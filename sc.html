@@ -256,6 +256,11 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 .hlt{font-family:var(--serif);line-height:1.7}
 .hln{font-size:.82em;background:var(--sunk);border-radius:6px;padding:4px 8px;white-space:pre-wrap}
 .updbar{position:fixed;left:0;right:0;top:0;z-index:60;border:none;background:#B98A2E;color:#fff;font-weight:700;font-size:.9em;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.cardpv{background:var(--sunk);border-radius:12px;overflow:hidden;text-align:center}
+.cardpv img{max-width:100%;max-height:48vh;display:block;margin:0 auto;-webkit-touch-callout:default;user-select:auto}
+.cchips{display:flex;gap:6px;flex-wrap:wrap}
+.cchip{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 12px;font-size:.82em;font-weight:500}
+.cchip.on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
 /* today & me */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;margin-top:16px}
 .card .date{font-family:var(--mono);font-size:.78em;color:var(--muted)}
@@ -289,7 +294,7 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 <button data-go="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6"/></svg>我的</button>
 </div></nav>
 <script>
-var VER = '202609271321';
+var VER = '202609272258';
 var DATA = 'sc-';
 var SPEECH = 'zh-CN';
 var REFS = {};
@@ -1018,7 +1023,7 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
       else if (a === 'ask') {
         keepNote(); saveHl(); close();
         chatSrc = { t: h.t, ut: h.ut };
-        chatPending = IS_EN ? 'Please help me understand and reflect on this: “' + h.t + '”' : '请帮助我明白并默想这一段：「' + h.t + '」';
+        chatPending = IS_EN ? 'Please explain this passage so I can understand it: “' + h.t + '”' : '请解释这一段，帮助我明白它的意思：「' + h.t + '」';
         S.view = 'chat'; render(); window.scrollTo(0, 0);
       }
     });
@@ -1379,7 +1384,7 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
       '<div class="msg-body" id="mb-' + where + '-' + m.id + '">' + mdToHtml(m.text) + '</div>' +
       (busy ? '' : '<button class="msg-more" data-a="col" data-i="' + i + '" data-w="' + where + '">' + (col ? '展开全文 ▾' : '') + '</button>' +
       '<div class="msg-actions">' + act('tts', sayId === (where + i) ? '⏸ 停止' : '🔊 朗读', sayId === (where + i)) +
-      act('fav', fav ? '★ 已收藏' : '☆ 收藏', fav) + act('col', col ? '展开' : '收合', false) + act('copy', '复制', false) +
+      act('fav', fav ? '★ 已收藏' : '☆ 收藏', fav) + act('col', col ? '展开' : '收合', false) + act('share', '↗ 分享', false) + act('card', '🖼 美图', false) + act('copy', '复制', false) +
       (where === 'chat' ? act('del', '删除', false) : '') + '</div>') + '</div>';
   }
   function bindBodies(root) {
@@ -1416,6 +1421,8 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
       saveFav();
       if (w === 'fav') { paintFav(); } else { var y2 = window.scrollY; paintChatKeep(); window.scrollTo(0, y2); }
     }
+    else if (a === 'share') { shareAnswer(q, m.text); }
+    else if (a === 'card') { openCard(q, m.text); }
     else if (a === 'copy') {
       var txt = (q ? q + '\n\n' : '') + mdStrip(m.text);
       try { navigator.clipboard.writeText(txt).then(function () { toast('已复制'); }, function () { toast('不能复制，请长按文字自行复制'); }); }
@@ -1433,6 +1440,120 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
     log.innerHTML = CHAT.map(function (m, i) { return m.role === 'user' ? '<div class="msg user">' + esc(m.text) + '</div>' : aiCard(m, i, '', 'chat'); }).join('');
     bindBodies(log);
   }
+  /* ---------- 分享到社群 ---------- */
+  function appUrl() { return location.protocol.indexOf('http') === 0 ? location.origin + location.pathname.replace(/index\.html$/, '') : ''; }
+  function cleanQ(q) { return String(q || '').replace(/^请解释这一段，帮助我明白它的意思：/, '').replace(/^Please explain this passage so I can understand it: /, ''); }
+  function shareAnswer(q, text) {
+    q = cleanQ(q);
+    var body = (q ? (IS_EN ? 'Q: ' : '问：') + q + '\n\n' : '') + mdStrip(text) + '\n\n—— 321万象见神' + (appUrl() ? '\n' + appUrl() : '');
+    if (navigator.share) {
+      try { navigator.share({ title: '321万象见神', text: body }).then(null, function (e) { if (!e || e.name !== 'AbortError') { copyText(body); } }); return; } catch (e) {}
+    }
+    copyText(body);
+  }
+  function copyText(t) {
+    try { navigator.clipboard.writeText(t).then(function () { toast('已复制，可以贴到群组或社群'); }, function () { toast('不能复制，请长按文字自行复制'); }); }
+    catch (e) { toast('不能复制，请长按文字自行复制'); }
+  }
+  /* ---------- 美图：把回答的重点做成分享图片 ---------- */
+  function keyLine(md) {
+    var raw = String(md || ''), LIMIT = IS_EN ? 300 : 140;
+    var qm = raw.match(/^> ?(.+)$/m);
+    if (qm) { var qt = mdStrip(qm[1]); if (qt.length >= 10 && qt.length <= LIMIT + 60) { return qt; } }
+    var body = mdStrip(raw).split('\n').filter(function (l) { return l.replace(/\s/g, '') && !/^・/.test(l); }).join(IS_EN ? ' ' : '');
+    if (body.length <= LIMIT) { return body; }
+    var parts = body.split(IS_EN ? /(?=[.!?]\s)/ : /(?=[。！？])/), out = '';
+    for (var i = 0; i < parts.length; i++) { var p = parts[i].replace(/^[。！？.!?]\s*/, ''); if (out && (out + p).length > LIMIT) { break; } out += (out && IS_EN ? '. ' : (out ? '。' : '')) + p; }
+    return (out || body.slice(0, LIMIT)) + (IS_EN ? '.' : '。');
+  }
+  var CARD = { size: 'p', theme: 'night' };
+  var CARD_SIZES = { p: [1080, 1350], s: [1080, 1080], w: [1600, 900] };
+  var CARD_THEMES = {
+    night: { bg: ['#1C2A4A', '#0B1020'], ink: '#FFFFFF', sub: '#C9D2E6', acc: '#E8B96A', stars: true },
+    dawn: { bg: ['#F7D9A8', '#E88E6A'], ink: '#2B1A10', sub: '#5A3B28', acc: '#8C2F1B', stars: false },
+    paper: { bg: ['#FBF6EC', '#EFE5D2'], ink: '#23211C', sub: '#6B6255', acc: '#2C5A9C', stars: false }
+  };
+  function drawCard(cv, q, txt) {
+    var sz = CARD_SIZES[CARD.size], W = sz[0], H = sz[1], T = CARD_THEMES[CARD.theme];
+    cv.width = W; cv.height = H;
+    var c = cv.getContext('2d');
+    var g = c.createLinearGradient(0, 0, W * 0.4, H); g.addColorStop(0, T.bg[0]); g.addColorStop(1, T.bg[1]);
+    c.fillStyle = g; c.fillRect(0, 0, W, H);
+    if (T.stars) { var R = rng(31); for (var i = 0; i < 220; i++) { c.globalAlpha = 0.15 + R() * 0.6; c.fillStyle = '#F4E9C8'; var sd = R() < 0.92 ? 2 : 4; c.fillRect(R() * W, R() * H, sd, sd); } c.globalAlpha = 1; }
+    var serif = '"Noto Serif TC","Noto Serif SC","PMingLiU","Songti TC","SimSun",Georgia,serif', sans = '"Noto Sans TC","Noto Sans SC","Microsoft JhengHei","PingFang TC",sans-serif';
+    var pad = Math.round(W * 0.09), maxW = W - pad * 2;
+    /* 最下方：图示与 App 名称 */
+    var icon = document.querySelector('.brandicon');
+    var by = H - pad * 0.9;
+    if (icon && icon.complete) { try { c.drawImage(icon, pad, by - 64, 64, 64); } catch (e) {} }
+    c.fillStyle = T.ink; c.font = '700 40px ' + serif; c.fillText(IS_EN ? '321 Creation Speaks' : '321万象见神', pad + 84, by - 18);
+    c.fillStyle = T.sub; c.font = '400 26px ' + sans; c.fillText(IS_EN ? 'Kingdom 321 Fellowship' : '国度321空中团契', pad + 86, by + 16);
+    /* 上方：提问 */
+    var top = pad * 1.1;
+    c.fillStyle = T.acc; c.fillRect(pad, top, 90, 6);
+    top += 60;
+    if (q) {
+      c.fillStyle = T.sub; c.font = '500 34px ' + sans;
+      var ql = wrapText(c, q, maxW).slice(0, 3);
+      ql.forEach(function (l, i2) { c.fillText(l, pad, top + i2 * 50); });
+      top += ql.length * 50 + 40;
+    }
+    /* 中间：重点文字，自动缩放字级到放得下 */
+    var bottomLimit = by - 120, fs = CARD.size === 'w' ? 64 : 72, lines, lh;
+    for (; fs >= 30; fs -= 2) {
+      c.font = '700 ' + fs + 'px ' + serif; lh = Math.round(fs * 1.55);
+      lines = wrapText(c, txt, maxW);
+      if (top + lines.length * lh <= bottomLimit) { break; }
+    }
+    c.fillStyle = T.ink; c.font = '700 ' + fs + 'px ' + serif;
+    var startY = top + Math.max(0, (bottomLimit - top - lines.length * lh) / 2) + fs;
+    lines.forEach(function (l, i3) { c.fillText(l, pad, startY + i3 * lh); });
+  }
+  function openCard(q, md) {
+    q = cleanQ(q);
+    var txt = keyLine(md);
+    var mask = document.createElement('div'); mask.className = 'hlsheet-mask';
+    var chip = function (k2, v, label, on) { return '<button class="cchip' + (on ? ' on' : '') + '" data-' + k2 + '="' + v + '">' + label + '</button>'; };
+    mask.innerHTML = '<div class="hlsheet-card" role="dialog" aria-label="美图">' +
+      '<div class="hlsheet-title">做成美图</div>' +
+      '<div class="cardpv"><img id="cardImg" alt="分享美图"></div>' +
+      '<p class="hl-hint">长按图片可以存储，或按「分享图片」直接传到社群。</p>' +
+      '<div class="hlsheet-row"><span class="hlsheet-label">尺寸</span><div class="cchips">' + chip('size', 'p', '直式', CARD.size === 'p') + chip('size', 's', '方形', CARD.size === 's') + chip('size', 'w', '横式', CARD.size === 'w') + '</div></div>' +
+      '<div class="hlsheet-row"><span class="hlsheet-label">风格</span><div class="cchips">' + chip('theme', 'night', '星空', CARD.theme === 'night') + chip('theme', 'dawn', '晨光', CARD.theme === 'dawn') + chip('theme', 'paper', '素雅', CARD.theme === 'paper') + '</div></div>' +
+      '<textarea class="hlsheet-ta" id="cardTxt">' + esc(txt) + '</textarea>' +
+      '<div class="hlsheet-acts"><button class="sbtn pri" data-a="sharepic">分享图片</button><button class="sbtn" data-a="close">关闭</button></div></div>';
+    document.body.appendChild(mask);
+    var cv = document.createElement('canvas'), timer = null;
+    function redraw() {
+      drawCard(cv, q, document.getElementById('cardTxt').value);
+      try { document.getElementById('cardImg').src = cv.toDataURL('image/png'); } catch (e) {}
+    }
+    redraw();
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(redraw); }
+    document.getElementById('cardTxt').oninput = function () { window.clearTimeout(timer); timer = window.setTimeout(redraw, 300); };
+    mask.addEventListener('click', function (e) {
+      var t = e.target;
+      if (t === mask) { mask.parentNode.removeChild(mask); return; }
+      if (t.hasAttribute('data-size')) { CARD.size = t.getAttribute('data-size'); }
+      else if (t.hasAttribute('data-theme')) { CARD.theme = t.getAttribute('data-theme'); }
+      else if (t.getAttribute('data-a') === 'close') { mask.parentNode.removeChild(mask); return; }
+      else if (t.getAttribute('data-a') === 'sharepic') {
+        try {
+          cv.toBlob(function (blob) {
+            var f = null;
+            try { f = new File([blob], '321-creation-speaks.png', { type: 'image/png' }); } catch (e2) {}
+            if (f && navigator.canShare && navigator.canShare({ files: [f] })) {
+              navigator.share({ files: [f], title: '321万象见神' }).then(null, function () {});
+            } else { toast('这台设备不能直接分享图片，请长按图片存储后再分享'); }
+          }, 'image/png');
+        } catch (e3) { toast('这台设备不能直接分享图片，请长按图片存储后再分享'); }
+        return;
+      } else { return; }
+      qsa('.cchip', mask).forEach(function (b) { var on = (b.hasAttribute('data-size') && b.getAttribute('data-size') === CARD.size) || (b.hasAttribute('data-theme') && b.getAttribute('data-theme') === CARD.theme); b.className = 'cchip' + (on ? ' on' : ''); });
+      redraw();
+    });
+  }
+
   function favView() {
     return '<div class="uhead"><div class="eyebrow">我的</div><h1>我的收藏</h1><p class="sub">收藏的小智回答。可以收合、朗读、画线与写笔记。</p></div>' +
       '<div class="row" style="margin-top:12px"><button class="iconbtn" data-go="me">‹ 回到我的</button></div><div class="chatlog" id="favlog" style="margin-top:12px"></div>';
@@ -1480,11 +1601,15 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
       CHAT.push({ role: 'ai', text: THINKING, id: newId() });
     }
     chatBusy = true; paintChat();
-    var sys = (IS_EN ? SYS_EN : SYS_ZH) + unitContext() + (chatSrc ? (IS_EN ? '\nThe reader highlighted: "' + chatSrc.t + '"' : '\n读者画线的句子：「' + chatSrc.t + '」') : '');
+    /* 从画线来的提问：重点是把这一段解释清楚，不带默想，篇幅精简，最多续写一次 */
+    var hlMode = !!chatSrc || (contMode && lastAi && lastAi.hl);
+    var sys = (IS_EN ? SYS_EN : SYS_ZH) + unitContext() + (chatSrc ? (IS_EN ? '\nThe reader highlighted: "' + chatSrc.t + '"' : '\n读者画线的句子：「' + chatSrc.t + '」') : '') +
+      (hlMode ? (IS_EN ? '\nThis question comes from a highlighted passage. Focus on explaining the passage clearly and answering what it means, so the reader understands it: key facts, how certain they are, and the related Scripture. Do not add devotional guidance or meditation prompts. Keep it focused and concise (about 200 to 400 words).'
+        : '\n这个问题来自读者画线的一段文字。重点是把这一段解释清楚、回答它的意思，让读者明白：交代关键事实、确定程度与相关经文即可，不需要默想或灵修引导。回答要聚焦、精简（约 300 到 600 字）。') : '');
     chatSrc = null;
     var msgs = CHAT.filter(function (m) { return m.text !== THINKING; }).slice(contMode ? -13 : -12, contMode ? -1 : undefined).map(function (m) { return { role: m.role === 'user' ? 'user' : 'assistant', content: m.text }; });
     /* 回答太长时，服务器会在中途截断；检测到截断就自动请小智接着写，最后合成完整的一篇 */
-    var MAXCONT = 6, conts = 0, acc = contMode ? lastAi.text : '', tries = 0, delays = [900, 1800];
+    var MAXCONT = hlMode ? (contMode ? 0 : 1) : 6, conts = 0, acc = contMode ? lastAi.text : '', tries = 0, delays = [900, 1800];
     var CONT_NOTE = IS_EN ? '\n\n*(continuing…)*' : '\n\n*（小智继续写……）*';
     var aid = CHAT[CHAT.length - 1].id;
     function show(t) { CHAT[CHAT.length - 1] = { role: 'ai', text: t, id: aid }; paintChat(); }
@@ -1495,7 +1620,8 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
       chatBusy = false; saveChat(); paintChat();
       /* 回答看起来还没写完，就把「小智继续写」放进输入栏，按送出就能接着写 */
       var box = $('chatIn');
-      if (box && reply && (why || looksCut(reply))) { box.value = CONT_TEXT; toast(IS_EN ? 'The answer may be incomplete. Tap Send to continue.' : '回答可能还没写完，按「送出」让小智继续写'); }
+      if (hlMode) { CHAT[CHAT.length - 1].hl = true; saveChat(); }
+      if (box && reply && !hlMode && (why || looksCut(reply))) { box.value = CONT_TEXT; toast(IS_EN ? 'The answer may be incomplete. Tap Send to continue.' : '回答可能还没写完，按「送出」让小智继续写'); }
     }
     function cut(d, r) {
       if (!r) { return false; }

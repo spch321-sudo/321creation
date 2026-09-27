@@ -1,30 +1,14 @@
-/* 321申命記講義 · Service Worker（離線可用）
-   版本字串在每次 make_site.py 重新打包時都會變，
-   一變就會清掉舊快取、重新抓一份新的，使用者不必手動清除。 */
-const V = '申命記-2288eb58f4cb';
-const SHELL = [
-  './', './index.html', './manifest.webmanifest',
-  './icon-192.png', './icon-512.png',
-  './icon-180.png', './icon-167.png',
-  './icon-152.png', './icon-120.png',
-  './icon-64.png', './favicon.ico',
-];
-self.addEventListener('install', e => {
-  self.skipWaiting();
-  e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).catch(() => {}));
+var CACHE = 'wanxiang-202609272258';
+self.addEventListener('install', function (e) { self.skipWaiting(); });
+self.addEventListener('activate', function (e) {
+  e.waitUntil(caches.keys().then(function (ks) { return Promise.all(ks.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); })); }).then(function () { return self.clients.claim(); }));
 });
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(ks =>
-    Promise.all(ks.filter(k => k !== V).map(k => caches.delete(k)))
-  ).then(() => self.clients.claim()));
-});
-self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-  e.respondWith(
-    fetch(e.request).then(r => {
-      const cp = r.clone();
-      caches.open(V).then(c => c.put(e.request, cp)).catch(() => {});
-      return r;
-    }).catch(() => caches.match(e.request).then(r => r || caches.match('./index.html')))
-  );
+/* 有網路時一律向網站要最新版（不用瀏覽器的舊快取）；沒網路時才用手機裡存的那一份 */
+self.addEventListener('fetch', function (e) {
+  var r = e.request;
+  if (r.method !== 'GET' || new URL(r.url).origin !== self.location.origin) { return; }
+  e.respondWith(fetch(r, { cache: 'no-cache' }).then(function (res) {
+    if (res && res.ok) { var copy = res.clone(); caches.open(CACHE).then(function (c) { c.put(r, copy); }); }
+    return res;
+  }).catch(function () { return caches.match(r, { ignoreSearch: true }); }));
 });
