@@ -243,6 +243,19 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 :lang(en) .brand{letter-spacing:0;font-size:1em}
 .diag p{margin:4px 0;font-size:.85em;font-family:var(--mono)}.diag .ok{color:var(--good)}.diag .bad{color:var(--crit)}
 @media (max-width:560px){.top .in{gap:8px;padding-inline:12px}.langs a{padding:3px 5px}.top .iconbtn{padding:4px 9px}.brand{letter-spacing:.02em;min-width:0;overflow:hidden;text-overflow:ellipsis}}
+.msg-q{font-weight:700;font-size:.9em;color:var(--accent);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.msg.col .msg-body{max-height:10.5em;overflow:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.msg-more{display:none;border:none;background:none;color:var(--accent);font-size:.82em;font-weight:700;padding:4px 0}
+.msg.col .msg-more{display:block}
+.msg-actions{flex-wrap:wrap}
+.hllist{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.hlitem{display:flex;gap:10px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.hlbar{flex:0 0 5px;border-radius:3px}
+.hlmeta{display:flex;flex-direction:column;gap:4px;min-width:0}
+.hlsrc{font-size:.72em;color:var(--muted)}
+.hlt{font-family:var(--serif);line-height:1.7}
+.hln{font-size:.82em;background:var(--sunk);border-radius:6px;padding:4px 8px;white-space:pre-wrap}
+.updbar{position:fixed;left:0;right:0;top:0;z-index:60;border:none;background:#B98A2E;color:#fff;font-weight:700;font-size:.9em;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
 /* today & me */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;margin-top:16px}
 .card .date{font-family:var(--mono);font-size:.78em;color:var(--muted)}
@@ -276,7 +289,7 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 <button data-go="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6"/></svg>我的</button>
 </div></nav>
 <script>
-var VER = '202609271258';
+var VER = '202609271321';
 var DATA = 'tc-';
 var SPEECH = 'zh-TW';
 var REFS = {};
@@ -360,12 +373,14 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     else if (S.view === 'hall') { html = hallView(); }
     else if (S.view === 'today') { html = todayView(); }
     else if (S.view === 'chat') { html = chatView(); }
+    else if (S.view === 'fav') { html = favView(); }
+    else if (S.view === 'hls') { html = hlsView(); }
     else { html = meView(); }
     $('main').innerHTML = html;
     var tabs = document.querySelectorAll('.tabbar button');
     for (var i = 0; i < tabs.length; i++) {
       var v = tabs[i].getAttribute('data-go');
-      if (v === S.view || (v === 'home' && (S.view === 'unit' || S.view === 'hall'))) { tabs[i].setAttribute('aria-current', 'page'); }
+      if (v === S.view || (v === 'home' && (S.view === 'unit' || S.view === 'hall')) || (v === 'me' && (S.view === 'fav' || S.view === 'hls'))) { tabs[i].setAttribute('aria-current', 'page'); }
       else { tabs[i].removeAttribute('aria-current'); }
     }
     document.documentElement.style.setProperty('--fs', S.fs + 'px');
@@ -569,7 +584,8 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
       h += '<div class="attr"><span>' + ATTRS[i] + '</span><span class="bar"><i style="width:' + Math.round(n / mx * 100) + '%"></i></span><span class="num">' + n + '</span></div>';
     }
     h += '</div>' + (total ? '' : '<p class="muted">完成展館的單元後，這裡會依單元亮起神的屬性。</p>') + '</div>';
-    h += '<div class="card"><b>學習進度</b>' + progHtml() + '</div>' +
+    h += '<div class="card"><b>我的筆記</b><div class="row"><button class="iconbtn" data-go="fav">★ 我的收藏（' + FAV.length + '）</button><button class="iconbtn" data-go="hls">我的畫線（' + Object.keys(HLS).length + '）</button></div></div>' +
+      '<div class="card"><b>學習進度</b>' + progHtml() + '</div>' +
       '<div class="card"><b>閱讀設定</b>' +
       '<div class="row"><span class="muted" style="width:4em">字級</span><div class="seg">' +
       seg('fs', 15, '小') + seg('fs', 17, '中') + seg('fs', 20, '大') + '</div></div>' +
@@ -598,6 +614,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     if (S.view === 'unit') { S.seen[cur().id + '_' + S.step] = true; wrapSents($('stepBody'), unitPrefix()); paintHl(); }
     if (S.view === 'today') { wrapSents($('todayText'), 'today'); }
     if (S.view === 'chat') { afterChat(); }
+    if (S.view === 'fav') { paintFav(); }
     var act = document.querySelector('.steps [aria-current="step"]');
     if (act && act.parentNode.scrollTo) { act.parentNode.scrollLeft = act.offsetLeft - 40; }
   }
@@ -778,9 +795,9 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
 
   document.addEventListener('click', function (e) {
     var t = e.target;
-    if (S.view === 'unit' && t.className === 'sent' || (t.classList && t.classList.contains('sent'))) {
-      if ($('stepBody') && $('stepBody').contains(t)) { onSentTap(t); return; }
-    }
+    if (t.classList && t.classList.contains('sent') && rootOf(t)) { onSentTap(t); return; }
+    var hlItem = t.closest ? t.closest('[data-hlgo]') : null;
+    if (hlItem) { hlGo(hlItem.getAttribute('data-hlgo')); return; }
     while (t && t !== document && !(t.getAttribute && (t.hasAttribute('data-go') || t.hasAttribute('data-open') || t.hasAttribute('data-step') || t.hasAttribute('data-depth') || t.hasAttribute('data-q') || t.hasAttribute('data-unit') || t.hasAttribute('data-hall') || t.hasAttribute('data-set') || t.id))) { t = t.parentNode; }
     if (!t || t === document) { return; }
     if (t.hasAttribute('data-go')) { go(t.getAttribute('data-go')); return; }
@@ -844,6 +861,12 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
   try { HLS = JSON.parse(window.localStorage.getItem(HLKEY) || '{}') || {}; } catch (e) { HLS = {}; }
   try { CHAT = JSON.parse(window.localStorage.getItem(CHATKEY) || '[]') || []; } catch (e) { CHAT = []; }
   function saveHl() { try { window.localStorage.setItem(HLKEY, JSON.stringify(HLS)); } catch (e) {} }
+  var FAVKEY = 'wanxiang_fav_' + DATA, FAV = [];
+  try { FAV = JSON.parse(window.localStorage.getItem(FAVKEY) || '[]') || []; } catch (e) { FAV = []; }
+  function saveFav() { try { window.localStorage.setItem(FAVKEY, JSON.stringify(FAV)); } catch (e) {} }
+  function newId() { return Date.now().toString(36) + Math.floor(Math.random() * 1296).toString(36); }
+  CHAT.forEach(function (m) { if (!m.id) { m.id = newId(); } });
+  function isFav(id) { for (var i = 0; i < FAV.length; i++) { if (FAV[i].id === id) { return i; } } return -1; }
   function saveChat() { try { window.localStorage.setItem(CHATKEY, JSON.stringify(CHAT.slice(-40))); } catch (e) {} }
   function qsa(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
   function toast(msg, ms) {
@@ -905,8 +928,10 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
   function unitPrefix() { var U = cur(); return (U ? U.id : 'x') + '|' + S.step; }
 
   /* ---------- 畫線 ---------- */
-  function paintHl() {
-    var body = $('stepBody'); if (!body) { return; }
+  function hlRoots() { var r = qsa('.msg-body'); if ($('stepBody')) { r.unshift($('stepBody')); } return r; }
+  function rootOf(el) { while (el && el !== document.body) { if (el.id === 'stepBody' || (el.classList && el.classList.contains('msg-body'))) { return el; } el = el.parentNode; } return null; }
+  function paintHl() { hlRoots().forEach(paintRoot); }
+  function paintRoot(body) {
     var gs = groups(body), cover = [];
     gs.forEach(function (g, i) {
       var h = HLS[g.k]; if (!h) { return; }
@@ -935,7 +960,8 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     });
   }
   function spanText(k, n) {
-    var gs = groups($('stepBody')), i = -1;
+    var first = document.querySelector('.sent[data-k="' + k + '"]');
+    var gs = groups(rootOf(first) || $('stepBody')), i = -1;
     for (var j = 0; j < gs.length; j++) { if (gs[j].k === k) { i = j; break; } }
     if (i < 0) { return { t: '', n: 1 }; }
     n = Math.max(1, Math.min(n, gs.length - i));
@@ -946,8 +972,9 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
   function onSentTap(el) {
     var k = el.getAttribute('data-own') || el.getAttribute('data-k');
     if (!HLS[k]) {
-      var U = cur();
-      var h = { c: S.hlc || 'gold', n: '', sp: 1, t: '', uid: U.id, ut: U.title, hall: S.hall, u: S.u, st: S.step, ts: Date.now() };
+      var h;
+      if (/^chat\|/.test(k)) { h = { c: S.hlc || 'gold', n: '', sp: 1, t: '', src: 'chat', mid: k.split('|')[1], ut: '小智的回答', ts: Date.now() }; }
+      else { var U = cur(); h = { c: S.hlc || 'gold', n: '', sp: 1, t: '', uid: U.id, ut: U.title, hall: S.hall, u: S.u, st: S.step, ts: Date.now() }; }
       h.t = spanText(k, 1).t;
       HLS[k] = h; saveHl(); paintHl();
     } else { openHlSheet(k); }
@@ -1169,7 +1196,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
   }
   function paintSay() {
     qsa('.msg-act[data-a="tts"]').forEach(function (b) {
-      var on = sayId === +b.getAttribute('data-i');
+      var on = sayId === (b.getAttribute('data-w') + b.getAttribute('data-i'));
       b.className = 'msg-act' + (on ? ' on' : '');
       b.textContent = on ? '⏸ 停止' : '🔊 朗讀';
     });
@@ -1326,6 +1353,14 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     return '';
   }
   var THINKING = '小智正在思考……';
+  var CONT_TEXT = '小智繼續寫';
+  var CONT_RE = /^(小智)?(請)?(繼續|接著)(寫|說|講)?|^(please )?(continue|keep going)/i;
+  /* 結尾停在句子中間（不是句號、問號、引號、禱告結尾等），就當作沒寫完 */
+  function looksCut(t) {
+    var tail = String(t || '').replace(/\s+$/, '').replace(/[*_]+$/, '');
+    if (!tail) { return false; }
+    return !/[。！？」』）)\].!?"”’…：:|—\-~～]$/.test(tail);
+  }
   function chatView() {
     var U = (HD[S.hall] && cur()) || null;
     var qs = (IS_EN ? QBANK_EN : QBANK_ZH).map(function (q) { return '<button class="qs-chip">' + esc(q) + '</button>'; }).join('');
@@ -1337,35 +1372,130 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
       '<div class="chatinput"><textarea id="chatIn" rows="2" placeholder="輸入你的問題……"></textarea><button id="chatSend">送出</button></div>' +
       '<p class="muted chatnote">小智是 AI，可能出錯；重要的事請對照聖經並請教牧者。</p></div>';
   }
+  function aiCard(m, i, q, where) {
+    var busy = m.text === THINKING, fav = isFav(m.id) >= 0, col = where === 'fav' ? (m.col !== false) : !!m.col;
+    var act = function (a2, label, on) { return '<button class="msg-act' + (on ? ' on' : '') + '" data-a="' + a2 + '" data-i="' + i + '" data-w="' + where + '">' + label + '</button>'; };
+    return '<div class="msg ai' + (col ? ' col' : '') + '" data-mid="' + m.id + '">' + (q ? '<div class="msg-q">' + esc(q) + '</div>' : '') +
+      '<div class="msg-body" id="mb-' + where + '-' + m.id + '">' + mdToHtml(m.text) + '</div>' +
+      (busy ? '' : '<button class="msg-more" data-a="col" data-i="' + i + '" data-w="' + where + '">' + (col ? '展開全文 ▾' : '') + '</button>' +
+      '<div class="msg-actions">' + act('tts', sayId === (where + i) ? '⏸ 停止' : '🔊 朗讀', sayId === (where + i)) +
+      act('fav', fav ? '★ 已收藏' : '☆ 收藏', fav) + act('col', col ? '展開' : '收合', false) + act('copy', '複製', false) +
+      (where === 'chat' ? act('del', '刪除', false) : '') + '</div>') + '</div>';
+  }
+  function bindBodies(root) {
+    qsa('.msg-body', root).forEach(function (b) {
+      Array.prototype.forEach.call(b.children, function (c, j) { c.setAttribute('data-b', j); });
+      var mid = b.parentNode.getAttribute('data-mid');
+      if (b.parentNode.textContent.indexOf(THINKING) < 0) { wrapSents(b, 'chat|' + mid); }
+    });
+    paintHl();
+  }
   function paintChat() {
     var log = $('chatlog'); if (!log) { return; }
     if (!CHAT.length) { log.innerHTML = '<p class="muted">從上面的「提問範例」開始，或在單元中畫一句線，按「問小智」。</p>'; return; }
     log.innerHTML = CHAT.map(function (m, i) {
       if (m.role === 'user') { return '<div class="msg user">' + esc(m.text) + '</div>'; }
-      return '<div class="msg ai"><div class="msg-body">' + mdToHtml(m.text) + '</div>' +
-        (m.text === THINKING ? '' : '<div class="msg-actions"><button class="msg-act' + (sayId === i ? ' on' : '') + '" data-a="tts" data-i="' + i + '">' + (sayId === i ? '⏸ 停止' : '🔊 朗讀') + '</button>' +
-        '<button class="msg-act" data-a="copy" data-i="' + i + '">複製</button><button class="msg-act" data-a="del" data-i="' + i + '">刪除</button></div>') + '</div>';
+      return aiCard(m, i, '', 'chat');
     }).join('');
-    log.scrollTop = log.scrollHeight;
+    bindBodies(log);
     var last = log.lastElementChild; if (last && last.scrollIntoView) { try { last.scrollIntoView({ block: 'end' }); } catch (e) {} }
+  }
+  function msgAction(e) {
+    var t = e.target; if (!t.hasAttribute || !t.hasAttribute('data-a')) { return; }
+    var i = +t.getAttribute('data-i'), w = t.getAttribute('data-w'), a = t.getAttribute('data-a');
+    var list = w === 'fav' ? FAV : CHAT, m = list[i]; if (!m) { return; }
+    var q = w === 'fav' ? m.q : (CHAT[i - 1] && CHAT[i - 1].role === 'user' ? CHAT[i - 1].text : '');
+    if (a === 'del') { CHAT.splice(i, 1); if (CHAT[i - 1] && CHAT[i - 1].role === 'user') { CHAT.splice(i - 1, 1); } saveChat(); paintChat(); }
+    else if (a === 'col') {
+      m.col = w === 'fav' ? !(m.col !== false) : !m.col;
+      if (w === 'fav') { saveFav(); paintFav(); } else { saveChat(); var y = window.scrollY; paintChatKeep(); window.scrollTo(0, y); }
+    }
+    else if (a === 'fav') {
+      var k = isFav(m.id);
+      if (k >= 0) { FAV.splice(k, 1); toast('已取消收藏'); } else { FAV.unshift({ id: m.id, q: q, text: m.text, ts: Date.now() }); toast('已收藏，可在「我的」查看'); }
+      saveFav();
+      if (w === 'fav') { paintFav(); } else { var y2 = window.scrollY; paintChatKeep(); window.scrollTo(0, y2); }
+    }
+    else if (a === 'copy') {
+      var txt = (q ? q + '\n\n' : '') + mdStrip(m.text);
+      try { navigator.clipboard.writeText(txt).then(function () { toast('已複製'); }, function () { toast('無法複製，請長按文字自行複製'); }); }
+      catch (err) { toast('無法複製，請長按文字自行複製'); }
+    }
+    else if (a === 'tts') {
+      var sid = w + i;
+      if (sayId === sid) { ttsSayStop(); return; }
+      ttsStop(); ttsUnlock(); sayId = sid; paintSay(); ttsSpeakText(m.text, sid);
+    }
+  }
+  /* 重畫但不捲到最底（收合、收藏時用） */
+  function paintChatKeep() {
+    var log = $('chatlog'); if (!log) { return; }
+    log.innerHTML = CHAT.map(function (m, i) { return m.role === 'user' ? '<div class="msg user">' + esc(m.text) + '</div>' : aiCard(m, i, '', 'chat'); }).join('');
+    bindBodies(log);
+  }
+  function favView() {
+    return '<div class="uhead"><div class="eyebrow">我的</div><h1>我的收藏</h1><p class="sub">收藏的小智回答。可以收合、朗讀、畫線與寫筆記。</p></div>' +
+      '<div class="row" style="margin-top:12px"><button class="iconbtn" data-go="me">‹ 回到我的</button></div><div class="chatlog" id="favlog" style="margin-top:12px"></div>';
+  }
+  function paintFav() {
+    var log = $('favlog'); if (!log) { return; }
+    if (!FAV.length) { log.innerHTML = '<p class="muted">還沒有收藏。在小智的回答下方按「☆ 收藏」。</p>'; return; }
+    log.innerHTML = FAV.map(function (m, i) { return aiCard(m, i, m.q, 'fav'); }).join('');
+    bindBodies(log);
+    log.onclick = msgAction;
+  }
+  function hlsView() {
+    var ks = Object.keys(HLS).sort(function (a2, b2) { return (HLS[b2].ts || 0) - (HLS[a2].ts || 0); });
+    var h = '<div class="uhead"><div class="eyebrow">我的</div><h1>我的畫線</h1><p class="sub">點一則畫線，就回到它所在的地方。</p></div>' +
+      '<div class="row" style="margin-top:12px"><button class="iconbtn" data-go="me">‹ 回到我的</button></div><div class="hllist">';
+    if (!ks.length) { h += '<p class="muted">還沒有畫線。在單元、講章或小智的回答裡點一下句子就能畫線。</p>'; }
+    ks.forEach(function (k) {
+      var x = HLS[k];
+      h += '<button class="hlitem" data-hlgo="' + esc(k) + '"><span class="hlbar" style="background:' + (HL_SWATCH[x.c] || HL_SWATCH.gold) + '"></span><span class="hlmeta"><span class="hlsrc">' + esc(x.ut || '') + '</span><span class="hlt">' + esc(x.t) + '</span>' + (x.n ? '<span class="hln">' + esc(x.n) + '</span>' : '') + '</span></button>';
+    });
+    return h + '</div>';
+  }
+  function hlGo(k) {
+    var x = HLS[k]; if (!x) { return; }
+    if (x.src === 'chat') {
+      var inFav = isFav(x.mid) >= 0, inChat = false;
+      CHAT.forEach(function (m) { if (m.id === x.mid) { inChat = true; } });
+      S.view = inChat ? 'chat' : (inFav ? 'fav' : 'chat');
+    } else { S.hall = x.hall; S.u = x.u; S.step = x.st; S.view = 'unit'; }
+    render();
+    window.setTimeout(function () {
+      var el = document.querySelector('.sent[data-k="' + k + '"]');
+      if (el) { var box = el.closest('.msg'); if (box && box.classList.contains('col')) { box.classList.remove('col'); } try { el.scrollIntoView({ block: 'center' }); } catch (e) {} }
+    }, 400);
   }
   function sendChat(text) {
     text = String(text || '').replace(/^\s+|\s+$/g, '');
     if (!text || chatBusy) { return; }
     var inp = $('chatIn'); if (inp) { inp.value = ''; }
-    CHAT.push({ role: 'user', text: text });
-    CHAT.push({ role: 'ai', text: THINKING });
+    /* 「小智繼續寫」：接在上一則回答後面寫，不另開新的一則 */
+    var lastAi = CHAT.length && CHAT[CHAT.length - 1].role === 'ai' ? CHAT[CHAT.length - 1] : null;
+    var contMode = !!lastAi && CONT_RE.test(text);
+    if (!contMode) {
+      CHAT.push({ role: 'user', text: text, id: newId() });
+      CHAT.push({ role: 'ai', text: THINKING, id: newId() });
+    }
     chatBusy = true; paintChat();
     var sys = (IS_EN ? SYS_EN : SYS_ZH) + unitContext() + (chatSrc ? (IS_EN ? '\nThe reader highlighted: "' + chatSrc.t + '"' : '\n讀者畫線的句子：「' + chatSrc.t + '」') : '');
     chatSrc = null;
-    var msgs = CHAT.filter(function (m) { return m.text !== THINKING; }).slice(-12).map(function (m) { return { role: m.role === 'user' ? 'user' : 'assistant', content: m.text }; });
+    var msgs = CHAT.filter(function (m) { return m.text !== THINKING; }).slice(contMode ? -13 : -12, contMode ? -1 : undefined).map(function (m) { return { role: m.role === 'user' ? 'user' : 'assistant', content: m.text }; });
     /* 回答太長時，伺服器會在中途截斷；偵測到截斷就自動請小智接著寫，最後合成完整的一篇 */
-    var MAXCONT = 6, conts = 0, acc = '', tries = 0, delays = [900, 1800];
+    var MAXCONT = 6, conts = 0, acc = contMode ? lastAi.text : '', tries = 0, delays = [900, 1800];
     var CONT_NOTE = IS_EN ? '\n\n*(continuing…)*' : '\n\n*（小智繼續寫……）*';
-    function show(t) { CHAT[CHAT.length - 1] = { role: 'ai', text: t }; paintChat(); }
+    var aid = CHAT[CHAT.length - 1].id;
+    function show(t) { CHAT[CHAT.length - 1] = { role: 'ai', text: t, id: aid }; paintChat(); }
+    if (contMode) { show(acc + CONT_NOTE); }
     function finish(reply, why) {
-      CHAT[CHAT.length - 1] = { role: 'ai', text: reply || ('小智暫時連不上，請確認網路後再試一次。' + (why ? '（' + why + '）' : '')) };
+      var old = CHAT[CHAT.length - 1] || {};
+      CHAT[CHAT.length - 1] = { role: 'ai', id: aid, col: old.col, text: reply || ('小智暫時連不上，請確認網路後再試一次。' + (why ? '（' + why + '）' : '')) };
       chatBusy = false; saveChat(); paintChat();
+      /* 回答看起來還沒寫完，就把「小智繼續寫」放進輸入欄，按送出就能接著寫 */
+      var box = $('chatIn');
+      if (box && reply && (why || looksCut(reply))) { box.value = CONT_TEXT; toast(IS_EN ? 'The answer may be incomplete. Tap Send to continue.' : '回答可能還沒寫完，按「送出」讓小智繼續寫'); }
     }
     function cut(d, r) {
       if (!r) { return false; }
@@ -1376,7 +1506,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
       }
       /* 伺服器沒有告訴我們停止原因時，看結尾：長篇回答卻停在句子中間，就當作被截斷 */
       var tail = r.replace(/\s+$/, '');
-      return tail.length > 600 && !/[。！？」』）)\].!?"”’…*：:|—-]$/.test(tail);
+      return tail.length > 600 && looksCut(tail);
     }
     function payloadFor() {
       var m = msgs.slice();
@@ -1426,20 +1556,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     qsa('.qs-chip').forEach(function (c) { c.onclick = function () { panel.hidden = true; sendChat(c.textContent); }; });
     $('chatSend').onclick = function () { sendChat($('chatIn').value); };
     $('chatIn').onkeydown = function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(e.target.value); } };
-    $('chatlog').onclick = function (e) {
-      var t = e.target; if (!t.hasAttribute('data-a')) { return; }
-      var i = +t.getAttribute('data-i'), m = CHAT[i], a = t.getAttribute('data-a');
-      if (a === 'del') { CHAT.splice(i, 1); if (CHAT[i - 1] && CHAT[i - 1].role === 'user') { CHAT.splice(i - 1, 1); } saveChat(); paintChat(); }
-      else if (a === 'copy') {
-        var txt = mdStrip(m.text);
-        try { navigator.clipboard.writeText(txt).then(function () { toast('已複製'); }, function () { toast('無法複製，請長按文字自行複製'); }); }
-        catch (err) { toast('無法複製，請長按文字自行複製'); }
-      }
-      else if (a === 'tts') {
-        if (sayId === i) { ttsSayStop(); return; }
-        ttsStop(); ttsUnlock(); sayId = i; paintSay(); ttsSpeakText(m.text, i);
-      }
-    };
+    $('chatlog').onclick = msgAction;
     if (chatPending) { var p = chatPending; chatPending = null; sendChat(p); }
   }
 
@@ -1462,6 +1579,41 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
       x.send();
     });
   }
+
+  /* ---------- 自動更新：發現網站上有新版本，就提醒一鍵更新 ---------- */
+  var updShown = false;
+  function checkUpdate() {
+    if (updShown || !/^https?:/.test(location.protocol)) { return; }
+    var x = new XMLHttpRequest();
+    try { x.open('GET', 'version.json?t=' + Date.now(), true); } catch (e) { return; }
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4 || x.status !== 200) { return; }
+      var v = null; try { v = JSON.parse(x.responseText).v; } catch (e) {}
+      if (v && v !== VER) { showUpdate(v); }
+    };
+    x.send();
+  }
+  function showUpdate(v) {
+    updShown = true;
+    var d = document.createElement('button');
+    d.className = 'updbar'; d.id = 'updbar';
+    d.textContent = '有新版本，點一下立即更新';
+    d.onclick = function () {
+      d.textContent = '更新中……';
+      var go2 = function () { location.replace(location.pathname + '?v=' + v); };
+      try {
+        var jobs = [];
+        if (window.caches && caches.keys) { jobs.push(caches.keys().then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); })); }
+        if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) { jobs.push(navigator.serviceWorker.getRegistrations().then(function (rs) { return Promise.all(rs.map(function (r) { return r.update(); })); })); }
+        Promise.all(jobs).then(go2, go2);
+        window.setTimeout(go2, 2500);
+      } catch (e) { go2(); }
+    };
+    document.body.appendChild(d);
+  }
+  window.setTimeout(checkUpdate, 2500);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') { checkUpdate(); } });
+  window.setInterval(checkUpdate, 30 * 60 * 1000);
 
   load();
   if (!HU[S.hall]) { S.hall = 'cosmos'; }
