@@ -276,7 +276,7 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 <button data-go="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6"/></svg>我的</button>
 </div></nav>
 <script>
-var VER = '202609271218';
+var VER = '202609271258';
 var DATA = 'sc-';
 var SPEECH = 'zh-CN';
 var REFS = {};
@@ -1079,9 +1079,8 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
     raSeg(item, k);
   }
   function buildQueue(root) {
-    var gs = groups(root), from = 0;
-    for (var i = 0; i < gs.length; i++) { if (gs[i].els[0].getBoundingClientRect().bottom > 60) { from = i; break; } }
-    gs = gs.slice(from);
+    /* 一律从这一步（或讲章）的第一句开始念，不从画面中间开始 */
+    var gs = groups(root);
     var items = [], it = null;
     function push() { if (it && it.text) { items.push(it); } it = { text: '', segs: [], lens: [], at: -1 }; }
     push();
@@ -1184,22 +1183,45 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
   function ttsSpeakText(text, id) {
     var clean = ttsPrep(mdSpeak(text));
     if (!clean) { return; }
-    var done = function () { if (sayId === id) { sayId = null; paintSay(); } };
-    ttsFetch(clean.slice(0, 900), function (url) {
+    /* 整篇回答切成几段依序朗读，不再只念前面一部分 */
+    var parts = [], cur = '';
+    clean.split(IS_EN ? /(?=[.!?]\s)|\n+/ : /(?=[。！？])|\n+/).forEach(function (p) {
+      if (!p) { return; }
+      if ((cur + p).length > (IS_EN ? 700 : 280) && cur) { parts.push(cur); cur = p; } else { cur += p; }
+    });
+    if (cur) { parts.push(cur); }
+    parts = parts.map(function (p) { return p.replace(/^[。！？.!?]\s*/, '').replace(/^\s+|\s+$/g, ''); }).filter(Boolean);
+    var urls = {}, native = false;
+    function done() { if (sayId === id) { sayId = null; paintSay(); } }
+    function fetchPart(i, cb) {
+      if (urls[i] !== undefined) { cb(); return; }
+      ttsFetch(parts[i], function (u) { urls[i] = u; cb(); });
+    }
+    function play(i) {
       if (sayId !== id) { return; }
-      if (url) {
+      if (i >= parts.length) { done(); return; }
+      fetchPart(i, function () {
+        if (sayId !== id) { return; }
+        if (i + 1 < parts.length) { fetchPart(i + 1, function () {}); }
+        var url = urls[i];
+        if (!url || native) { speakNative(i); return; }
         var a = ttsAudio(), old = a.src;
-        a.onended = done; a.onerror = done; a.ontimeupdate = null;
+        a.onended = function () { play(i + 1); }; a.onerror = function () { play(i + 1); }; a.ontimeupdate = null;
         a.src = url;
         if (old && old.indexOf('blob:') === 0) { try { URL.revokeObjectURL(old); } catch (e) {} }
-        try { var p = a.play(); if (p && p.then) { p.then(null, done); } } catch (e) { done(); }
-      } else if ('speechSynthesis' in window) {
-        var u = new window.SpeechSynthesisUtterance(clean);
-        u.lang = SPEECH; u.rate = 0.95 * (S.rate || 1); u.onend = done; u.onerror = done;
-        window.speechSynthesis.speak(u);
-        toast('改用本机语音朗读');
-      } else { toast('此设备不支持朗读'); done(); }
-    });
+        try { var p = a.play(); if (p && p.then) { p.then(null, function () { native = true; speakNative(i); }); } } catch (e) { native = true; speakNative(i); }
+      });
+    }
+    function speakNative(i) {
+      if (!('speechSynthesis' in window)) { toast('此设备不支持朗读'); done(); return; }
+      if (!native) { native = true; toast('改用本机语音朗读'); }
+      if (sayId !== id || i >= parts.length) { done(); return; }
+      var u = new window.SpeechSynthesisUtterance(parts[i]);
+      u.lang = SPEECH; u.rate = 0.95 * (S.rate || 1);
+      u.onend = function () { speakNative(i + 1); }; u.onerror = function () { speakNative(i + 1); };
+      window.speechSynthesis.speak(u);
+    }
+    play(0);
   }
 
   /* ---------- 小智：markdown 排版 ---------- */
@@ -1264,7 +1286,7 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
     '四、深入浅出：先用一两句话直接回答问题，再用生活中的比喻把道理讲清楚，然后带出相关经文与属灵意义。必要的专有名词要用白话解释。\n' +
     '五、公允谦卑：遇到争议议题（例如地球年龄、演化机制），采取「核心合一、周边宽容」，公平介绍福音派内部的主要观点，不贬低任何人；对怀疑与提问的人温柔尊重。\n' +
     '六、生命应用：适时自然地连结 321 理念——耶稣是我的榜样、圣经是我的准则、圣灵是我的引导；让耶稣作王、让耶稣得着一切的荣耀；创建属神的体系——帮助人从人的观点转向神的观点，谦卑回到受造者的本位。不要生硬堆砌口号。\n' +
-    '七、详细完整：一般回答约 600 到 1000 字，条理分明、内容扎实，不要只给结论。推荐结构：（1）一两句直接回答；（2）分点详细说明，交代关键事实、它是怎么被发现或怎么推论出来的，并标明确定程度；（3）一个贴切的生活比喻；（4）相关经文与属灵意义；（5）321 生命应用与一个具体可行的响应。用户要求简短时再精简。\n' +
+    '七、详细完整：不限字数，要把问题完整回答清楚，条理分明、内容扎实，不要只给结论，也不要中途省略。推荐结构：（1）一两句直接回答；（2）分点详细说明，交代关键事实、它是怎么被发现或怎么推论出来的，并标明确定程度；（3）一个贴切的生活比喻；（4）相关经文与属灵意义；（5）321 生命应用与一个具体可行的响应。用户要求简短时再精简。\n' +
     '八、界线：涉及医疗、法律或个人重大决定时，给予属灵的鼓励并推荐请教专业人士或牧者。\n' +
     '回答格式：可以用短小标题与条列；需要并行或对照时可以用 markdown 表格。请把最重要的一句用「> 」标成引言。不要用代码块或念不出来的装饰符号。若写到祷告，结尾一律用「奉主耶稣的名祷告，阿们」。';
   var SYS_EN = 'You are Xiaozhi, the study companion in the "321 Creation Speaks" app of Kingdom 321 Fellowship: an evangelical teacher who knows both science and theology and loves the Lord. Your mission is to help people know God\'s existence, eternal power and divine nature through the things he has made (Romans 1:20), and to turn knowledge into worship and a changed life.\n' +
@@ -1275,7 +1297,7 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
     '4. Make deep things simple: answer the question directly in one or two sentences first, then explain with an everyday picture, then bring in Scripture and its spiritual meaning. Explain any technical term in plain words.\n' +
     '5. Be fair and humble: on disputed questions (such as the age of the earth or the mechanisms of evolution) hold "unity on the core, charity on the rest", present the main evangelical views fairly, and treat doubters and questioners with gentleness and respect.\n' +
     '6. Apply it to life: connect naturally, when it fits, with the 321 vision: Jesus is my example, the Bible is my standard, the Holy Spirit is my guide; let Jesus reign, let Jesus receive all the glory; build God\'s kingdom system. Help people move from a human view to God\'s view and return humbly to their place as creatures. Do not stack slogans.\n' +
-    '7. Be thorough: usually 400 to 700 words, well organized and substantial; do not give only a conclusion. Suggested shape: (1) a direct answer in one or two sentences; (2) a detailed explanation in points, giving the key facts, how they were discovered or reasoned out, and how certain they are; (3) one fitting everyday picture; (4) related Scripture and its spiritual meaning; (5) a 321 life application with one concrete response. Be brief only when the user asks.\n' +
+    '7. Be complete: there is no length limit. Answer the question fully and in good order; do not stop at a conclusion or skip parts. Suggested shape: (1) a direct answer in one or two sentences; (2) a detailed explanation in points, giving the key facts, how they were discovered or reasoned out, and how certain they are; (3) one fitting everyday picture; (4) related Scripture and its spiritual meaning; (5) a 321 life application with one concrete response. Be brief only when the user asks.\n' +
     '8. Boundaries: on medical, legal or major personal decisions, give spiritual encouragement and suggest asking a professional or a pastor.\n' +
     'Format: short headings and lists are fine; use a markdown table when comparing things. Mark the single most important sentence as a "> " blockquote. No code blocks or decorative symbols that cannot be read aloud. If you write a prayer, close it with "in the name of the Lord Jesus we pray, Amen."';
   var QBANK_ZH = ['科学和信仰一定会冲突吗？', '这个单元的重点，可以用三句话讲给孩子听吗？', '这个单元的科学说法有多确定？哪些是推论？', '设计论证是在「证明」神存在吗？', '如果神创造了美好的世界，为什么还有苦难？', '基督徒应该怎么看地球的年龄？', '我可以怎样把今天学到的分享给不信的朋友？', '请根据这个单元帮我写一段祷告。'];
@@ -1337,29 +1359,64 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
     var sys = (IS_EN ? SYS_EN : SYS_ZH) + unitContext() + (chatSrc ? (IS_EN ? '\nThe reader highlighted: "' + chatSrc.t + '"' : '\n读者画线的句子：「' + chatSrc.t + '」') : '');
     chatSrc = null;
     var msgs = CHAT.filter(function (m) { return m.text !== THINKING; }).slice(-12).map(function (m) { return { role: m.role === 'user' ? 'user' : 'assistant', content: m.text }; });
-    var payload = JSON.stringify({ system: sys, messages: msgs });
-    var tries = 0, delays = [900, 1800];
+    /* 回答太长时，服务器会在中途截断；检测到截断就自动请小智接着写，最后合成完整的一篇 */
+    var MAXCONT = 6, conts = 0, acc = '', tries = 0, delays = [900, 1800];
+    var CONT_NOTE = IS_EN ? '\n\n*(continuing…)*' : '\n\n*（小智继续写……）*';
+    function show(t) { CHAT[CHAT.length - 1] = { role: 'ai', text: t }; paintChat(); }
     function finish(reply, why) {
       CHAT[CHAT.length - 1] = { role: 'ai', text: reply || ('小智暂时连不上，请确认网络后再试一次。' + (why ? '（' + why + '）' : '')) };
       chatBusy = false; saveChat(); paintChat();
     }
+    function cut(d, r) {
+      if (!r) { return false; }
+      if (d && typeof d === 'object') {
+        if (d.stop_reason === 'max_tokens' || d.finish_reason === 'length') { return true; }
+        if (d.choices && d.choices[0] && d.choices[0].finish_reason === 'length') { return true; }
+        if (d.stop_reason === 'end_turn' || (d.choices && d.choices[0] && d.choices[0].finish_reason === 'stop')) { return false; }
+      }
+      /* 服务器没有告诉我们停止原因时，看结尾：长篇回答却停在句子中间，就当作被截断 */
+      var tail = r.replace(/\s+$/, '');
+      return tail.length > 600 && !/[。！？」』）)\].!?"”’…*：:|—-]$/.test(tail);
+    }
+    function payloadFor() {
+      var m = msgs.slice();
+      if (acc) {
+        m.push({ role: 'assistant', content: acc.replace(/\s+$/, '') });
+        m.push({ role: 'user', content: IS_EN ? 'Your answer was cut off. Continue exactly where you stopped, without repeating anything already written and without any preface.' : '你的回答被截断了。请从刚才停下的地方直接接着写下去，不要重复已经写过的内容，也不要加任何开场白。' });
+      }
+      return JSON.stringify({ system: sys, messages: m, max_tokens: 8000 });
+    }
+    function join(a2, b2) {
+      if (!a2) { return b2; }
+      b2 = b2.replace(/^\s+/, '');
+      /* 若续写开头重复了上一段结尾的文字，去掉重复的部分 */
+      for (var n = Math.min(80, b2.length, a2.length); n >= 8; n--) {
+        if (a2.slice(-n) === b2.slice(0, n)) { return a2 + b2.slice(n); }
+      }
+      var glue = /[\u4e00-\u9fff]$/.test(a2) || /^[\u4e00-\u9fff]/.test(b2) ? '' : (/\n$/.test(a2) ? '' : ' ');
+      return a2 + glue + b2;
+    }
     function attempt() {
       var x = new XMLHttpRequest();
-      try { x.open('POST', API.chat, true); } catch (e) { finish('', 'blocked'); return; }
+      try { x.open('POST', API.chat, true); } catch (e) { finish(acc, 'blocked'); return; }
       x.setRequestHeader('Content-Type', 'application/json');
-      x.timeout = 60000;
+      x.timeout = 120000;
       x.onload = function () {
         if (x.status >= 200 && x.status < 300) {
           var d = null; try { d = JSON.parse(x.responseText); } catch (e) { d = x.responseText; }
           var r = extractReply(d);
-          finish(r, r ? '' : 'empty');
+          if (!r) { if (acc) { finish(acc); } else { finish('', 'empty'); } return; }
+          var more = cut(d, r) && conts < MAXCONT;
+          acc = join(acc, r);
+          if (more) { conts++; tries = 0; show(acc + CONT_NOTE); attempt(); }
+          else { finish(acc); }
         } else { retry('http ' + x.status); }
       };
       x.onerror = function () { retry('network'); };
       x.ontimeout = function () { retry('timeout'); };
-      try { x.send(payload); } catch (e) { retry('network'); }
+      try { x.send(payloadFor()); } catch (e) { retry('network'); }
     }
-    function retry(why) { if (tries >= delays.length) { finish('', why); return; } window.setTimeout(attempt, delays[tries++]); }
+    function retry(why) { if (tries >= delays.length) { finish(acc, why); return; } window.setTimeout(attempt, delays[tries++]); }
     attempt();
   }
   function afterChat() {

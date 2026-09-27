@@ -276,7 +276,7 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 <button data-go="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6"/></svg>Me</button>
 </div></nav>
 <script>
-var VER = '202609271218';
+var VER = '202609271258';
 var DATA = 'en-';
 var SPEECH = 'en-US';
 var REFS = {};
@@ -1079,9 +1079,8 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
     raSeg(item, k);
   }
   function buildQueue(root) {
-    var gs = groups(root), from = 0;
-    for (var i = 0; i < gs.length; i++) { if (gs[i].els[0].getBoundingClientRect().bottom > 60) { from = i; break; } }
-    gs = gs.slice(from);
+    /* 一律從這一步（或Sermon）的第一句Start唸，不從畫面M間Start */
+    var gs = groups(root);
     var items = [], it = null;
     function push() { if (it && it.text) { items.push(it); } it = { text: '', segs: [], lens: [], at: -1 }; }
     push();
@@ -1184,22 +1183,45 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
   function ttsSpeakText(text, id) {
     var clean = ttsPrep(mdSpeak(text));
     if (!clean) { return; }
-    var done = function () { if (sayId === id) { sayId = null; paintSay(); } };
-    ttsFetch(clean.slice(0, 900), function (url) {
+    /* 整篇回答切成幾段依序Read aloud，不再只唸前面一部分 */
+    var parts = [], cur = '';
+    clean.split(IS_EN ? /(?=[.!?]\s)|\n+/ : /(?=[。！?])|\n+/).forEach(function (p) {
+      if (!p) { return; }
+      if ((cur + p).length > (IS_EN ? 700 : 280) && cur) { parts.push(cur); cur = p; } else { cur += p; }
+    });
+    if (cur) { parts.push(cur); }
+    parts = parts.map(function (p) { return p.replace(/^[。！?.!?]\s*/, '').replace(/^\s+|\s+$/g, ''); }).filter(Boolean);
+    var urls = {}, native = false;
+    function done() { if (sayId === id) { sayId = null; paintSay(); } }
+    function fetchPart(i, cb) {
+      if (urls[i] !== undefined) { cb(); return; }
+      ttsFetch(parts[i], function (u) { urls[i] = u; cb(); });
+    }
+    function play(i) {
       if (sayId !== id) { return; }
-      if (url) {
+      if (i >= parts.length) { done(); return; }
+      fetchPart(i, function () {
+        if (sayId !== id) { return; }
+        if (i + 1 < parts.length) { fetchPart(i + 1, function () {}); }
+        var url = urls[i];
+        if (!url || native) { speakNative(i); return; }
         var a = ttsAudio(), old = a.src;
-        a.onended = done; a.onerror = done; a.ontimeupdate = null;
+        a.onended = function () { play(i + 1); }; a.onerror = function () { play(i + 1); }; a.ontimeupdate = null;
         a.src = url;
         if (old && old.indexOf('blob:') === 0) { try { URL.revokeObjectURL(old); } catch (e) {} }
-        try { var p = a.play(); if (p && p.then) { p.then(null, done); } } catch (e) { done(); }
-      } else if ('speechSynthesis' in window) {
-        var u = new window.SpeechSynthesisUtterance(clean);
-        u.lang = SPEECH; u.rate = 0.95 * (S.rate || 1); u.onend = done; u.onerror = done;
-        window.speechSynthesis.speak(u);
-        toast('Using this device’s built-in voice');
-      } else { toast('Read-aloud is not supported on this device'); done(); }
-    });
+        try { var p = a.play(); if (p && p.then) { p.then(null, function () { native = true; speakNative(i); }); } } catch (e) { native = true; speakNative(i); }
+      });
+    }
+    function speakNative(i) {
+      if (!('speechSynthesis' in window)) { toast('Read-aloud is not supported on this device'); done(); return; }
+      if (!native) { native = true; toast('Using this device’s built-in voice'); }
+      if (sayId !== id || i >= parts.length) { done(); return; }
+      var u = new window.SpeechSynthesisUtterance(parts[i]);
+      u.lang = SPEECH; u.rate = 0.95 * (S.rate || 1);
+      u.onend = function () { speakNative(i + 1); }; u.onerror = function () { speakNative(i + 1); };
+      window.speechSynthesis.speak(u);
+    }
+    play(0);
   }
 
   /* ---------- Xiaozhi：markdown 排版 ---------- */
@@ -1264,7 +1286,7 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
     '四, 深入淺出：先用一兩句話直接回答問題，再用生活M的Picture it把道理講清楚，然後帶出相關經文與屬靈意義。必要的專有名詞要用白話解釋。\n' +
     '五, 公允謙卑：遇到爭議議題（例如地球年齡, 演化機制），採取“核心合一, 周邊寬容”，公平介紹福音派內部的主要觀點，不貶低任何人；對懷疑與提問的人溫柔尊重。\n' +
     '六, 生命應用：適時自然地連結 321 理念——耶穌是Me榜樣, 聖經是Me準則, 聖靈是Me引導；讓耶穌作王, 讓耶穌得著一切的榮耀；建立屬神的體系——幫助人從人的觀點轉向神的觀點，謙卑Back to 受造者的本位。不要生硬堆砌口號。\n' +
-    '七, 詳細完整：一般回答約 600 到 1000 ，條理分明, 內容紮實，不要只給結論。建議架構：（1）一兩句直接回答；（2）分點詳細說明，交代關鍵事實, 它是怎麼被發現或怎麼推論出來的，並標明確定程度；（3）一個貼切的生活Picture it；（4）相關經文與屬靈意義；（5）321 生命應用與一個具體可行的回應。使用者要求簡短時再精簡。\n' +
+    '七, 詳細完整：不限數，要把問題完整回答清楚，條理分明, 內容紮實，不要只給結論，也不要M途省略。建議架構：（1）一兩句直接回答；（2）分點詳細說明，交代關鍵事實, 它是怎麼被發現或怎麼推論出來的，並標明確定程度；（3）一個貼切的生活Picture it；（4）相關經文與屬靈意義；（5）321 生命應用與一個具體可行的回應。使用者要求簡短時再精簡。\n' +
     '八, 界線：涉及醫療, 法律或個人重L決定時，給予屬靈的鼓勵並建議請教專業人士或牧者。\n' +
     '回答格式：可以用短S標題與條列；需要並列或對照時可以用 markdown 表格。請把最重要的一句用“> ”標成引言。不要用程式碼區塊或唸不出來的裝飾符號。若寫到禱告，結尾一律用“奉主耶穌的名禱告，阿們”。';
   var SYS_EN = 'You are Xiaozhi, the study companion in the "321 Creation Speaks" app of Kingdom 321 Fellowship: an evangelical teacher who knows both science and theology and loves the Lord. Your mission is to help people know God\'s existence, eternal power and divine nature through the things he has made (Romans 1:20), and to turn knowledge into worship and a changed life.\n' +
@@ -1275,7 +1297,7 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
     '4. Make deep things simple: answer the question directly in one or two sentences first, then explain with an everyday picture, then bring in Scripture and its spiritual meaning. Explain any technical term in plain words.\n' +
     '5. Be fair and humble: on disputed questions (such as the age of the earth or the mechanisms of evolution) hold "unity on the core, charity on the rest", present the main evangelical views fairly, and treat doubters and questioners with gentleness and respect.\n' +
     '6. Apply it to life: connect naturally, when it fits, with the 321 vision: Jesus is my example, the Bible is my standard, the Holy Spirit is my guide; let Jesus reign, let Jesus receive all the glory; build God\'s kingdom system. Help people move from a human view to God\'s view and return humbly to their place as creatures. Do not stack slogans.\n' +
-    '7. Be thorough: usually 400 to 700 words, well organized and substantial; do not give only a conclusion. Suggested shape: (1) a direct answer in one or two sentences; (2) a detailed explanation in points, giving the key facts, how they were discovered or reasoned out, and how certain they are; (3) one fitting everyday picture; (4) related Scripture and its spiritual meaning; (5) a 321 life application with one concrete response. Be brief only when the user asks.\n' +
+    '7. Be complete: there is no length limit. Answer the question fully and in good order; do not stop at a conclusion or skip parts. Suggested shape: (1) a direct answer in one or two sentences; (2) a detailed explanation in points, giving the key facts, how they were discovered or reasoned out, and how certain they are; (3) one fitting everyday picture; (4) related Scripture and its spiritual meaning; (5) a 321 life application with one concrete response. Be brief only when the user asks.\n' +
     '8. Boundaries: on medical, legal or major personal decisions, give spiritual encouragement and suggest asking a professional or a pastor.\n' +
     'Format: short headings and lists are fine; use a markdown table when comparing things. Mark the single most important sentence as a "> " blockquote. No code blocks or decorative symbols that cannot be read aloud. If you write a prayer, close it with "in the name of the Lord Jesus we pray, Amen."';
   var QBANK_ZH = ['科學和信仰一定會衝突嗎?', '這個units的重點，可以用三句話講給孩子聽嗎?', '這個units的科學說法有多確定?哪些是推論?', '設計論證是在“證明”神存在嗎?', '如果神創造了美好的世界，為什麼還有苦難?', '基督徒應該怎麼看地球的年齡?', '我可以怎樣把今天學到的分享給不信的朋友?', '請根據這個units幫我寫一段禱告。'];
@@ -1337,29 +1359,64 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
     var sys = (IS_EN ? SYS_EN : SYS_ZH) + unitContext() + (chatSrc ? (IS_EN ? '\nThe reader highlighted: "' + chatSrc.t + '"' : '\n讀者Highlight的句子：“' + chatSrc.t + '”') : '');
     chatSrc = null;
     var msgs = CHAT.filter(function (m) { return m.text !== THINKING; }).slice(-12).map(function (m) { return { role: m.role === 'user' ? 'user' : 'assistant', content: m.text }; });
-    var payload = JSON.stringify({ system: sys, messages: msgs });
-    var tries = 0, delays = [900, 1800];
+    /* 回答太長時，伺服器會在M途截斷；偵測到截斷就自動請Xiaozhi接著寫，最後合成完整的一篇 */
+    var MAXCONT = 6, conts = 0, acc = '', tries = 0, delays = [900, 1800];
+    var CONT_NOTE = IS_EN ? '\n\n*(continuing…)*' : '\n\n*（XiaozhiContinue寫……）*';
+    function show(t) { CHAT[CHAT.length - 1] = { role: 'ai', text: t }; paintChat(); }
     function finish(reply, why) {
       CHAT[CHAT.length - 1] = { role: 'ai', text: reply || ('Xiaozhi cannot be reached right now. Check your connection and try again.' + (why ? '（' + why + '）' : '')) };
       chatBusy = false; saveChat(); paintChat();
     }
+    function cut(d, r) {
+      if (!r) { return false; }
+      if (d && typeof d === 'object') {
+        if (d.stop_reason === 'max_tokens' || d.finish_reason === 'length') { return true; }
+        if (d.choices && d.choices[0] && d.choices[0].finish_reason === 'length') { return true; }
+        if (d.stop_reason === 'end_turn' || (d.choices && d.choices[0] && d.choices[0].finish_reason === 'stop')) { return false; }
+      }
+      /* 伺服器沒有告訴我們停止原因時，看結尾：長篇回答卻停在句子M間，就當作被截斷 */
+      var tail = r.replace(/\s+$/, '');
+      return tail.length > 600 && !/[。！?”』）)\].!?"”’…*：:|—-]$/.test(tail);
+    }
+    function payloadFor() {
+      var m = msgs.slice();
+      if (acc) {
+        m.push({ role: 'assistant', content: acc.replace(/\s+$/, '') });
+        m.push({ role: 'user', content: IS_EN ? 'Your answer was cut off. Continue exactly where you stopped, without repeating anything already written and without any preface.' : '你的回答被截斷了。請從剛才停下的地方直接接著寫下去，不要重複已經寫過的內容，也不要加任何開場白。' });
+      }
+      return JSON.stringify({ system: sys, messages: m, max_tokens: 8000 });
+    }
+    function join(a2, b2) {
+      if (!a2) { return b2; }
+      b2 = b2.replace(/^\s+/, '');
+      /* 若續寫開頭重複了上一段結尾的文，去掉重複的部分 */
+      for (var n = Math.min(80, b2.length, a2.length); n >= 8; n--) {
+        if (a2.slice(-n) === b2.slice(0, n)) { return a2 + b2.slice(n); }
+      }
+      var glue = /[\u4e00-\u9fff]$/.test(a2) || /^[\u4e00-\u9fff]/.test(b2) ? '' : (/\n$/.test(a2) ? '' : ' ');
+      return a2 + glue + b2;
+    }
     function attempt() {
       var x = new XMLHttpRequest();
-      try { x.open('POST', API.chat, true); } catch (e) { finish('', 'blocked'); return; }
+      try { x.open('POST', API.chat, true); } catch (e) { finish(acc, 'blocked'); return; }
       x.setRequestHeader('Content-Type', 'application/json');
-      x.timeout = 60000;
+      x.timeout = 120000;
       x.onload = function () {
         if (x.status >= 200 && x.status < 300) {
           var d = null; try { d = JSON.parse(x.responseText); } catch (e) { d = x.responseText; }
           var r = extractReply(d);
-          finish(r, r ? '' : 'empty');
+          if (!r) { if (acc) { finish(acc); } else { finish('', 'empty'); } return; }
+          var more = cut(d, r) && conts < MAXCONT;
+          acc = join(acc, r);
+          if (more) { conts++; tries = 0; show(acc + CONT_NOTE); attempt(); }
+          else { finish(acc); }
         } else { retry('http ' + x.status); }
       };
       x.onerror = function () { retry('network'); };
       x.ontimeout = function () { retry('timeout'); };
-      try { x.send(payload); } catch (e) { retry('network'); }
+      try { x.send(payloadFor()); } catch (e) { retry('network'); }
     }
-    function retry(why) { if (tries >= delays.length) { finish('', why); return; } window.setTimeout(attempt, delays[tries++]); }
+    function retry(why) { if (tries >= delays.length) { finish(acc, why); return; } window.setTimeout(attempt, delays[tries++]); }
     attempt();
   }
   function afterChat() {
