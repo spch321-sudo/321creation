@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F1628">
+<title>萬象見神</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#F2F3F7; --surface:#FFFFFF; --sunk:#E8EAF1; --ink:#1A2233; --muted:#586177; --line:#D5D9E3;
+  --accent:#2C5A9C; --accent-soft:rgba(44,90,156,.10); --red:#B94A30; --red-soft:rgba(185,74,48,.10);
+  --good:#2E7D4F; --good-soft:rgba(46,125,79,.12); --warn:#9A6B00; --warn-soft:rgba(154,107,0,.13); --crit:#B4561C; --crit-soft:rgba(180,86,28,.13);
+  --night1:#0F1628; --night2:#1C2A4A; --star:#F4E9C8;
+  --fs:17px;
+  --serif:"Noto Serif TC","PMingLiU","Songti TC",serif;
+  --sans:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0D1220; --surface:#151C2D; --sunk:#1C2438; --ink:#E6E9F1; --muted:#A1A9BC; --line:#2B3550;
+    --accent:#8DB1EE; --accent-soft:rgba(141,177,238,.14); --red:#EE8A6C; --red-soft:rgba(238,138,108,.14);
+    --good:#74C795; --good-soft:rgba(116,199,149,.14); --warn:#E1B652; --warn-soft:rgba(225,182,82,.14); --crit:#EE9A62; --crit-soft:rgba(238,154,98,.15);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0D1220; --surface:#151C2D; --sunk:#1C2438; --ink:#E6E9F1; --muted:#A1A9BC; --line:#2B3550;
+  --accent:#8DB1EE; --accent-soft:rgba(141,177,238,.14); --red:#EE8A6C; --red-soft:rgba(238,138,108,.14);
+  --good:#74C795; --good-soft:rgba(116,199,149,.14); --warn:#E1B652; --warn-soft:rgba(225,182,82,.14); --crit:#EE9A62; --crit-soft:rgba(238,154,98,.15);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:var(--fs);line-height:1.75;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--serif);text-wrap:balance;line-height:1.35;margin:0}
+.wrap{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:0 104px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .in{max-width:720px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-family:var(--serif);font-weight:700;font-size:1.1em;letter-spacing:.08em}
+.brand small{font-family:var(--sans);font-weight:400;font-size:.62em;color:var(--muted);letter-spacing:.04em;margin-left:8px}
+.top .sp{flex:1}
+.iconbtn{background:none;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.8em;color:var(--muted)}
+.proto{font-size:.72em;color:var(--warn);background:var(--warn-soft);border-radius:4px;padding:2px 8px;letter-spacing:.04em}
+
+/* hero */
+.hero{margin-block:20px 8px;padding:28px 22px 22px;border-radius:14px;color:#EEF1F8;background:radial-gradient(120% 90% at 85% 0%,var(--night2) 0%,var(--night1) 70%);position:relative;overflow:hidden}
+.hero h1{font-size:2.1em;letter-spacing:.12em;color:#fff}
+.hero .v{font-family:var(--serif);font-size:1em;line-height:1.9;margin:14px 0 4px;color:#E3E7F2;max-width:32em}
+.hero cite{font-style:normal;font-size:.8em;color:#AAB4CC}
+.spec{margin-top:18px;height:14px;border-radius:3px;position:relative;background:linear-gradient(90deg,#5b2ca0,#2f5fe0 16%,#22b3d8 30%,#3fcf6a 45%,#e8e04a 60%,#f39a2d 75%,#d63a2a 92%)}
+.spec i{position:absolute;top:0;bottom:0;width:2px;background:rgba(10,12,20,.85)}
+.speclbl{display:flex;justify-content:space-between;font-size:.7em;color:#AAB4CC;margin-top:6px;letter-spacing:.06em}
+.stars{position:absolute;inset:0;pointer-events:none;opacity:.8}
+
+.sec{margin-top:30px}
+.sec h2{font-size:1.2em;margin-bottom:12px;display:flex;align-items:baseline;gap:10px}
+.sec h2 span{font-family:var(--sans);font-weight:400;font-size:.68em;color:var(--muted)}
+.halls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:600px){.halls{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.hall{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:4px;min-height:112px}
+.hall b{font-family:var(--serif);font-size:1.05em}
+.hall .d{font-size:.78em;color:var(--muted);line-height:1.5}
+.hall .st{margin-top:auto;font-size:.72em;letter-spacing:.04em;color:var(--muted)}
+.hall.open{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.hall.open .st{color:var(--accent);font-weight:700}
+.hall[disabled]{opacity:.62;cursor:default}
+.qlist{display:flex;flex-direction:column;gap:8px}
+.q{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;text-align:left;display:flex;align-items:center;gap:10px}
+.q .m{font-family:var(--serif);font-size:1.3em;color:var(--red);line-height:1}
+.q .t{flex:1}
+.q .s{font-size:.72em;color:var(--muted)}
+
+/* unit */
+.uhead{margin-top:18px}
+.eyebrow{font-size:.74em;letter-spacing:.14em;color:var(--muted)}
+.uhead h1{font-size:1.9em;margin-top:4px}
+.uhead .sub{color:var(--muted);margin-top:4px;font-size:.92em}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tag{font-size:.72em;border-radius:999px;padding:2px 10px;background:var(--accent-soft);color:var(--accent);font-weight:500}
+.depth{display:flex;margin-top:16px;background:var(--sunk);border-radius:10px;padding:3px}
+.depth button{flex:1;background:none;border:0;border-radius:8px;padding:6px 4px;font-size:.84em;color:var(--muted)}
+.depth button[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.depth button small{display:block;font-size:.76em;font-weight:400;color:var(--muted)}
+.steps{display:flex;margin-top:16px;border-bottom:1px solid var(--line);overflow-x:auto}
+.steps button{flex:1 0 auto;background:none;border:0;border-bottom:2px solid transparent;padding:8px 10px;font-size:.84em;color:var(--muted);white-space:nowrap}
+.steps button .n{font-family:var(--mono);font-size:.8em;margin-right:4px}
+.steps button[aria-current="step"]{color:var(--ink);border-bottom-color:var(--red);font-weight:700}
+.steps button.done{color:var(--accent)}
+.body{margin-top:18px;display:flex;flex-direction:column;gap:16px}
+.body p{margin:0;max-width:36em}
+.body h3{font-size:1.1em;margin-top:6px}
+.body ul{margin:0;padding-left:1.3em}
+.body li{margin:4px 0}
+.dtag{font-size:.66em;letter-spacing:.08em;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-right:6px;vertical-align:2px}
+.verse{margin:0;padding:14px 18px;border-left:3px solid var(--red);background:var(--red-soft);border-radius:0 8px 8px 0}
+.verse p{font-family:var(--serif);line-height:1.95}
+.verse cite{display:block;font-style:normal;font-size:.8em;color:var(--muted);margin-top:4px}
+.analogy{padding:14px 16px;background:var(--sunk);border-radius:10px}
+.lbl{display:inline-block;font-size:.7em;letter-spacing:.12em;color:var(--muted);margin-bottom:4px}
+.claim{padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;gap:6px}
+.chip{align-self:flex-start;font-size:.72em;font-weight:700;border-radius:4px;padding:1px 8px;letter-spacing:.04em}
+.chip.c1{color:var(--good);background:var(--good-soft)}
+.chip.c2{color:var(--warn);background:var(--warn-soft)}
+.chip.c3{color:var(--crit);background:var(--crit-soft)}
+.chip.c4{color:var(--accent);background:var(--accent-soft)}
+details.refs{font-size:.8em;color:var(--muted)}
+details.refs summary{cursor:pointer;color:var(--accent);width:max-content}
+details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.views{display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:600px){.views{grid-template-columns:1fr 1fr}}
+.view{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--surface)}
+.view b{font-family:var(--serif)}
+.view p{font-size:.9em}
+.sim{background:var(--night1);border-radius:12px;padding:12px;color:#E3E7F2}
+.sim canvas{width:100%;aspect-ratio:16/10;display:block;border-radius:8px;max-width:100%}
+.simctl{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.simctl input{flex:1;min-width:160px;accent-color:#EE8A6C}
+.simctl .num{font-size:.85em;color:#F4E9C8;min-width:9.5em}
+.simbtn{background:#EE8A6C;color:#1A1208;border:0;border-radius:999px;padding:5px 14px;font-size:.85em;font-weight:700}
+.simnote{font-size:.74em;color:#AAB4CC;margin-top:6px}
+.pray{padding:16px;border:1px dashed var(--line);border-radius:10px}
+.pray p{font-family:var(--serif)}
+.quiz{display:flex;flex-direction:column;gap:14px}
+.qz{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--surface)}
+.qz .qq{font-weight:700;margin-bottom:8px}
+.qz button{display:block;width:100%;text-align:left;background:var(--sunk);border:1px solid transparent;border-radius:8px;padding:8px 12px;margin-top:6px;font-size:.92em}
+.qz button.ok{border-color:var(--good);background:var(--good-soft)}
+.qz button.no{border-color:var(--crit);background:var(--crit-soft)}
+.qz .fb{font-size:.85em;color:var(--muted);margin-top:8px}
+.sharebox img{width:100%;border-radius:10px;border:1px solid var(--line);display:block}
+.sharebox p{font-size:.82em;color:var(--muted);margin-top:6px}
+.nav{display:flex;gap:10px;margin-top:26px}
+.nav button{flex:1;border-radius:10px;padding:12px;border:1px solid var(--line);background:var(--surface);font-weight:500}
+.nav button.pri{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:700}
+.nav button[disabled]{opacity:.4;cursor:default}
+.readbtn{display:inline-flex;align-items:center;gap:6px}
+
+/* today & me */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.card .date{font-family:var(--mono);font-size:.78em;color:var(--muted)}
+.attrs{display:flex;flex-direction:column;gap:10px}
+.attr{display:grid;grid-template-columns:4.2em 1fr 2.4em;align-items:center;gap:10px;font-size:.92em}
+.bar{height:10px;border-radius:5px;background:var(--sunk);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:5px}
+.attr .num{text-align:right;color:var(--muted);font-size:.85em}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:6px}
+.seg button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:4px 12px;font-size:.85em}
+.seg button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:700}
+.muted{color:var(--muted);font-size:.85em}
+.foot{margin-top:36px;font-size:.74em;color:var(--muted);line-height:1.7;border-top:1px solid var(--line);padding-top:12px}
+
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabbar .in{max-width:720px;margin:0 auto;display:flex}
+.tabbar button{flex:1;background:none;border:0;padding:10px 4px 12px;font-size:.8em;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
+.tabbar button svg{width:22px;height:22px}
+.tabbar button[aria-current="page"]{color:var(--accent);font-weight:700}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="in"><span class="brand">萬象見神<small>Creation Speaks</small></span><span class="sp"></span><span class="proto">原型</span><button class="iconbtn" id="themeBtn" aria-label="切換深淺色">深／淺</button></div></header>
+<main class="wrap" id="main"></main>
+<nav class="tabbar" aria-label="主選單"><div class="in">
+<button data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(-20 12 12)"/></svg>展館</button>
+<button data-go="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>今日</button>
+<button data-go="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6"/></svg>我的</button>
+</div></nav>
+<script>
+var REFS = {
+  slipher: 'Slipher, V. M. (1917). Nebulae. <i>Proceedings of the American Philosophical Society</i>, 56, 403–409.',
+  einstein: 'Einstein, A. (1917). Kosmologische Betrachtungen zur allgemeinen Relativitätstheorie. <i>Sitzungsberichte der Preussischen Akademie der Wissenschaften</i>, 142–152.',
+  lemaitre: 'Lemaître, G. (1927). Un univers homogène de masse constante et de rayon croissant. <i>Annales de la Société Scientifique de Bruxelles</i>, A47, 49–59.',
+  hubble: 'Hubble, E. (1929). A relation between distance and radial velocity among extra-galactic nebulae. <i>PNAS</i>, 15(3), 168–173.',
+  penzias: 'Penzias, A. A., &amp; Wilson, R. W. (1965). A measurement of excess antenna temperature at 4080 Mc/s. <i>The Astrophysical Journal</i>, 142, 419–421.',
+  mather: 'Mather, J. C., et al. (1994). Measurement of the cosmic microwave background spectrum by the COBE FIRAS instrument. <i>The Astrophysical Journal</i>, 420, 439–444.',
+  fixsen: 'Fixsen, D. J. (2009). The temperature of the cosmic microwave background. <i>The Astrophysical Journal</i>, 707, 916–920.',
+  planck: 'Planck Collaboration (2020). Planck 2018 results. VI. Cosmological parameters. <i>Astronomy &amp; Astrophysics</i>, 641, A6.',
+  riess: 'Riess, A. G., et al. (2022). A comprehensive measurement of the local value of the Hubble constant. <i>The Astrophysical Journal Letters</i>, 934, L7.',
+  fields: 'Fields, B. D., Olive, K. A., Yeh, T.-H., &amp; Young, C. (2020). Big-Bang nucleosynthesis after Planck. <i>Journal of Cosmology and Astroparticle Physics</i>, 2020(03), 010.',
+  bgv: 'Borde, A., Guth, A. H., &amp; Vilenkin, A. (2003). Inflationary spacetimes are incomplete in past directions. <i>Physical Review Letters</i>, 90, 151301.',
+  craig: 'Craig, W. L., &amp; Sinclair, J. D. (2009). The kalam cosmological argument. In W. L. Craig &amp; J. P. Moreland (Eds.), <i>The Blackwell Companion to Natural Theology</i> (pp. 101–201). Wiley-Blackwell.',
+  jastrow: 'Jastrow, R. (1978). <i>God and the Astronomers</i>. New York: W. W. Norton.'
+};
+
+var CERT = { 1: '已確立', 2: '主流，仍有討論', 3: '研究中或有爭議', 4: '哲學推論' };
+
+var HALLS = [
+  { k: 'cosmos', n: '宇宙館', d: '宇宙的開端與微調', open: true },
+  { k: 'earth', n: '地球館', d: '罕見的適居地球' },
+  { k: 'life', n: '生命館', d: 'DNA 與細胞機器' },
+  { k: 'body', n: '人體館', d: '眼、腦、胚胎的奇妙' },
+  { k: 'mind', n: '心智館', d: '意識、理性與良心' },
+  { k: 'math', n: '數學館', d: '宇宙為何可以理解' },
+  { k: 'beauty', n: '美善館', d: '美、音樂與色彩' },
+  { k: 'history', n: '科學史館', d: '科學先驅的信仰' }
+];
+
+var QUESTIONS = [
+  { q: '宇宙是從哪裡來的？', s: '宇宙館・宇宙有開端', open: true },
+  { q: '為什麼有萬物，而不是什麼都沒有？', s: '宇宙館・宇宙有開端', open: true },
+  { q: '宇宙為什麼剛好適合生命？', s: '宇宙館・即將開放' },
+  { q: '科學和信仰一定互相衝突嗎？', s: '科學史館・即將開放' }
+];
+
+var ATTRS = ['永能', '永恆', '智慧', '信實', '良善', '美善', '公義'];
+
+var UNIT = {
+  id: 'cosmos-beginning',
+  hall: '宇宙館',
+  no: '第 1 單元',
+  title: '宇宙有開端',
+  sub: '二十世紀天文學最震撼的發現，印證了聖經的第一句話。',
+  attrs: ['永能', '永恆'],
+  steps: [
+    { k: '驚嘆', blocks: [
+      { d: 1, t: 'p', h: '如果把宇宙的歷史拍成一部影片，然後按下「倒帶」，你會看見什麼？' },
+      { d: 1, t: 'p', h: '所有的星系都在往回跑，彼此越靠越近，最後擠進一個又熱又密的起點。在那一刻之前，我們的望遠鏡什麼也看不見。' },
+      { d: 1, t: 'sim' },
+      { d: 1, t: 'verse', h: '起初，神創造天地。', ref: '創世記 1:1' },
+      { d: 2, t: 'p', h: '三千多年前，摩西寫下聖經的第一句話；二十世紀的天文學家，花了幾十年、用盡最好的儀器，才走到同一個結論：宇宙不是一直都在，宇宙有開端。' }
+    ]},
+    { k: '發現', blocks: [
+      { d: 1, t: 'h', h: '星系都在彼此遠離' },
+      { d: 1, t: 'p', h: '天文學家發現，遙遠星系的光都往紅色那一端偏移，稱為「紅移」。紅移表示星系正在遠離我們，而且越遠的星系，遠離得越快。' },
+      { d: 1, t: 'analogy', h: '想像一個還在發酵的葡萄乾麵包。麵團脹大時，每一顆葡萄乾都會看見其他葡萄乾離自己而去，離得越遠的，退得越快。宇宙就像這個麵團，不是星系在空間裡飛散，而是空間本身在膨脹。' },
+      { d: 2, t: 'p', h: '1912 年起，美國天文學家斯里弗（Vesto Slipher）量到多數螺旋星雲的光譜都有紅移。1927 年，比利時的物理學家勒梅特（Georges Lemaître）從愛因斯坦的方程式推出宇宙正在膨脹；他同時也是一位天主教神父。1929 年，哈伯（Edwin Hubble）用觀測數據證實：星系的距離與遠離速度成正比。2018 年，國際天文學聯合會建議將這個定律改稱為「哈伯－勒梅特定律」。', refs: ['slipher', 'lemaitre', 'hubble'] },
+      { d: 1, t: 'h', h: '起初留下的餘暉' },
+      { d: 1, t: 'p', h: '如果宇宙起初又熱又密，那麼應該有一道「餘溫」留到今天。1965 年，貝爾實驗室的彭齊亞斯和威爾遜在調校天線時，意外收到一種從四面八方均勻而來的微波雜訊。它正是那道餘暉，稱為「宇宙微波背景輻射」。兩人因此獲得 1978 年諾貝爾物理學獎。' },
+      { d: 1, t: 'analogy', h: '就像大火熄滅之後走進屋裡，雖然看不見火焰，牆壁仍然微微發燙。今天這道餘暉已經冷卻到大約攝氏負 270 度，卻仍然均勻地充滿整個天空。' },
+      { d: 2, t: 'p', h: '1990 年代，COBE 衛星測量出這道輻射的光譜，與理論預測的「黑體」曲線幾乎完全吻合，溫度約 <span class="num">2.725 K</span>。另一個獨立的證據是宇宙中最輕的元素：按質量計算，普通物質大約四分之三是氫、四分之一是氦，正是「熾熱開端」模型所預測的比例。', refs: ['mather', 'fixsen', 'fields'] },
+      { d: 3, t: 'h', h: '科學家一開始並不歡迎這個發現' },
+      { d: 3, t: 'p', h: '1917 年，愛因斯坦為了讓宇宙保持靜止不變，在方程式裡加上一個「宇宙常數」。英國天文學家霍伊爾（Fred Hoyle）提出「穩恆態宇宙論」，主張宇宙沒有開端，並在 1949 年的英國廣播電台節目中，略帶嘲諷地把對手的理論稱為「大爆炸」（Big Bang），這個名字從此沿用下來。直到背景輻射被發現，穩恆態理論才失去大多數學者的支持。', refs: ['einstein'] },
+      { d: 3, t: 'p', h: '美國航太總署戈達德太空研究所的創所所長賈斯特羅（Robert Jastrow）自稱是不可知論者，他在《神與天文學家》一書中寫道：科學家辛苦攀上無知的高山，正要登上最高峰時，卻發現一群神學家已經在那裡坐了好幾個世紀。', refs: ['jastrow'] }
+    ]},
+    { k: '查證', blocks: [
+      { d: 1, t: 'p', h: '我們把每一個說法分開來看，標明它有多確定。科學事實和哲學推論要分清楚，這是對真理的尊重。' },
+      { d: 1, t: 'claim', c: 1, h: '宇宙正在膨脹：遙遠星系普遍有紅移，而且距離越遠、紅移越大。', refs: ['hubble', 'planck'] },
+      { d: 1, t: 'claim', c: 1, h: '宇宙微波背景輻射存在，溫度約 <span class="num">2.725 K</span>，光譜近乎完美的黑體。', refs: ['penzias', 'mather', 'fixsen'] },
+      { d: 1, t: 'claim', c: 1, h: '可觀測宇宙的歷史，可以追溯到一個極熱、極密的早期狀態。', refs: ['planck', 'fields'] },
+      { d: 2, t: 'claim', c: 2, h: '依標準宇宙模型，宇宙年齡約 <span class="num">137.87 ± 0.20</span> 億年。不同方法量出的膨脹速率（哈伯常數）目前還有差距，稱為「哈伯張力」，學界仍在研究。', refs: ['planck', 'riess'] },
+      { d: 3, t: 'claim', c: 3, h: '時間與空間本身有一個絕對的起點。博德、古斯與維蘭金在 2003 年證明：平均而言一直在膨脹的宇宙，不可能無限地往過去延伸。但在量子重力的尺度上會發生什麼，目前仍沒有定論，也有學者提出其他模型。', refs: ['bgv'] },
+      { d: 2, t: 'claim', c: 4, h: '凡開始存在的，都有一個起因；宇宙開始存在；所以宇宙有一個起因。這是哲學上的「卡拉姆宇宙論論證」，它的第二個前提得到上述科學發現的支持。', refs: ['craig'] },
+      { d: 2, t: 'h', h: '觀點對話室' },
+      { d: 2, t: 'p', h: '福音派基督徒對「宇宙多老」有不同的看法，但對「宇宙有開端、是神所創造」完全一致。以下是兩種主要觀點的概述，將來會由各派學者親自審訂文字。' },
+      { d: 2, t: 'views', items: [
+        { n: '古老地球創造論', h: '接受天文學測得的宇宙年齡，認為創世記第一章的「日」可以理解為長時期，或是一種文學架構。' },
+        { n: '年輕地球創造論', h: '依創世記的家譜與「日」的字面意義，認為宇宙年齡以千年計，並對天文年齡的測量前提提出不同解讀。' }
+      ]},
+      { d: 3, t: 'p', h: '我們在核心上合一，在周邊上寬容。不同觀點的弟兄姊妹都能一起在這裡驚嘆：宇宙不是自己來的。' }
+    ]},
+    { k: '啟示', blocks: [
+      { d: 1, t: 'verse', h: '自從造天地以來，神的永能和神性是明明可知的，雖是眼不能見，但藉著所造之物就可以曉得，叫人無可推諉。', ref: '羅馬書 1:20' },
+      { d: 1, t: 'h', h: '祂的永能：從無到有' },
+      { d: 1, t: 'p', h: '人所做的一切，都是用已經存在的材料重新組合。只有神能從「無」中造出「有」。一個開始存在的宇宙，指向一位在宇宙之外、有無比大能的起因。' },
+      { d: 1, t: 'verse', h: '諸天藉耶和華的命而造；萬象藉他口中的氣而成。因為他說有，就有；命立，就立。', ref: '詩篇 33:6、9' },
+      { d: 2, t: 'verse', h: '我們因著信，就知道諸世界是藉神話造成的；這樣，所看見的，並不是從顯然之物造出來的。', ref: '希伯來書 11:3' },
+      { d: 1, t: 'h', h: '祂的神性：在時間之先' },
+      { d: 1, t: 'p', h: '宇宙的起因不能是宇宙的一部分。這一位必須超越時間、空間與物質，並且憑自己的意志選擇創造。聖經告訴我們祂是誰：' },
+      { d: 1, t: 'verse', h: '諸山未曾生出，地與世界你未曾造成，從亙古到永遠，你是神。', ref: '詩篇 90:2' },
+      { d: 2, t: 'verse', h: '天地都要滅沒，你卻要長存；天地都要如外衣漸漸舊了。你要將天地如裡衣更換，天地就改變了。惟有你永不改變；你的年數沒有窮盡。', ref: '詩篇 102:26–27' },
+      { d: 2, t: 'p', h: '熱力學第二定律說，宇宙中可用的能量不斷減少，就像一件漸漸舊了的衣服。三千年前的詩人已經寫下這幅圖畫，並且把它襯托在一位「永不改變」的神面前。' },
+      { d: 1, t: 'h', h: '創造的主，就是耶穌基督' },
+      { d: 1, t: 'verse', h: '因為萬有都是靠他造的，無論是天上的，地上的；能看見的，不能看見的……一概都是藉著他造的，又是為他造的。他在萬有之先；萬有也靠他而立。', ref: '歌羅西書 1:16–17' },
+      { d: 1, t: 'p', h: '那位在宇宙開端之前就已存在的主，為了我們進入時間，成為人，死在十字架上，又從死裡復活。造物主不只是宇宙的起因，更是願意親近我們的救主。' }
+    ]},
+    { k: '敬拜', blocks: [
+      { d: 1, t: 'p', h: '請放下手機兩分鐘。今晚若能看見天空，就走到窗邊抬頭看。用心，不只是用腦。' },
+      { d: 1, t: 'verse', h: '我觀看你指頭所造的天，並你所陳設的月亮星宿，便說：人算什麼，你竟顧念他？世人算什麼，你竟眷顧他？', ref: '詩篇 8:3–4' },
+      { d: 1, t: 'pray', h: '默想：那位創造千億星系的主，也認識我的名字。在祂面前，我是誰？' },
+      { d: 1, t: 'pray', h: '禱告：主啊，你是萬有的起頭。我承認我常常想作自己的主。今天我回到受造者的本位，讓你作神，讓你在我心裡作王。一切榮耀都歸給你。奉耶穌的名，阿們。' },
+      { d: 2, t: 'p', h: '可以接著唱一首讚美造物主的詩歌，例如〈祢真偉大〉（How Great Thou Art）。' }
+    ]},
+    { k: '活出', blocks: [
+      { d: 1, t: 'h', h: '321 生命應用' },
+      { d: 1, t: 'list', items: [
+        '<b>改變觀點</b>：從地上的觀點改變成天上的觀點。我的難處很大，但創造宇宙的神更大。',
+        '<b>回到本位</b>：驕傲是離開本位、想代替神；在星空下，我學習謙卑，讓人作人，讓神作神。',
+        '<b>讓耶穌作王</b>：萬有靠祂而立，我的生活也交給祂掌管。'
+      ]},
+      { d: 1, t: 'p', h: '<b>本週行動</b>：找一個晚上抬頭看天五分鐘，然後把下面的分享卡傳給一位朋友，問他：「你覺得宇宙是從哪裡來的？」' },
+      { d: 1, t: 'share' },
+      { d: 1, t: 'h', h: '小測驗' },
+      { d: 1, t: 'quiz' }
+    ]}
+  ]
+};
+
+var QUIZ = [
+  { q: '1929 年，哈伯的觀測顯示了什麼？', o: ['星系越遠，遠離我們的速度越快', '宇宙是靜止不變的', '太陽繞著地球轉'], a: 0, e: '距離與遠離速度成正比，表示宇宙正在膨脹。' },
+  { q: '宇宙微波背景輻射最像下面哪一個比喻？', o: ['太陽光被月亮反射', '大火熄滅後牆壁殘留的溫度', '地球磁場發出的雜訊'], a: 1, e: '它是宇宙熾熱開端所留下、今天已冷卻到約 2.7 K 的餘暉。' },
+  { q: '下面哪一句是「哲學推論」，而不是直接的科學觀測？', o: ['遙遠星系的光譜有紅移', '背景輻射溫度約 2.7 K', '宇宙的開端需要一位超越時空的起因'], a: 2, e: '前兩句是觀測結果；第三句是從觀測出發的推論，我們誠實地把它們分開。' }
+];
+
+var TODAY = {
+  verse: '諸天述說神的榮耀；穹蒼傳揚他的手段。',
+  ref: '詩篇 19:1',
+  h: '天空沒有說一句話，卻天天向全地講道。今天的星光，許多在你出生之前很久就已經出發了。它們一路穿越宇宙來到你眼前，只為告訴你一件事：有一位比宇宙更大、更古老的神，祂的手段何等奇妙。',
+  pray: '主啊，今天當我看見天空，求你打開我心裡的眼睛，看見你的榮耀。'
+};
+
+(function () {
+  'use strict';
+  var KEY = 'wanxiang_v1';
+  var S = { view: 'home', step: 0, depth: 2, fs: 17, rate: 1, done: {}, seen: {}, attrs: {}, quiz: {} };
+
+  function load() {
+    try {
+      var raw = window.localStorage.getItem(KEY);
+      if (raw) {
+        var o = JSON.parse(raw);
+        for (var k in o) { if (o.hasOwnProperty(k)) { S[k] = o[k]; } }
+      }
+    } catch (e) {}
+  }
+  function save() {
+    try { window.localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+  }
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function css(name) { return window.getComputedStyle(document.documentElement).getPropertyValue(name).replace(/^\s+|\s+$/g, ''); }
+
+  /* ---------- views ---------- */
+  function render() {
+    stopSpeak();
+    var html = '';
+    if (S.view === 'home') { html = homeView(); }
+    else if (S.view === 'unit') { html = unitView(); }
+    else if (S.view === 'today') { html = todayView(); }
+    else { html = meView(); }
+    $('main').innerHTML = html;
+    var tabs = document.querySelectorAll('.tabbar button');
+    for (var i = 0; i < tabs.length; i++) {
+      var v = tabs[i].getAttribute('data-go');
+      if (v === S.view || (v === 'home' && S.view === 'unit')) { tabs[i].setAttribute('aria-current', 'page'); }
+      else { tabs[i].removeAttribute('aria-current'); }
+    }
+    document.documentElement.style.setProperty('--fs', S.fs + 'px');
+    after();
+    save();
+  }
+
+  function homeView() {
+    var h = '<section class="hero"><canvas class="stars" id="stars"></canvas>' +
+      '<h1>萬象見神</h1>' +
+      '<p class="v">自從造天地以來，神的永能和神性是明明可知的，雖是眼不能見，但藉著所造之物就可以曉得，叫人無可推諉。</p>' +
+      '<cite>羅馬書 1:20</cite>' +
+      '<div class="spec" aria-hidden="true"><i style="left:22%"></i><i style="left:39%"></i><i style="left:61%"></i><i style="left:83%"></i></div>' +
+      '<div class="speclbl"><span>星系光譜</span><span>吸收譜線往紅端偏移 → 宇宙在膨脹</span></div>' +
+      '</section>';
+    var done = S.done[UNIT.id];
+    h += '<section class="sec"><h2>繼續學習<span>' + (done ? '已完成 1 / 1 開放單元' : '從第一個單元開始') + '</span></h2>' +
+      '<button class="q" data-open="unit"><span class="m">宇</span><span class="t"><b>' + UNIT.title + '</b><br><span class="s">' + UNIT.hall + '・' + UNIT.no + '・約 10 分鐘</span></span><span class="s">' + (done ? '重溫' : '開始') + ' ›</span></button></section>';
+    h += '<section class="sec"><h2>八大展館<span>所造之物</span></h2><div class="halls">';
+    for (var i = 0; i < HALLS.length; i++) {
+      var a = HALLS[i];
+      h += '<button class="hall' + (a.open ? ' open' : '') + '"' + (a.open ? ' data-open="unit"' : ' disabled') + '><b>' + a.n + '</b><span class="d">' + a.d + '</span><span class="st">' + (a.open ? '1 個單元開放' : '即將開放') + '</span></button>';
+    }
+    h += '</div></section>';
+    h += '<section class="sec"><h2>大哉問<span>從你心裡的問題開始</span></h2><div class="qlist">';
+    for (var j = 0; j < QUESTIONS.length; j++) {
+      var q = QUESTIONS[j];
+      h += '<button class="q"' + (q.open ? ' data-open="unit"' : ' disabled style="opacity:.62"') + '><span class="m">？</span><span class="t">' + q.q + '<br><span class="s">' + q.s + '</span></span></button>';
+    }
+    h += '</div></section>' + foot();
+    return h;
+  }
+
+  function foot() {
+    return '<p class="foot">原型版本：本單元為內容樣板，科學敘述附原始文獻，正式上線前將由科學與神學顧問委員會審查。經文引用《和合本》。國度 321 空中團契。</p>';
+  }
+
+  function unitView() {
+    var st = UNIT.steps[S.step];
+    var h = '<div class="uhead"><div class="eyebrow">' + UNIT.hall + '・' + UNIT.no + '</div><h1>' + UNIT.title + '</h1><p class="sub">' + UNIT.sub + '</p><div class="tags">';
+    for (var i = 0; i < UNIT.attrs.length; i++) { h += '<span class="tag">彰顯神的' + UNIT.attrs[i] + '</span>'; }
+    h += '</div></div>';
+    var dl = [['驚嘆', '1 分鐘'], ['明白', '10 分鐘'], ['深究', '看文獻']];
+    h += '<div class="depth" role="group" aria-label="閱讀深度">';
+    for (var d = 0; d < 3; d++) {
+      h += '<button data-depth="' + (d + 1) + '" aria-pressed="' + (S.depth === d + 1) + '">' + dl[d][0] + '<small>' + dl[d][1] + '</small></button>';
+    }
+    h += '</div><nav class="steps" aria-label="學習步驟">';
+    for (var s = 0; s < UNIT.steps.length; s++) {
+      h += '<button data-step="' + s + '"' + (s === S.step ? ' aria-current="step"' : '') + (S.seen[s] ? ' class="done"' : '') + '><span class="n">' + (s + 1) + '</span>' + UNIT.steps[s].k + '</button>';
+    }
+    h += '</nav><div class="row" style="margin-top:12px"><button class="iconbtn readbtn" id="readBtn">朗讀這一步</button></div>';
+    h += '<div class="body" id="stepBody">';
+    for (var b = 0; b < st.blocks.length; b++) {
+      var bl = st.blocks[b];
+      if ((bl.d || 1) <= S.depth) { h += block(bl); }
+    }
+    h += '</div>';
+    var last = S.step === UNIT.steps.length - 1;
+    h += '<div class="nav"><button id="prevBtn"' + (S.step === 0 ? ' disabled' : '') + '>‹ 上一步</button>' +
+      '<button class="pri" id="nextBtn">' + (last ? (S.done[UNIT.id] ? '回到展館' : '完成單元，把榮耀歸給神') : '下一步：' + UNIT.steps[S.step + 1].k + ' ›') + '</button></div>';
+    return h + foot();
+  }
+
+  function refsHtml(list) {
+    if (!list || !list.length) { return ''; }
+    var h = '<details class="refs"><summary>出處 ' + list.length + '</summary><ol>';
+    for (var i = 0; i < list.length; i++) { h += '<li>' + REFS[list[i]] + '</li>'; }
+    return h + '</ol></details>';
+  }
+
+  function dtag(b) { return (b.d || 1) > 1 ? '<span class="dtag">' + (b.d === 2 ? '明白' : '深究') + '</span>' : ''; }
+
+  function block(b) {
+    switch (b.t) {
+      case 'h': return '<h3>' + b.h + '</h3>';
+      case 'p': return '<div><p>' + dtag(b) + b.h + '</p>' + refsHtml(b.refs) + '</div>';
+      case 'verse': return '<blockquote class="verse"><p>' + b.h + '</p><cite>' + b.ref + '（和合本）</cite></blockquote>';
+      case 'analogy': return '<div class="analogy"><span class="lbl">比喻</span><p>' + b.h + '</p></div>';
+      case 'claim': return '<div class="claim"><span class="chip c' + b.c + '">' + CERT[b.c] + '</span><p>' + b.h + '</p>' + refsHtml(b.refs) + '</div>';
+      case 'pray': return '<div class="pray"><p>' + b.h + '</p></div>';
+      case 'list':
+        var l = '<ul>';
+        for (var i = 0; i < b.items.length; i++) { l += '<li>' + b.items[i] + '</li>'; }
+        return l + '</ul>';
+      case 'views':
+        var v = '<div class="views">';
+        for (var j = 0; j < b.items.length; j++) { v += '<div class="view"><b>' + b.items[j].n + '</b><p>' + b.items[j].h + '</p></div>'; }
+        return v + '</div>';
+      case 'sim':
+        return '<div class="sim"><canvas id="simCv" width="800" height="500" aria-label="宇宙倒帶示意動畫"></canvas>' +
+          '<div class="simctl"><input type="range" id="simT" min="0" max="1000" value="1000" aria-label="時間"><span class="num" id="simLbl"></span><button class="simbtn" id="simPlay">倒帶</button></div>' +
+          '<p class="simnote">示意動畫：拖動滑桿，把宇宙的時間往回倒。比例與位置為示意，不是真實星系分布。</p></div>';
+      case 'share':
+        return '<div class="sharebox"><img id="shareImg" alt="宇宙有開端分享卡"><p>長按圖片即可儲存或分享。</p></div>';
+      case 'quiz': return quizHtml();
+    }
+    return '';
+  }
+
+  function quizHtml() {
+    var h = '<div class="quiz">';
+    for (var i = 0; i < QUIZ.length; i++) {
+      var q = QUIZ[i], ans = S.quiz[i];
+      h += '<div class="qz"><div class="qq">' + (i + 1) + '. ' + q.q + '</div>';
+      for (var j = 0; j < q.o.length; j++) {
+        var cls = '';
+        if (ans !== undefined) { if (j === q.a) { cls = 'ok'; } else if (j === ans) { cls = 'no'; } }
+        h += '<button data-q="' + i + '" data-o="' + j + '"' + (cls ? ' class="' + cls + '"' : '') + '>' + q.o[j] + '</button>';
+      }
+      if (ans !== undefined) { h += '<p class="fb">' + (ans === q.a ? '答對了。' : '再想一想。') + q.e + '</p>'; }
+      h += '</div>';
+    }
+    return h + '</div>';
+  }
+
+  function todayView() {
+    var d = new Date();
+    var ds = d.getFullYear() + '.' + (d.getMonth() + 1) + '.' + d.getDate();
+    return '<div class="uhead"><div class="eyebrow">每日造物靈修</div><h1>今天抬頭看天</h1></div>' +
+      '<div class="card"><span class="date">' + ds + '</span>' +
+      '<blockquote class="verse"><p>' + TODAY.verse + '</p><cite>' + TODAY.ref + '（和合本）</cite></blockquote>' +
+      '<p>' + TODAY.h + '</p><div class="pray"><p>' + TODAY.pray + '</p></div>' +
+      '<div class="row"><button class="iconbtn" id="readToday">朗讀</button><button class="iconbtn" data-open="unit">延伸閱讀：宇宙有開端 ›</button></div></div>' + foot();
+  }
+
+  function meView() {
+    var total = 0, i;
+    for (i = 0; i < ATTRS.length; i++) { total += S.attrs[ATTRS[i]] || 0; }
+    var h = '<div class="uhead"><div class="eyebrow">我的</div><h1>我所認識的神</h1><p class="sub">每完成一個單元，就更認識神的一個面向。</p></div><div class="card"><div class="attrs">';
+    for (i = 0; i < ATTRS.length; i++) {
+      var n = S.attrs[ATTRS[i]] || 0;
+      h += '<div class="attr"><span>' + ATTRS[i] + '</span><span class="bar"><i style="width:' + Math.min(100, n * 25) + '%"></i></span><span class="num">' + n + '</span></div>';
+    }
+    h += '</div>' + (total ? '' : '<p class="muted">完成「宇宙有開端」後，這裡會亮起「永能」與「永恆」。</p>') + '</div>';
+    h += '<div class="card"><b>閱讀設定</b>' +
+      '<div class="row"><span class="muted" style="width:4em">字級</span><div class="seg">' +
+      seg('fs', 15, '小') + seg('fs', 17, '中') + seg('fs', 20, '大') + '</div></div>' +
+      '<div class="row"><span class="muted" style="width:4em">朗讀</span><div class="seg">' +
+      seg('rate', 0.8, '慢') + seg('rate', 1, '正常') + seg('rate', 1.2, '快') + '</div></div>' +
+      '<div class="row"><button class="iconbtn" id="resetBtn">清除學習紀錄</button><span class="muted" id="resetMsg"></span></div></div>';
+    return h + foot();
+  }
+  function seg(k, v, t) { return '<button data-set="' + k + '" data-val="' + v + '" aria-pressed="' + (S[k] === v) + '">' + t + '</button>'; }
+
+  /* ---------- after render ---------- */
+  function after() {
+    if ($('stars')) { drawStars($('stars')); }
+    if ($('simCv')) { initSim(); }
+    if ($('shareImg')) { makeShare($('shareImg')); }
+    if (S.view === 'unit') { S.seen[S.step] = true; }
+  }
+
+  function rng(seed) {
+    var x = seed;
+    return function () { x = (x * 16807) % 2147483647; return (x - 1) / 2147483646; };
+  }
+
+  function drawStars(cv) {
+    var r = cv.getBoundingClientRect();
+    cv.width = Math.max(1, Math.round(r.width)); cv.height = Math.max(1, Math.round(r.height));
+    var c = cv.getContext('2d'), R = rng(7);
+    for (var i = 0; i < 120; i++) {
+      c.globalAlpha = 0.25 + R() * 0.6;
+      c.fillStyle = '#F4E9C8';
+      var s = R() < 0.9 ? 1 : 2;
+      c.fillRect(R() * cv.width, R() * cv.height, s, s);
+    }
+  }
+
+  /* ---------- rewind simulation ---------- */
+  var GAL = null, playTimer = null;
+  function initSim() {
+    if (!GAL) {
+      GAL = [];
+      var R = rng(11);
+      for (var i = 0; i < 180; i++) {
+        var a = R() * Math.PI * 2, d = Math.sqrt(R());
+        GAL.push({ x: Math.cos(a) * d, y: Math.sin(a) * d * 0.62, s: 0.6 + R() * 1.8, h: R() });
+      }
+    }
+    var inp = $('simT');
+    inp.oninput = function () { drawSim(inp.value / 1000); };
+    $('simPlay').onclick = function () {
+      if (playTimer) { return; }
+      var v = inp.value > 20 ? +inp.value : 1000;
+      playTimer = window.setInterval(function () {
+        v -= 12;
+        if (v <= 0) { v = 0; window.clearInterval(playTimer); playTimer = null; }
+        inp.value = v; drawSim(v / 1000);
+      }, 30);
+    };
+    drawSim(inp.value / 1000);
+  }
+  function drawSim(t) {
+    var cv = $('simCv'); if (!cv) { return; }
+    var c = cv.getContext('2d'), W = cv.width, H = cv.height, cx = W / 2, cy = H / 2;
+    c.fillStyle = '#0F1628'; c.fillRect(0, 0, W, H);
+    var sc = Math.max(t, 0.004), R = W * 0.47 * sc;
+    var glow = t < 0.2 ? (0.2 - t) / 0.2 : 0;
+    if (glow > 0) {
+      var g = c.createRadialGradient(cx, cy, 0, cx, cy, W * 0.5);
+      g.addColorStop(0, 'rgba(255,214,150,' + (0.95 * glow) + ')');
+      g.addColorStop(0.35, 'rgba(238,138,108,' + (0.55 * glow) + ')');
+      g.addColorStop(1, 'rgba(15,22,40,0)');
+      c.fillStyle = g; c.fillRect(0, 0, W, H);
+    }
+    for (var i = 0; i < GAL.length; i++) {
+      var p = GAL[i];
+      var red = Math.round(170 + 85 * p.h * t), gr = Math.round(190 + 40 * (1 - p.h)), bl = Math.round(255 - 110 * p.h * t);
+      c.fillStyle = 'rgb(' + red + ',' + gr + ',' + bl + ')';
+      c.globalAlpha = 0.85;
+      c.beginPath(); c.arc(cx + p.x * R, cy + p.y * R, p.s * (0.7 + 0.6 * t), 0, Math.PI * 2); c.fill();
+    }
+    c.globalAlpha = 1;
+    var lbl = $('simLbl');
+    if (lbl) {
+      if (t >= 0.999) { lbl.textContent = '現在'; }
+      else if (t <= 0.001) { lbl.textContent = '約 138 億年前・開端'; }
+      else { lbl.textContent = '往回約 ' + Math.round(138 * (1 - t)) + ' 億年（示意）'; }
+    }
+  }
+
+  /* ---------- share card ---------- */
+  function wrapText(c, text, maxW) {
+    var lines = [], cur = '';
+    for (var i = 0; i < text.length; i++) {
+      var ch = text.charAt(i);
+      if (c.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; } else { cur += ch; }
+    }
+    if (cur) { lines.push(cur); }
+    return lines;
+  }
+  function makeShare(img) {
+    var cv = document.createElement('canvas'); cv.width = 1600; cv.height = 900;
+    var c = cv.getContext('2d');
+    var g = c.createRadialGradient(1300, 80, 50, 1000, 400, 1300);
+    g.addColorStop(0, '#2A3E6B'); g.addColorStop(0.6, '#121A30'); g.addColorStop(1, '#0B1020');
+    c.fillStyle = g; c.fillRect(0, 0, 1600, 900);
+    var R = rng(23);
+    for (var i = 0; i < 260; i++) {
+      c.globalAlpha = 0.2 + R() * 0.7; c.fillStyle = '#F4E9C8';
+      var s = R() < 0.92 ? 2 : 4; c.fillRect(R() * 1600, R() * 900, s, s);
+    }
+    c.globalAlpha = 1;
+    var serif = '"Noto Serif TC","PMingLiU","Songti TC",serif', sans = '"Noto Sans TC","Microsoft JhengHei",sans-serif';
+    c.fillStyle = '#EE8A6C'; c.font = '500 34px ' + sans; c.fillText('萬象見神・宇宙館', 120, 150);
+    c.fillStyle = '#FFFFFF'; c.font = '700 110px ' + serif; c.fillText('宇宙有開端', 120, 300);
+    c.fillStyle = '#E3E7F2'; c.font = '600 46px ' + serif;
+    var lines = wrapText(c, '「我們因著信，就知道諸世界是藉神話造成的；這樣，所看見的，並不是從顯然之物造出來的。」', 1300);
+    for (var j = 0; j < lines.length; j++) { c.fillText(lines[j], 120, 420 + j * 74); }
+    c.fillStyle = '#AAB4CC'; c.font = '400 34px ' + sans; c.fillText('希伯來書 11:3（和合本）', 120, 440 + lines.length * 74);
+    var sy = 800, cols = ['#5b2ca0', '#2f5fe0', '#22b3d8', '#3fcf6a', '#e8e04a', '#f39a2d', '#d63a2a'];
+    var sg = c.createLinearGradient(120, 0, 1480, 0);
+    for (var k = 0; k < cols.length; k++) { sg.addColorStop(k / (cols.length - 1), cols[k]); }
+    c.fillStyle = sg; c.fillRect(120, sy, 1360, 22);
+    c.fillStyle = 'rgba(10,12,20,.85)';
+    var ls = [0.24, 0.41, 0.63, 0.85];
+    for (var m = 0; m < ls.length; m++) { c.fillRect(120 + 1360 * ls[m], sy, 4, 22); }
+    try { img.src = cv.toDataURL('image/png'); } catch (e) {}
+  }
+
+  /* ---------- speech ---------- */
+  var speaking = false;
+  function stopSpeak() {
+    speaking = false;
+    try { if (window.speechSynthesis) { window.speechSynthesis.cancel(); } } catch (e) {}
+    var b = $('readBtn'); if (b) { b.textContent = '朗讀這一步'; }
+  }
+  function speak(el, btn, label) {
+    if (!window.speechSynthesis) { btn.textContent = '此裝置不支援朗讀'; return; }
+    if (speaking) { stopSpeak(); btn.textContent = label; return; }
+    var clone = el.cloneNode(true);
+    var drop = clone.querySelectorAll('details,.sim,.sharebox,.quiz,.chip,.dtag');
+    for (var i = 0; i < drop.length; i++) { drop[i].parentNode.removeChild(drop[i]); }
+    var text = (clone.textContent || '').replace(/\s+/g, ' ');
+    var parts = text.split(/(?=[。！？])/);
+    var chunks = [], cur = '';
+    for (var j = 0; j < parts.length; j++) {
+      if ((cur + parts[j]).length > 120 && cur) { chunks.push(cur); cur = parts[j]; } else { cur += parts[j]; }
+    }
+    if (cur) { chunks.push(cur); }
+    speaking = true; btn.textContent = '停止朗讀';
+    var idx = 0;
+    function next() {
+      if (!speaking || idx >= chunks.length) { speaking = false; btn.textContent = label; return; }
+      var u = new window.SpeechSynthesisUtterance(chunks[idx++].replace(/^[。！？]/, ''));
+      u.lang = 'zh-TW'; u.rate = S.rate;
+      u.onend = next; u.onerror = function () { speaking = false; btn.textContent = label; };
+      window.speechSynthesis.speak(u);
+    }
+    next();
+  }
+
+  /* ---------- events ---------- */
+  function go(v) { S.view = v; if (v === 'unit' && S.step >= UNIT.steps.length) { S.step = 0; } render(); window.scrollTo(0, 0); }
+
+  function finish() {
+    if (!S.done[UNIT.id]) {
+      S.done[UNIT.id] = true;
+      for (var i = 0; i < UNIT.attrs.length; i++) { S.attrs[UNIT.attrs[i]] = (S.attrs[UNIT.attrs[i]] || 0) + 1; }
+      S.step = 0; go('me');
+    } else { S.step = 0; go('home'); }
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    while (t && t !== document && !(t.getAttribute && (t.hasAttribute('data-go') || t.hasAttribute('data-open') || t.hasAttribute('data-step') || t.hasAttribute('data-depth') || t.hasAttribute('data-q') || t.hasAttribute('data-set') || t.id))) { t = t.parentNode; }
+    if (!t || t === document) { return; }
+    if (t.hasAttribute('data-go')) { go(t.getAttribute('data-go')); return; }
+    if (t.hasAttribute('data-open')) { go(t.getAttribute('data-open')); return; }
+    if (t.hasAttribute('data-step')) { S.step = +t.getAttribute('data-step'); render(); return; }
+    if (t.hasAttribute('data-depth')) { S.depth = +t.getAttribute('data-depth'); render(); return; }
+    if (t.hasAttribute('data-q')) {
+      var qi = +t.getAttribute('data-q');
+      if (S.quiz[qi] === undefined) { S.quiz[qi] = +t.getAttribute('data-o'); render(); }
+      return;
+    }
+    if (t.hasAttribute('data-set')) { S[t.getAttribute('data-set')] = +t.getAttribute('data-val'); render(); return; }
+    switch (t.id) {
+      case 'prevBtn': if (S.step > 0) { S.step--; render(); window.scrollTo(0, 0); } break;
+      case 'nextBtn':
+        if (S.step < UNIT.steps.length - 1) { S.step++; render(); window.scrollTo(0, 0); } else { finish(); }
+        break;
+      case 'readBtn': speak($('stepBody'), t, '朗讀這一步'); break;
+      case 'readToday': speak(t.parentNode.parentNode, t, '朗讀'); break;
+      case 'themeBtn':
+        var cur = document.documentElement.getAttribute('data-theme');
+        var dark = cur ? cur === 'dark' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+        render(); break;
+      case 'resetBtn':
+        if (t.getAttribute('data-arm') === '1') {
+          S.done = {}; S.seen = {}; S.attrs = {}; S.quiz = {}; S.step = 0; render();
+          $('resetMsg').textContent = '已清除。';
+        } else { t.setAttribute('data-arm', '1'); t.textContent = '再按一次確認清除'; }
+        break;
+    }
+  });
+
+  load();
+  if (S.view === 'unit' && !(S.step >= 0 && S.step < UNIT.steps.length)) { S.step = 0; }
+  render();
+})();
+
+</script>
+</body>
+</html>
