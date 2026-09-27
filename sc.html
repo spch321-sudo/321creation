@@ -176,7 +176,7 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 .langs{display:flex;gap:2px;font-size:.78em}
 .langs a{color:var(--muted);text-decoration:none;padding:3px 7px;border-radius:6px}
 .langs a[aria-current="true"]{color:var(--accent);font-weight:700;background:var(--accent-soft)}
-@media (max-width:420px){.brand small{display:none}.proto{display:none}}
+@media (max-width:560px){.brand small{display:none}.proto{display:none}}
 :lang(en) .attr{grid-template-columns:8.6em 1fr 2.4em}
 :lang(en) .hero h1{letter-spacing:.04em}
 /* ---- 画线、朗读、小智 ---- */
@@ -242,6 +242,7 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 .brand{white-space:nowrap}
 :lang(en) .brand{letter-spacing:0;font-size:1em}
 .diag p{margin:4px 0;font-size:.85em;font-family:var(--mono)}.diag .ok{color:var(--good)}.diag .bad{color:var(--crit)}
+@media (max-width:560px){.top .in{gap:8px;padding-inline:12px}.langs a{padding:3px 5px}.top .iconbtn{padding:4px 9px}.brand{letter-spacing:.02em;min-width:0;overflow:hidden;text-overflow:ellipsis}}
 /* today & me */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;margin-top:16px}
 .card .date{font-family:var(--mono);font-size:.78em;color:var(--muted)}
@@ -275,8 +276,8 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 <button data-go="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6"/></svg>我的</button>
 </div></nav>
 <script>
-var VER = '202609271209';
-var DATA = 'halls-sc/';
+var VER = '202609271218';
+var DATA = 'sc-';
 var SPEECH = 'zh-CN';
 var REFS = {};
 var CERT = {"1": "已确立", "2": "主流，仍有讨论", "3": "研究中或有争议", "4": "哲学推论"};
@@ -341,7 +342,7 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
       $('main').innerHTML = '<div class="uhead"><div class="eyebrow">' + hallMeta(S.hall).n + '</div><h1>加载中……</h1><p class="sub" id="loadMsg">正在打开展馆内容。</p></div>';
       loadHall(S.hall, function (ok) {
         if (ok) { render(); }
-        else { var m = $('loadMsg'); if (m) { m.textContent = '内容加载失败，请确认网络连接后再试一次。'; } }
+        else { var m = $('loadMsg'); if (m) { m.innerHTML = '内容加载失败，请确认网络连接后再试一次。<br><span class="num">' + esc(DATA + S.hall + '.json') + '</span><br><button class="iconbtn" id="retryBtn">重试</button>'; } }
       });
       return;
     }
@@ -349,7 +350,7 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
       $('main').innerHTML = '<div class="uhead"><div class="eyebrow">教学讲章</div><h1>加载中……</h1><p class="sub" id="loadMsg">正在打开讲章。</p></div>';
       loadSermon(S.hall, function (ok) {
         if (ok) { render(); }
-        else { var m = $('loadMsg'); if (m) { m.textContent = '讲章加载失败，请确认网络连接后再试一次。'; } }
+        else { var m = $('loadMsg'); if (m) { m.innerHTML = '讲章加载失败，请确认网络连接后再试一次。<br><span class="num">' + esc(DATA + S.hall + '-sermon.json') + '</span><br><button class="iconbtn" id="retryBtn">重试</button>'; } }
       });
       return;
     }
@@ -808,6 +809,7 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
         document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
         render(); break;
       case 'diagBtn': runDiag(); break;
+      case 'retryBtn': render(); break;
       case 'resetBtn':
         if (t.getAttribute('data-arm') === '1') {
           S.done = {}; S.seen = {}; S.attrs = {}; S.quiz = {}; S.step = 0; render();
@@ -824,15 +826,15 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
     chat: 'https://xiaozhi-proxy.spch321.workers.dev',
     tts: 'https://azure-tts.spch321.workers.dev'
   };
-  var IS_EN = DATA === 'halls-en/';
+  var IS_EN = DATA === 'en-';
   var TTS_SIL = 140, TTS_SILC = 140, TTS_SILE = 260;
   var TTS_CHUNK = IS_EN ? 320 : 130, TTS_LOOKAHEAD = 2, TTS_RETRY = [800, 1600], RA_COOLDOWN = 4000;
   var VOICES = {
-    'halls/': [{ n: '云哲', v: 'zh-TW-YunJheNeural' }, { n: '云帆', v: 'zh-CN-Yunfan:DragonHDLatestNeural' }, { n: '晓辰', v: 'zh-CN-Xiaochen:DragonHDLatestNeural' }],
-    'halls-sc/': [{ n: '云帆', v: 'zh-CN-Yunfan:DragonHDLatestNeural' }, { n: '云哲', v: 'zh-TW-YunJheNeural' }, { n: '晓辰', v: 'zh-CN-Xiaochen:DragonHDLatestNeural' }],
-    'halls-en/': [{ n: 'Andrew', v: 'en-US-AndrewNeural' }, { n: 'Emma', v: 'en-US-EmmaNeural' }, { n: 'Brian', v: 'en-US-BrianNeural' }]
+    'tc-': [{ n: '云哲', v: 'zh-TW-YunJheNeural' }, { n: '云帆', v: 'zh-CN-Yunfan:DragonHDLatestNeural' }, { n: '晓辰', v: 'zh-CN-Xiaochen:DragonHDLatestNeural' }],
+    'sc-': [{ n: '云帆', v: 'zh-CN-Yunfan:DragonHDLatestNeural' }, { n: '云哲', v: 'zh-TW-YunJheNeural' }, { n: '晓辰', v: 'zh-CN-Xiaochen:DragonHDLatestNeural' }],
+    'en-': [{ n: 'Andrew', v: 'en-US-AndrewNeural' }, { n: 'Emma', v: 'en-US-EmmaNeural' }, { n: 'Brian', v: 'en-US-BrianNeural' }]
   };
-  function voiceList() { return VOICES[DATA] || VOICES['halls/']; }
+  function voiceList() { return VOICES[DATA] || VOICES['tc-']; }
   function curVoice() { var L = voiceList(); return (L[S.voice || 0] || L[0]).v; }
   function ttsRate() { return S.rate < 1 ? '-15%' : (S.rate > 1 ? '+15%' : '+0%'); }
   var HL_COLORS = ['gold', 'green', 'blue', 'pink', 'purple', 'maroon', 'brown', 'charcoal'];
@@ -1006,14 +1008,14 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
     }
     return String(x).replace(/([一-鿿]{1,6})\s*(\d+)\s*[:：]\s*(\d+)(?:\s*[–\-—~～、至]\s*(\d+))?/g, function (m, bk, c, v, v2) {
       var ps = /^诗篇$|^诗篇$/.test(bk);
-      return bk + c + (ps ? '篇' : '章') + v + (v2 ? '到' + v2 : '') + (DATA === 'halls-sc/' ? '节' : '节');
+      return bk + c + (ps ? '篇' : '章') + v + (v2 ? '到' + v2 : '') + (DATA === 'sc-' ? '节' : '节');
     });
   }
   function ttsPrep(s) {
     var x = ttsRef(s).replace(/[←-⇿⌀-➿⬀-⯿]/g, '');
     if (IS_EN) { return x.replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, ''); }
     x = x.replace(/[「」『』（）()]/g, '');
-    if (DATA === 'halls/') { TTS_FIX.forEach(function (f) { x = x.replace(f[0], f[1]); }); }
+    if (DATA === 'tc-') { TTS_FIX.forEach(function (f) { x = x.replace(f[0], f[1]); }); }
     return x.replace(/^\s+|\s+$/g, '');
   }
   var SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=';
@@ -1386,7 +1388,7 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
 
   function runDiag() {
     var out = $('diagOut'); if (!out) { return; }
-    var lg = DATA === 'halls-en/' ? 'en' : (DATA === 'halls-sc/' ? 'sc' : 'tc');
+    var lg = DATA === 'en-' ? 'en' : (DATA === 'sc-' ? 'sc' : 'tc');
     var files = ['manifest-' + lg + '.json', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'sw.js', DATA + 'cosmos.json', DATA + 'cosmos-sermon.json'];
     var rows = [], left = files.length;
     var apple = document.querySelector('link[rel="apple-touch-icon"]');

@@ -1,4 +1,4 @@
-var CACHE = 'wanxiang-202609271209';
+var CACHE = 'wanxiang-202609271218';
 self.addEventListener('install', function (e) { self.skipWaiting(); });
 self.addEventListener('activate', function (e) { e.waitUntil(self.clients.claim()); });
 self.addEventListener('fetch', function (e) {
