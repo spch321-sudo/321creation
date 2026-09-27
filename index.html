@@ -141,6 +141,16 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 .nav button[disabled]{opacity:.4;cursor:default}
 .readbtn{display:inline-flex;align-items:center;gap:6px}
 
+.dialbar{position:relative;height:18px;border-radius:9px;background:rgba(238,154,98,.35)}
+.dialbar .win{position:absolute;left:0;top:0;bottom:0;width:2.1%;min-width:5px;background:#74C795;border-radius:9px 0 0 9px}
+.dialbar .mk{position:absolute;top:-5px;width:4px;height:28px;margin-left:-2px;background:#F4E9C8;border-radius:2px}
+.dialst{margin:10px 0 0;font-weight:700}
+.scale .scn{font-family:var(--serif);font-size:1.8em;color:#fff}
+.scale .scv{color:#E3E7F2}
+.scale .scl{color:#F4E9C8;font-size:.9em;margin-top:2px}
+.dots{display:flex;align-items:center;gap:10px;margin-top:14px;min-height:30px}
+.dots i{display:block;border-radius:50%;background:rgba(244,233,200,.18)}
+.dots i.on{background:#EE8A6C}
 /* today & me */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;margin-top:16px}
 .card .date{font-family:var(--mono);font-size:.78em;color:var(--muted)}
@@ -305,10 +315,496 @@ var TODAY = {
   pray: '主啊，今天當我看見天空，求你打開我心裡的眼睛，看見你的榮耀。'
 };
 
+/* 宇宙館 第 2–8 單元 */
+REFS.weinberg = 'Weinberg, S. (1987). Anthropic bound on the cosmological constant. <i>Physical Review Letters</i>, 59, 2607–2610.';
+REFS.weinberg89 = 'Weinberg, S. (1989). The cosmological constant problem. <i>Reviews of Modern Physics</i>, 61, 1–23.';
+REFS.barnes = 'Barnes, L. A. (2012). The fine-tuning of the universe for intelligent life. <i>Publications of the Astronomical Society of Australia</i>, 29, 529–564.';
+REFS.rees = 'Rees, M. (1999). <i>Just Six Numbers: The Deep Forces That Shape the Universe</i>. London: Weidenfeld &amp; Nicolson.';
+REFS.conselice = 'Conselice, C. J., et al. (2016). The evolution of galaxy number density at z &lt; 8 and its implications. <i>The Astrophysical Journal</i>, 830, 83.';
+REFS.lauer = 'Lauer, T. R., et al. (2021). New Horizons observations of the cosmic optical background. <i>The Astrophysical Journal</i>, 906, 77.';
+REFS.hdf = 'Williams, R. E., et al. (1996). The Hubble Deep Field: Observations, data reduction, and galaxy photometry. <i>The Astronomical Journal</i>, 112, 1335–1389.';
+REFS.si = 'Bureau International des Poids et Mesures (2019). <i>The International System of Units (SI)</i>, 9th ed. 光速定義為 299 792 458 m/s。';
+REFS.denton = 'Denton, M. (2018). <i>Children of Light: The Astonishing Properties of Sunlight that Make Us Possible</i>. Seattle: Discovery Institute Press.';
+REFS.b2fh = 'Burbidge, E. M., Burbidge, G. R., Fowler, W. A., &amp; Hoyle, F. (1957). Synthesis of the elements in stars. <i>Reviews of Modern Physics</i>, 29, 547–650.';
+REFS.hoyle54 = 'Hoyle, F. (1954). On nuclear reactions occurring in very hot stars. <i>The Astrophysical Journal Supplement Series</i>, 1, 121–146.';
+REFS.hoyle81 = 'Hoyle, F. (1981). The universe: Past and present reflections. <i>Engineering and Science</i>, 45(2), 8–12.';
+REFS.gw170817 = 'Abbott, B. P., et al. (2017). Multi-messenger observations of a binary neutron star merger. <i>The Astrophysical Journal Letters</i>, 848, L12.';
+REFS.ghz = 'Gonzalez, G., Brownlee, D., &amp; Ward, P. (2001). The Galactic Habitable Zone: Galactic chemical evolution. <i>Icarus</i>, 152, 185–200.';
+REFS.privileged = 'Gonzalez, G., &amp; Richards, J. W. (2004). <i>The Privileged Planet</i>. Washington, DC: Regnery.';
+REFS.eddington = 'Dyson, F. W., Eddington, A. S., &amp; Davidson, C. (1920). A determination of the deflection of light by the sun\'s gravitational field. <i>Philosophical Transactions of the Royal Society A</i>, 220, 291–333.';
+REFS.llr = 'Dickey, J. O., et al. (1994). Lunar laser ranging: A continuing legacy of the Apollo program. <i>Science</i>, 265, 482–490.';
+REFS.uzan = 'Uzan, J.-P. (2011). Varying constants, gravitation and cosmology. <i>Living Reviews in Relativity</i>, 14, 2.';
+REFS.wigner = 'Wigner, E. P. (1960). The unreasonable effectiveness of mathematics in the natural sciences. <i>Communications on Pure and Applied Mathematics</i>, 13, 1–14.';
+REFS.ligo = 'Abbott, B. P., et al. (2016). Observation of gravitational waves from a binary black hole merger. <i>Physical Review Letters</i>, 116, 061102.';
+REFS.riess98 = 'Riess, A. G., et al. (1998). Observational evidence from supernovae for an accelerating universe and a cosmological constant. <i>The Astronomical Journal</i>, 116, 1009–1038.';
+REFS.perlmutter = 'Perlmutter, S., et al. (1999). Measurements of Ω and Λ from 42 high-redshift supernovae. <i>The Astrophysical Journal</i>, 517, 565–586.';
+REFS.adams = 'Adams, F. C., &amp; Laughlin, G. (1997). A dying universe: The long-term fate and evolution of astrophysical objects. <i>Reviews of Modern Physics</i>, 69, 337–372.';
+REFS.sun = 'Sackmann, I.-J., Boothroyd, A. I., &amp; Kraemer, K. E. (1993). Our Sun. III. Present and future. <i>The Astrophysical Journal</i>, 418, 457–468.';
+
+UNIT.quiz = QUIZ;
+UNIT.mark = '始';
+UNIT.mins = 10;
+UNIT.share = { v: '我們因著信，就知道諸世界是藉神話造成的；這樣，所看見的，並不是從顯然之物造出來的。', r: '希伯來書 11:3' };
+
+var UNITS = [UNIT,
+
+/* ---------- 2 ---------- */
+{ id: 'fine-tuning', hall: '宇宙館', no: '第 2 單元', title: '恰到好處的宇宙', mark: '調', mins: 10,
+  sub: '物理定律中的幾個數字，只要稍有不同，就不會有星星、行星和生命。',
+  attrs: ['智慧'],
+  share: { v: '耶和華用能力創造大地，用智慧建立世界，用聰明鋪張穹蒼。', r: '耶利米書 10:12' },
+  steps: [
+    { k: '驚嘆', blocks: [
+      { t: 'p', h: '想像一個控制宇宙的儀表板，上面有幾十個旋鈕：重力的強度、電磁力的強度、質子與電子的質量比……' },
+      { t: 'p', h: '物理學家發現，其中好幾個旋鈕只要轉動一點點，宇宙就不會有穩定的恆星、不會有碳，也不會有我們。' },
+      { t: 'dial' },
+      { t: 'verse', h: '耶和華以智慧立地，以聰明定天。', ref: '箴言 3:19' }
+    ]},
+    { k: '發現', blocks: [
+      { t: 'h', h: '宇宙常數：最驚人的一個數字' },
+      { t: 'p', h: '推動宇宙加速膨脹的「宇宙常數」（暗能量）非常小。依量子物理的粗略估計，它本來應該大上大約 10<sup>120</sup> 倍。物理學家溫伯格（Steven Weinberg）指出，如果它比實際值大上幾百倍，宇宙會膨脹得太快，星系根本來不及形成。', refs: ['weinberg', 'weinberg89'] },
+      { t: 'analogy', h: '這就像從地球上射出一支箭，要射中宇宙另一端一個比針眼還小的靶心。宇宙常數的數值，正落在那個靶心裡。' },
+      { t: 'h', h: '其他恰到好處的數字' },
+      { d: 2, t: 'list', items: [
+        '<b>重力與電磁力的比例</b>：決定恆星能不能長時間穩定地燃燒。',
+        '<b>強核力</b>：把原子核綁在一起的力，強弱影響化學元素能否形成。',
+        '<b>宇宙初期的密度起伏</b>：大約十萬分之一，太小則物質聚不成星系，太大則大多塌縮成黑洞。',
+        '<b>空間的維度</b>：三維空間讓行星軌道與原子都能保持穩定。'
+      ]},
+      { d: 2, t: 'p', h: '英國皇家天文學家芮斯（Martin Rees）在《六個數字》一書中，挑出六個決定宇宙面貌的數字。天文物理學家巴恩斯（Luke Barnes）在 2012 年的回顧論文中，整理了許多已發表的微調研究。', refs: ['rees', 'barnes'] },
+      { d: 3, t: 'p', h: '學界對「微調」的程度仍有討論：有些常數可以同時改變而互相抵銷，有些估計依賴特定模型。但大多數物理學家同意，現有的物理定律容許生命存在的範圍，相對於可能的數值範圍是非常窄的。', refs: ['barnes'] }
+    ]},
+    { k: '查證', blocks: [
+      { t: 'claim', c: 1, h: '宇宙正在加速膨脹，推動它的宇宙常數（或暗能量）非常小但不是零。', refs: ['riess98', 'perlmutter', 'planck'] },
+      { t: 'claim', c: 2, h: '若宇宙常數大上約數百倍，星系就難以形成。', refs: ['weinberg'] },
+      { t: 'claim', c: 2, h: '多個物理常數容許生命存在的範圍相當狹窄；個別常數的微調程度與計算方法仍有學術討論。', refs: ['barnes', 'rees'] },
+      { t: 'h', h: '觀點對話室：怎麼解釋微調？' },
+      { t: 'views', items: [
+        { n: '設計的解釋', h: '宇宙的數值像是被精心設定，指向一位有智慧、有目的的設計者。這是從觀測出發的哲學推論。' },
+        { n: '多重宇宙的解釋', h: '也許有無數個宇宙、各有不同數值，我們剛好在適合的那一個。目前這仍是理論推測，沒有直接觀測證據，而且產生多重宇宙的機制本身也需要微調。' }
+      ]},
+      { d: 2, t: 'claim', c: 4, h: '不論哪一種解釋，都承認宇宙的數值「看起來像是被調過」。問題在於：這是巧合、是無數宇宙中的一個，還是出於一位設計者的心意？', refs: ['barnes'] }
+    ]},
+    { k: '啟示', blocks: [
+      { t: 'verse', h: '耶和華用能力創造大地，用智慧建立世界，用聰明鋪張穹蒼。', ref: '耶利米書 10:12' },
+      { t: 'h', h: '祂的神性：無比的智慧' },
+      { t: 'p', h: '一座精準的鐘指向鐘錶匠；一個恰到好處的宇宙，指向一位智慧無窮的創造者。祂不只造了萬物，更是為了生命、為了人，把宇宙安排得剛剛好。' },
+      { t: 'verse', h: '你知道天的定例麼？能使地歸在天的權下麼？', ref: '約伯記 38:33' },
+      { d: 2, t: 'p', h: '神在旋風中問約伯一連串關於天地的問題。約伯明白之後說：「我從前風聞有你，現在親眼看見你。」認識宇宙的精密，使人從知道神，走到遇見神。' },
+      { t: 'verse', h: '因為萬有都是本於他，倚靠他，歸於他。願榮耀歸給他，直到永遠。阿們！', ref: '羅馬書 11:36' }
+    ]},
+    { k: '敬拜', blocks: [
+      { t: 'p', h: '想一想：宇宙中最大的數字與最小的數字，都在祂手中調得剛好。你的生命，也在祂的手中。' },
+      { t: 'pray', h: '默想：我生命中有哪一件事，我以為是偶然，其實是神的安排？' },
+      { t: 'pray', h: '禱告：主啊，你用智慧調好了整個宇宙，也看顧我生命中的每一個細節。我放下自己的聰明，信靠你的智慧。奉耶穌的名，阿們。' }
+    ]},
+    { k: '活出', blocks: [
+      { t: 'h', h: '321 生命應用' },
+      { t: 'list', items: [
+        '<b>聖經是我的準則</b>：神在宇宙中設下精確的定律，也在聖經中為我的生命設下真理的準則。',
+        '<b>謙卑</b>：我不必事事都懂才信靠。連物理學家都驚嘆的智慧，值得我放心交託。',
+        '<b>讓耶穌得著榮耀</b>：看見精妙時，把讚美歸給設計者，而不是歸給巧合。'
+      ]},
+      { t: 'p', h: '<b>本週行動</b>：寫下三件你曾以為是巧合、現在看見是神安排的事，並向一位朋友分享其中一件。' },
+      { t: 'share' },
+      { t: 'h', h: '小測驗' },
+      { t: 'quiz' }
+    ]}
+  ],
+  quiz: [
+    { q: '若宇宙常數大上數百倍，會發生什麼事？', o: ['宇宙膨脹太快，星系來不及形成', '地球會變得更溫暖', '星星會更亮'], a: 0, e: '溫伯格 1987 年的估計指出，宇宙常數必須很小，星系才有機會形成。' },
+    { q: '「多重宇宙」目前在科學上的狀態是？', o: ['已被觀測證實', '理論推測，沒有直接觀測證據', '已被完全否定'], a: 1, e: '多重宇宙是理論推測，我們誠實地標示為仍在研究中。' },
+    { q: '本單元主要彰顯神的哪一個屬性？', o: ['智慧', '憤怒', '後悔'], a: 0, e: '「耶和華用智慧建立世界。」（耶 10:12）' }
+  ]
+},
+
+/* ---------- 3 ---------- */
+{ id: 'vastness', hall: '宇宙館', no: '第 3 單元', title: '浩瀚的星空', mark: '浩', mins: 8,
+  sub: '從地球到可觀測宇宙的邊緣，一步一步量一量神的手所造的天。',
+  attrs: ['永能'],
+  share: { v: '你們向上舉目，看誰創造這萬象，按數目領出，他一一稱其名。', r: '以賽亞書 40:26' },
+  steps: [
+    { k: '驚嘆', blocks: [
+      { t: 'p', h: '光每秒可以繞地球七圈半。可是從宇宙最遠處來的光，走了一百多億年才到達我們的眼睛。' },
+      { t: 'scale' },
+      { t: 'verse', h: '你們向上舉目，看誰創造這萬象，按數目領出，他一一稱其名；因他的權能，又因他的大能大力，連一個都不缺。', ref: '以賽亞書 40:26' }
+    ]},
+    { k: '發現', blocks: [
+      { t: 'h', h: '一粒沙大小的天空' },
+      { t: 'p', h: '1995 年，哈伯太空望遠鏡對準北斗七星附近一小片看似空無一物的天空，連續拍攝了十天。這一小片天空，大約只有全天的兩千四百萬分之一，就像手臂伸直時看著一粒沙。照片裡卻出現了大約三千個星系。', refs: ['hdf'] },
+      { t: 'analogy', h: '如果把每一個星系都當成一座城市，那一粒沙大小的天空裡，就擠滿了三千座城市，而每一座城市裡住著上千億顆星星。' },
+      { t: 'h', h: '有多少星系？' },
+      { t: 'p', h: '我們所在的銀河系，直徑大約十萬光年，擁有一千億到四千億顆恆星。可觀測宇宙中的星系數目，估計在數千億到上兆個之間。', refs: ['conselice', 'lauer'] },
+      { d: 2, t: 'p', h: '可觀測宇宙的直徑約九百三十億光年。它比「宇宙年齡 × 光速」還大，因為光在旅途中，空間本身也在膨脹。' },
+      { d: 3, t: 'p', h: '2016 年一項研究估計星系總數可能多達兩兆；2021 年新視野號在冥王星外測量宇宙背景光，得到的估計則低得多，約數千億。這正是科學不斷修正的過程。', refs: ['conselice', 'lauer'] }
+    ]},
+    { k: '查證', blocks: [
+      { t: 'claim', c: 1, h: '哈伯深空影像在極小的天區中拍到約三千個星系。', refs: ['hdf'] },
+      { t: 'claim', c: 1, h: '陽光到達地球約需 8 分 20 秒；最近的恆星比鄰星距離約 4.24 光年；仙女座星系約 250 萬光年。' },
+      { t: 'claim', c: 2, h: '可觀測宇宙中的星系數目約為數千億到上兆個，不同方法的估計差距仍大。', refs: ['conselice', 'lauer'] },
+      { t: 'claim', c: 4, h: '宇宙的巨大，不代表人不重要；聖經反而說，這位造了萬象的神，特別顧念人。這是信仰的宣告，也是本單元的核心。' }
+    ]},
+    { k: '啟示', blocks: [
+      { t: 'h', h: '祂的永能：數算星宿的神' },
+      { t: 'verse', h: '他數點星宿的數目，一一稱它的名。', ref: '詩篇 147:4' },
+      { t: 'p', h: '人類用盡最好的望遠鏡，還數不清星系有多少；神卻叫得出每一顆星的名字。宇宙有多大，祂的大能就比宇宙更大。' },
+      { t: 'verse', h: '誰曾用手心量諸水，用手虎口量蒼天，用升斗盛大地的塵土，用秤稱山嶺，用天平平岡陵呢？', ref: '以賽亞書 40:12' },
+      { t: 'h', h: '同一段經文的下文' },
+      { t: 'verse', h: '雅各啊，你為何說：我的道路向耶和華隱藏；以色列啊，你為何言：我的冤屈神並不查問？……疲乏的，他賜能力；軟弱的，他加力量。', ref: '以賽亞書 40:27、29' },
+      { t: 'p', h: '以賽亞講完浩瀚的星空，緊接著講的是疲乏的人。數算星宿的神，也數算你的眼淚。' }
+    ]},
+    { k: '敬拜', blocks: [
+      { t: 'p', h: '今晚抬頭看天，試著數一數你能看見幾顆星。然後記得：祂每一顆都叫得出名字，也叫得出你的名字。' },
+      { t: 'pray', h: '默想：我的難處放在宇宙之中有多大？放在神的面前又有多大？' },
+      { t: 'pray', h: '禱告：主啊，你用手虎口量蒼天，我的擔子在你手中並不重。求你賜力量給疲乏的我，使我如鷹展翅上騰。奉耶穌的名，阿們。' }
+    ]},
+    { k: '活出', blocks: [
+      { t: 'h', h: '321 生命應用' },
+      { t: 'list', items: [
+        '<b>焦點在耶穌</b>：不在自己、不在別人、不在環境。仰望那位比宇宙更大的主。',
+        '<b>從地上的觀點改變成天上的觀點</b>：問題沒有變小，但我看見神更大。',
+        '<b>謙卑戰勝驕傲</b>：在浩瀚星空下，人不再自以為大。'
+      ]},
+      { t: 'p', h: '<b>本週行動</b>：找一位正在疲乏中的朋友，把以賽亞書 40:26–31 傳給他，並為他禱告。' },
+      { t: 'share' },
+      { t: 'h', h: '小測驗' },
+      { t: 'quiz' }
+    ]}
+  ],
+  quiz: [
+    { q: '哈伯深空影像在極小一片天空中拍到大約多少個星系？', o: ['約 30 個', '約 3,000 個', '約 3 億個'], a: 1, e: '約三千個星系，而那片天空只像伸直手臂看著的一粒沙。' },
+    { q: '陽光從太陽到地球大約要多久？', o: ['1 秒', '8 分 20 秒', '4 年'], a: 1, e: '約 8 分 20 秒；比鄰星的光則要走 4.24 年。' },
+    { q: '以賽亞書 40 章講完星空之後，接著安慰的是誰？', o: ['疲乏軟弱的人', '天文學家', '君王'], a: 0, e: '「疲乏的，他賜能力；軟弱的，他加力量。」（賽 40:29）' }
+  ]
+},
+
+/* ---------- 4 ---------- */
+{ id: 'light', hall: '宇宙館', no: '第 4 單元', title: '要有光', mark: '光', mins: 9,
+  sub: '創造的第一句話是「要有光」。光的奧秘，至今仍讓物理學家驚嘆。',
+  attrs: ['良善', '智慧'],
+  share: { v: '神就是光，在他毫無黑暗。', r: '約翰一書 1:5' },
+  steps: [
+    { k: '驚嘆', blocks: [
+      { t: 'p', h: '你此刻看見的每一個顏色，都是光。可是人眼能看見的光，只是整個電磁波譜中非常窄的一小段。' },
+      { t: 'p', h: '更奇妙的是：太陽發出最多能量的波段、大氣最透明的波段、水最透明的波段，以及我們眼睛能看見的波段，幾乎重疊在同一個窄窄的窗口裡。' },
+      { t: 'verse', h: '神說：要有光，就有了光。', ref: '創世記 1:3' }
+    ]},
+    { k: '發現', blocks: [
+      { t: 'h', h: '宇宙的速限' },
+      { t: 'p', h: '光在真空中的速度是每秒 <span class="num">299,792,458</span> 公尺。這個數值恆定不變，1983 年起直接被用來定義「一公尺」有多長。', refs: ['si'] },
+      { t: 'analogy', h: '光就像宇宙的信差。因為信差要走一段時間，我們看見的星星都是它「過去的樣子」：看得越遠，就看見越古老的宇宙。' },
+      { t: 'h', h: '剛剛好的窗口' },
+      { t: 'p', h: '可見光的波長大約在 380 到 750 奈米之間。太陽輻射的高峰正落在這裡；地球大氣在這一段幾乎透明，對許多有害的紫外線與部分紅外線卻大量吸收；水也只在這一段透明，使海洋中的生物得以進行光合作用。', refs: ['denton'] },
+      { d: 2, t: 'p', h: '光合作用需要的能量範圍、眼睛裡感光分子所需的能量範圍，也都落在同一個窗口。生物化學家丹頓（Michael Denton）稱之為一連串驚人的「巧合」。', refs: ['denton'] },
+      { d: 3, t: 'p', h: '這些現象都有物理原因可以說明，例如分子吸收光的能量本來就落在這個範圍。但問題是：為什麼大自然的定律，恰好使這麼多條件同時對生命有利？', refs: ['denton', 'barnes'] }
+    ]},
+    { k: '查證', blocks: [
+      { t: 'claim', c: 1, h: '真空中的光速為每秒 299,792,458 公尺，是國際單位制定義的常數。', refs: ['si'] },
+      { t: 'claim', c: 1, h: '看得越遠，就看見越早的宇宙：從仙女座星系來的光，已經走了約 250 萬年。' },
+      { t: 'claim', c: 1, h: '地球大氣與液態水都在可見光波段相當透明，在許多其他波段則強烈吸收。', refs: ['denton'] },
+      { t: 'claim', c: 4, h: '多種有利條件同時落在同一窄窗口，指向有目的的設計。這是哲學推論，學界對其意義有不同看法。', refs: ['denton'] }
+    ]},
+    { k: '啟示', blocks: [
+      { t: 'verse', h: '神就是光，在他毫無黑暗。', ref: '約翰一書 1:5' },
+      { t: 'h', h: '祂的神性：良善與聖潔' },
+      { t: 'p', h: '光使萬物可以被看見，也使生命可以生長。神把光放在創造的第一天，好像是說：我要把一個看得見、活得下去的世界賜給你們。這是祂的良善。' },
+      { t: 'verse', h: '生命在他裡頭，這生命就是人的光。光照在黑暗裡，黑暗卻不接受光。', ref: '約翰福音 1:4–5' },
+      { t: 'verse', h: '我是世界的光。跟從我的，就不在黑暗裡走，必要得著生命的光。', ref: '約翰福音 8:12' },
+      { d: 2, t: 'verse', h: '那吩咐光從黑暗裡照出來的神，已經照在我們心裡，叫我們得知神榮耀的光顯在耶穌基督的面上。', ref: '哥林多後書 4:6' },
+      { d: 2, t: 'p', h: '保羅把創世記的第一道光與人信主的那一刻連在一起。起初神照亮宇宙，今天祂照亮人心。' }
+    ]},
+    { k: '敬拜', blocks: [
+      { t: 'p', h: '明天早上，看看第一道陽光照進房間。那道光在八分多鐘前離開太陽，一路為你而來。' },
+      { t: 'pray', h: '默想：我心裡還有哪一個角落，不願意讓光照進來？' },
+      { t: 'pray', h: '禱告：主耶穌，你是世界的光。求你照亮我心中的黑暗，也使我成為別人的光。奉耶穌的名，阿們。' }
+    ]},
+    { k: '活出', blocks: [
+      { t: 'h', h: '321 生命應用' },
+      { t: 'list', items: [
+        '<b>聖靈是我的引導</b>：光不照亮一切是為了炫耀，而是為了讓人看清路。求聖靈照亮我下一步。',
+        '<b>活出基督的生命</b>：「你們是世上的光」，讓人看見我的好行為，便將榮耀歸給天上的父（太 5:14–16）。',
+        '<b>無己</b>：光不為自己發亮，而是照亮別人。'
+      ]},
+      { t: 'p', h: '<b>本週行動</b>：做一件不求回報的善事，讓一個人的生活因你而亮一點。' },
+      { t: 'share' },
+      { t: 'h', h: '小測驗' },
+      { t: 'quiz' }
+    ]}
+  ],
+  quiz: [
+    { q: '為什麼說「看得越遠，就看見越早的宇宙」？', o: ['因為光需要時間傳遞', '因為望遠鏡會倒轉時間', '因為遠方的星星比較老'], a: 0, e: '光從遠方出發要走很久，我們看見的是它出發時的樣子。' },
+    { q: '下面哪一項也落在可見光這個窄窗口裡？', o: ['水與大氣最透明的波段', '手機訊號的波段', 'X 光的波段'], a: 0, e: '太陽輻射高峰、大氣與水的透明窗口，都與可見光重疊。' },
+    { q: '哪一節經文說「神就是光，在他毫無黑暗」？', o: ['約翰一書 1:5', '創世記 1:1', '詩篇 23:1'], a: 0, e: '約翰一書 1:5。' }
+  ]
+},
+
+/* ---------- 5 ---------- */
+{ id: 'stardust', hall: '宇宙館', no: '第 5 單元', title: '恆星的熔爐', mark: '星', mins: 10,
+  sub: '我們身體裡的碳、氧、鐵，都是在恆星裡煉成的。',
+  attrs: ['智慧', '良善'],
+  share: { v: '那時，晨星一同歌唱；神的眾子也都歡呼。', r: '約伯記 38:7' },
+  steps: [
+    { k: '驚嘆', blocks: [
+      { t: 'p', h: '你血液裡的鐵、骨頭裡的鈣、每一個細胞裡的碳，都不是在地球上造出來的。它們是在古老恆星的核心裡，經過億萬度的高溫煉成的。' },
+      { t: 'p', h: '神用「地上的塵土」造人；而這塵土，原來是星星的熔爐燒出來的。' },
+      { t: 'verse', h: '耶和華神用地上的塵土造人，將生氣吹在他鼻孔裡，他就成了有靈的活人，名叫亞當。', ref: '創世記 2:7' }
+    ]},
+    { k: '發現', blocks: [
+      { t: 'h', h: '元素是怎麼來的？' },
+      { t: 'list', items: [
+        '<b>氫、氦（和少量鋰）</b>：宇宙開端後的最初幾分鐘形成。',
+        '<b>碳、氧、氮到鐵</b>：在恆星核心裡，較輕的原子核融合成較重的原子核。',
+        '<b>比鐵更重的元素（如金、碘）</b>：在超新星爆發與中子星碰撞中產生。'
+      ]},
+      { t: 'p', h: '1957 年，伯比奇夫婦、福勒與霍伊爾發表了一篇經典論文，完整說明恆星如何製造元素。2017 年，天文學家首次同時用重力波與光觀測到兩顆中子星碰撞，看見重元素正在形成。', refs: ['b2fh', 'gw170817'] },
+      { t: 'h', h: '碳的奇蹟' },
+      { t: 'p', h: '要形成碳，需要三個氦原子核幾乎同時碰在一起，這本來非常困難。1953 年，霍伊爾推論碳原子核必須有一個特定能量的狀態（約 7.65 百萬電子伏特），碳才能大量產生。實驗室隨後果然找到了這個狀態，今天稱為「霍伊爾態」。', refs: ['hoyle54'] },
+      { d: 2, t: 'p', h: '霍伊爾本人並不信神，卻在 1981 年寫道：對這些事實的常識性解讀是，有一位超級智慧「動過」物理學、化學與生物學的手腳。', refs: ['hoyle81'] },
+      { d: 3, t: 'p', h: '後續研究顯示，碳與氧的產量對霍伊爾態的能量及核力強度相當敏感，但敏感程度的精確估計仍有討論。', refs: ['barnes'] }
+    ]},
+    { k: '查證', blocks: [
+      { t: 'claim', c: 1, h: '比氦重的大多數元素是在恆星內部與恆星爆發中形成的。', refs: ['b2fh'] },
+      { t: 'claim', c: 1, h: '中子星碰撞會產生金等重元素，2017 年已被直接觀測。', refs: ['gw170817'] },
+      { t: 'claim', c: 1, h: '碳原子核存在霍伊爾預測的激發態，使恆星能有效產生碳。', refs: ['hoyle54'] },
+      { t: 'claim', c: 2, h: '碳與氧的產量對核力的細微變化很敏感，敏感程度仍在研究。', refs: ['barnes'] }
+    ]},
+    { k: '啟示', blocks: [
+      { t: 'h', h: '祂的智慧：預備了很久的禮物' },
+      { t: 'p', h: '在人出現之前，恆星已經燃燒、爆發了一代又一代，為生命預備材料。神做事從不匆忙，祂為人預備的，比我們想像的更早、更周全。' },
+      { t: 'verse', h: '因為他知道我們的本體，思念我們不過是塵土。', ref: '詩篇 103:14' },
+      { t: 'verse', h: '日有日的榮光，月有月的榮光，星有星的榮光；這星和那星的榮光也有分別。', ref: '哥林多前書 15:41' },
+      { d: 2, t: 'p', h: '保羅用星星的不同榮光，來說明復活身體的榮耀。從塵土而來的人，因著基督，將來要得著榮耀、不朽壞的身體。' }
+    ]},
+    { k: '敬拜', blocks: [
+      { t: 'p', h: '把手放在胸口，感受心跳。這個身體裡的每一個原子，都經過神漫長而細心的預備。' },
+      { t: 'pray', h: '默想：我是塵土，卻有神的氣息；我很渺小，卻被神珍視。' },
+      { t: 'pray', h: '禱告：天父，謝謝你在我出生之前很久，就已經為我預備。我的生命是你的禮物，我願把它獻給你使用。奉耶穌的名，阿們。' }
+    ]},
+    { k: '活出', blocks: [
+      { t: 'h', h: '321 生命應用' },
+      { t: 'list', items: [
+        '<b>謙卑</b>：我本是塵土，沒有什麼可以自誇。',
+        '<b>尊貴</b>：我有神的氣息，是照神形像造的，不必自卑。',
+        '<b>先生命再關係後事工</b>：神用億萬年預備生命的材料，我也要耐心讓生命被神塑造。'
+      ]},
+      { t: 'p', h: '<b>本週行動</b>：對一位常常自卑的朋友說：「你是神細心預備的作品。」' },
+      { t: 'share' },
+      { t: 'h', h: '小測驗' },
+      { t: 'quiz' }
+    ]}
+  ],
+  quiz: [
+    { q: '我們身體裡的碳主要是在哪裡形成的？', o: ['地球的火山', '恆星的核心', '海洋的深處'], a: 1, e: '碳是在恆星核心由氦原子核融合而成。' },
+    { q: '「霍伊爾態」和哪一種元素的形成有關？', o: ['碳', '金', '氫'], a: 0, e: '碳原子核的這個能量狀態，使恆星能大量產生碳。' },
+    { q: '2017 年天文學家觀測到什麼事件，證實重元素的形成？', o: ['日全食', '兩顆中子星碰撞', '彗星撞木星'], a: 1, e: '中子星碰撞同時被重力波與光觀測到。' }
+  ]
+},
+
+/* ---------- 6 ---------- */
+{ id: 'privileged', hall: '宇宙館', no: '第 6 單元', title: '看得見宇宙的地方', mark: '觀', mins: 9,
+  sub: '地球不只適合居住，也恰好是觀察宇宙的好位置。',
+  attrs: ['良善', '智慧'],
+  share: { v: '要叫他們尋求神，或者可以揣摩而得，其實他離我們各人不遠。', r: '使徒行傳 17:27' },
+  steps: [
+    { k: '驚嘆', blocks: [
+      { t: 'p', h: '太陽的直徑大約是月亮的 400 倍，而太陽到地球的距離，也大約是月亮到地球的 400 倍。所以從地球看，月亮剛好能把太陽完全遮住，又不會遮得太多。' },
+      { t: 'p', h: '這使得日全食時，科學家能看見太陽外圍的日冕，還能在白天看見太陽旁邊的星星。' },
+      { t: 'verse', h: '神說：天上要有光體，可以分晝夜，作記號，定節令、日子、年歲。', ref: '創世記 1:14' }
+    ]},
+    { k: '發現', blocks: [
+      { t: 'h', h: '日全食驗證了相對論' },
+      { t: 'p', h: '1919 年，英國天文學家愛丁頓等人趁日全食，拍下太陽附近的星星，發現星光經過太陽時被彎曲，彎曲量符合愛因斯坦廣義相對論的預測。這次觀測使相對論舉世聞名。', refs: ['eddington'] },
+      { t: 'p', h: '月亮每年大約遠離地球 3.8 公分。遠古時月亮較近，遠遠的將來它會離得更遠，那時就不再有完美的日全食。人類剛好活在能看見完美日全食的時代。', refs: ['llr'] },
+      { t: 'h', h: '銀河系裡的好位置' },
+      { t: 'p', h: '太陽系位在銀河系的旋臂之間，不在星系核心那樣擁擠危險的地方，也不在邊緣那樣缺乏重元素的地方。天文學家稱這樣的區域為「星系適居帶」。', refs: ['ghz'] },
+      { d: 2, t: 'p', h: '這個位置也讓我們擁有清晰、較少被塵埃遮蔽的視野，可以看到遙遠的星系與宇宙背景輻射。天文學家岡薩雷斯與哲學家理查茲認為：適合居住的地方，也恰好最適合觀測，這不像是巧合。', refs: ['privileged'] },
+      { d: 3, t: 'p', h: '批評者認為這是一種「選擇效應」：能思考這些問題的觀察者，本來就只會出現在適合的地方。支持者則回應，選擇效應能解釋可居住，卻未必能解釋同時也適合觀測。', refs: ['privileged'] }
+    ]},
+    { k: '查證', blocks: [
+      { t: 'claim', c: 1, h: '太陽直徑約為月球的 400 倍，距離也約為 400 倍，使日全食時兩者視大小相近。' },
+      { t: 'claim', c: 1, h: '1919 年日全食觀測到星光被太陽重力彎曲，支持廣義相對論。', refs: ['eddington'] },
+      { t: 'claim', c: 1, h: '月球每年遠離地球約 3.8 公分（雷射測距）。', refs: ['llr'] },
+      { t: 'claim', c: 2, h: '銀河系中存在較適合複雜生命的「星系適居帶」，其範圍仍有討論。', refs: ['ghz'] },
+      { t: 'claim', c: 4, h: '「可居住性與可觀測性彼此相關」是一個有爭議的哲學論證。', refs: ['privileged'] }
+    ]},
+    { k: '啟示', blocks: [
+      { t: 'verse', h: '他從一本造出萬族的人，住在全地上，並且預先定準他們的年限和所住的疆界，要叫他們尋求神，或者可以揣摩而得，其實他離我們各人不遠。', ref: '使徒行傳 17:26–27' },
+      { t: 'h', h: '祂的良善：一扇打開的窗' },
+      { t: 'p', h: '神不只給人一個家，還給了一扇窗，讓人可以望見宇宙、讀懂祂的作為。祂願意被人尋見。' },
+      { t: 'verse', h: '諸天述說神的榮耀；穹蒼傳揚他的手段。這日到那日發出言語；這夜到那夜傳出知識。', ref: '詩篇 19:1–2' },
+      { d: 2, t: 'p', h: '保羅在雅典對不認識神的哲學家說這番話，從他們熟悉的受造界談起，最後講到耶穌從死裡復活（徒 17:31）。這正是本 App 的路線。' }
+    ]},
+    { k: '敬拜', blocks: [
+      { t: 'p', h: '你所住的地方、你出生的年代，都在神的安排之中。祂把你放在這裡，是為了讓你尋求祂。' },
+      { t: 'pray', h: '默想：神在我的生活中打開了哪一扇窗，讓我看見祂？' },
+      { t: 'pray', h: '禱告：主啊，你離我不遠。謝謝你為我定準年限和疆界，求你使我在我所在的地方尋求你、榮耀你。奉耶穌的名，阿們。' }
+    ]},
+    { k: '活出', blocks: [
+      { t: 'h', h: '321 生命應用' },
+      { t: 'list', items: [
+        '<b>建立屬神的體系</b>：神把我放在我的家庭、職場與城市，那裡就是祂國度的領土。',
+        '<b>讓耶穌作王</b>：我的疆界不是偶然，是祂的安排；我在其中順服祂。',
+        '<b>關係比東西重要</b>：神使人「揣摩而得」，我也要成為別人認識神的一扇窗。'
+      ]},
+      { t: 'p', h: '<b>本週行動</b>：查一查下一次在你所在地區可見的日食或月食，約一位朋友一起觀看。' },
+      { t: 'share' },
+      { t: 'h', h: '小測驗' },
+      { t: 'quiz' }
+    ]}
+  ],
+  quiz: [
+    { q: '為什麼從地球看，月亮能剛好遮住太陽？', o: ['太陽直徑與距離都約為月亮的 400 倍', '月亮比太陽大', '太陽會縮小'], a: 0, e: '兩個約 400 倍互相抵銷，使兩者看起來一樣大。' },
+    { q: '1919 年的日全食觀測支持了哪一個理論？', o: ['廣義相對論', '地心說', '穩恆態宇宙論'], a: 0, e: '星光被太陽重力彎曲，符合愛因斯坦的預測。' },
+    { q: '使徒行傳 17 章說，神定準人的年限和疆界，是為了什麼？', o: ['要叫人尋求神', '要叫人害怕', '要叫人彼此比較'], a: 0, e: '「要叫他們尋求神……其實他離我們各人不遠。」' }
+  ]
+},
+
+/* ---------- 7 ---------- */
+{ id: 'laws', hall: '宇宙館', no: '第 7 單元', title: '天地的定例', mark: '律', mins: 9,
+  sub: '同樣的定律，從地球一直管到宇宙的盡頭。科學之所以可能，是因為宇宙有秩序。',
+  attrs: ['信實'],
+  share: { v: '我們不至消滅，是出於耶和華諸般的慈愛；是因他的憐憫不至斷絕。每早晨，這都是新的；你的誠實極其廣大！', r: '耶利米哀歌 3:22–23' },
+  steps: [
+    { k: '驚嘆', blocks: [
+      { t: 'p', h: '1846 年，天文學家還沒有看見海王星，就先用紙筆算出了它的位置。望遠鏡對準那個方向，海王星就在那裡。' },
+      { t: 'p', h: '2015 年，科學家接收到十幾億年前兩個黑洞合併所發出的重力波，而這種波早在 1916 年就被愛因斯坦的方程式預言。宇宙守規矩，守得令人驚訝。', refs: ['ligo'] },
+      { t: 'verse', h: '地還存留的時候，稼穡、寒暑、冬夏、晝夜就永不停息了。', ref: '創世記 8:22' }
+    ]},
+    { k: '發現', blocks: [
+      { t: 'h', h: '處處一樣的定律' },
+      { t: 'p', h: '天文學家分析遙遠星系的光譜，發現那裡的原子吸收與發出光的方式，和地球實驗室裡一模一樣。幾十億光年外的物理定律，與這裡相同。', refs: ['uzan'] },
+      { t: 'analogy', h: '就像一本字典，不論在台北或倫敦翻開，每個字的意思都一樣。宇宙的每一個角落，都用同一本「定律字典」。' },
+      { t: 'h', h: '數學為什麼管用？' },
+      { t: 'p', h: '諾貝爾物理獎得主維格納在 1960 年寫了一篇著名的文章，稱數學在自然科學中的有效性是「不合理的有效」：人在紙上推導出的數學，竟然能精準描述遙遠天體的運動。', refs: ['wigner'] },
+      { d: 2, t: 'p', h: '近代科學的先驅，如克卜勒、牛頓，都相信宇宙是一位理性的神所造，因此值得研究、可以被理解。對他們來說，研究自然就是追隨創造者的思想。' },
+      { d: 3, t: 'p', h: '物理常數是否在宇宙歷史中有極微小的變化，仍是研究題目。目前的觀測把精細結構常數的可能變化限制在極小範圍內，尚無公認的變化證據。', refs: ['uzan'] }
+    ]},
+    { k: '查證', blocks: [
+      { t: 'claim', c: 1, h: '海王星於 1846 年依數學預測的位置被發現。' },
+      { t: 'claim', c: 1, h: '重力波於 2015 年首次被直接偵測，與廣義相對論的預測一致。', refs: ['ligo'] },
+      { t: 'claim', c: 2, h: '遙遠天體的光譜顯示，物理常數在宇宙中極為一致；是否有極微小的變化仍在研究。', refs: ['uzan'] },
+      { t: 'claim', c: 4, h: '宇宙的秩序與可理解性，最好的解釋是一位理性而信實的創造者。這是哲學推論。', refs: ['wigner'] }
+    ]},
+    { k: '啟示', blocks: [
+      { t: 'h', h: '祂的神性：信實' },
+      { t: 'verse', h: '那使太陽白日發光，使月亮星宿有定例，夜間發亮，又攪動大海，使海中波浪匉訇的，萬軍之耶和華是他的名。他如此說：這些定例若能在我面前廢掉，以色列的後裔也就在我面前斷絕，永遠不再成國。', ref: '耶利米書 31:35–36' },
+      { t: 'p', h: '神用宇宙的定律，為祂的應許作擔保：只要日月還照定例運行，祂對祂子民的約就不會落空。每一次日出，都在述說神的信實。' },
+      { t: 'verse', h: '他是神榮耀所發的光輝，是神本體的真像，常用他權能的命令托住萬有。', ref: '希伯來書 1:3' },
+      { d: 2, t: 'p', h: '科學家說的「自然定律」，聖經稱為耶穌「權能的命令」。宇宙不是一台自己運轉的機器，而是每一刻都被基督托住。' }
+    ]},
+    { k: '敬拜', blocks: [
+      { t: 'p', h: '明天早晨看見日出時，對神說一句：「你的誠實極其廣大！」' },
+      { t: 'pray', h: '默想：神在宇宙中從不失信，祂對我的應許又怎麼會落空？' },
+      { t: 'pray', h: '禱告：信實的主，你托住萬有，也托住我。我願像日月守你的定例一樣，每天忠心地跟隨你。奉耶穌的名，阿們。' }
+    ]},
+    { k: '活出', blocks: [
+      { t: 'h', h: '321 生命應用' },
+      { t: 'list', items: [
+        '<b>聖經是我的準則</b>：宇宙有定例，我的生命也需要神的話作定例。',
+        '<b>改變觀念的八大步驟</b>：資訊、啟示、信服、實踐、檢討、修正、反覆、繁殖。規律地操練，生命就會改變。',
+        '<b>信實</b>：像神一樣守信，說到做到，在關係中成為可靠的人。'
+      ]},
+      { t: 'p', h: '<b>本週行動</b>：為自己定一個每天固定的靈修時間，連續七天守住它。' },
+      { t: 'share' },
+      { t: 'h', h: '小測驗' },
+      { t: 'quiz' }
+    ]}
+  ],
+  quiz: [
+    { q: '海王星是怎麼被發現的？', o: ['先用數學算出位置再觀測到', '太空船偶然拍到', '古人用肉眼看到'], a: 0, e: '1846 年依數學預測的位置被發現。' },
+    { q: '維格納說數學在自然科學中的有效性是？', o: ['不合理的有效', '完全沒用', '只對地球有效'], a: 0, e: '人的數學竟能精準描述宇宙，令人驚訝。' },
+    { q: '希伯來書 1:3 說，萬有是被什麼托住的？', o: ['耶穌權能的命令', '運氣', '人的努力'], a: 0, e: '「常用他權能的命令托住萬有。」' }
+  ]
+},
+
+/* ---------- 8 ---------- */
+{ id: 'new-creation', hall: '宇宙館', no: '第 8 單元', title: '新天新地', mark: '新', mins: 10,
+  sub: '宇宙有開端，也走向終局。但聖經的故事不停在熱寂，而是停在更新。',
+  attrs: ['永恆', '公義'],
+  share: { v: '但我們照他的應許，盼望新天新地，有義居在其中。', r: '彼得後書 3:13' },
+  steps: [
+    { k: '驚嘆', blocks: [
+      { t: 'p', h: '1998 年，兩個天文團隊觀測遙遠的超新星，發現宇宙的膨脹不但沒有變慢，反而正在加速。三位科學家因此獲得 2011 年諾貝爾物理學獎。', refs: ['riess98', 'perlmutter'] },
+      { t: 'p', h: '依照目前的理解，宇宙會越來越冷、越來越暗。星星一顆顆熄滅，最後只剩下寒冷與寂靜。這稱為「熱寂」。' },
+      { t: 'verse', h: '天地要廢去，我的話卻不能廢去。', ref: '馬太福音 24:35' }
+    ]},
+    { k: '發現', blocks: [
+      { t: 'h', h: '一切都在「變舊」' },
+      { t: 'p', h: '熱力學第二定律說，封閉系統中可用的能量會不斷減少，亂度（熵）只增不減。熱水會變涼，房間不整理會變亂，恆星的燃料也會用完。' },
+      { t: 'p', h: '我們的太陽大約再過 50 億年，會膨脹成紅巨星。在更遙遠的未來，宇宙中的恆星會逐漸停止形成，最後熄滅。', refs: ['sun', 'adams'] },
+      { t: 'analogy', h: '宇宙像一座上了發條的鐘，從開端就一直在走，發條一點一點鬆開。這告訴我們兩件事：它曾經被上緊，也不會永遠走下去。' },
+      { d: 2, t: 'p', h: '宇宙的最終命運取決於暗能量的性質。多數模型預測永遠膨脹、逐漸冷卻；也有模型討論其他可能。這些都是根據現有定律的推算，仍在研究中。', refs: ['adams', 'planck'] }
+    ]},
+    { k: '查證', blocks: [
+      { t: 'claim', c: 1, h: '宇宙的膨脹正在加速（1998 年超新星觀測，2011 年諾貝爾獎）。', refs: ['riess98', 'perlmutter'] },
+      { t: 'claim', c: 1, h: '太陽約在 50 億年後離開主序階段，膨脹為紅巨星。', refs: ['sun'] },
+      { t: 'claim', c: 2, h: '宇宙的長遠命運很可能是持續膨脹、逐漸冷卻的「熱寂」，但取決於暗能量的性質。', refs: ['adams'] },
+      { t: 'claim', c: 4, h: '宇宙本身不能給出永恆的盼望；盼望必須來自宇宙之外。這是信仰的宣告。' }
+    ]},
+    { k: '啟示', blocks: [
+      { t: 'verse', h: '天地都要滅沒，你卻要長存；天地都要如外衣漸漸舊了。你要將天地如裡衣更換，天地就改變了。惟有你永不改變；你的年數沒有窮盡。', ref: '詩篇 102:26–27' },
+      { t: 'h', h: '受造之物的歎息' },
+      { t: 'verse', h: '但受造之物仍然指望脫離敗壞的轄制，得享神兒女自由的榮耀。我們知道，一切受造之物一同歎息、勞苦，直到如今。', ref: '羅馬書 8:21–22' },
+      { t: 'h', h: '祂的永恆與公義：更新萬物' },
+      { t: 'verse', h: '但我們照他的應許，盼望新天新地，有義居在其中。', ref: '彼得後書 3:13' },
+      { t: 'verse', h: '神要擦去他們一切的眼淚；不再有死亡，也不再有悲哀、哭號、疼痛，因為以前的事都過去了。坐寶座的說：看哪，我將一切都更新了！', ref: '啟示錄 21:4–5' },
+      { t: 'p', h: '那位給宇宙開端的主，也要給宇宙一個新的開始。耶穌的復活，就是新創造的第一道曙光。' }
+    ]},
+    { k: '敬拜', blocks: [
+      { t: 'p', h: '你生命中有哪些東西正在「變舊」？健康、關係、夢想？把它們帶到那位「將一切都更新」的主面前。' },
+      { t: 'pray', h: '默想：我是在為會廢去的天地而活，還是為永遠長存的國度而活？' },
+      { t: 'pray', h: '禱告：永恆的主，你的年數沒有窮盡。求你使我從暫時的眼光轉向永恆的眼光，盼望你的國降臨，你的旨意行在地上，如同行在天上。奉耶穌的名，阿們。' }
+    ]},
+    { k: '活出', blocks: [
+      { t: 'h', h: '321 生命應用' },
+      { t: 'list', items: [
+        '<b>從暫時觀點改變成永恆觀點</b>：用永恆的尺，量今天的得失。',
+        '<b>成為得勝者</b>：「得勝的，我要賜他在我寶座上與我同坐。」（啟 3:21）',
+        '<b>迎接主再來</b>：建立屬神的體系，預備新天新地，讓神的國度降臨在我的家庭與職場。'
+      ]},
+      { t: 'p', h: '<b>本週行動</b>：寫下一件你要「為永恆而做」的事，這個星期就開始。' },
+      { t: 'p', h: '恭喜你走完宇宙館！從「起初，神創造天地」到「我將一切都更新了」，你看見了整個宇宙的故事，也看見了故事的主角：耶穌基督。' },
+      { t: 'share' },
+      { t: 'h', h: '小測驗' },
+      { t: 'quiz' }
+    ]}
+  ],
+  quiz: [
+    { q: '1998 年天文學家發現宇宙的膨脹正在？', o: ['加速', '停止', '倒轉'], a: 0, e: '遙遠超新星的觀測顯示膨脹正在加速。' },
+    { q: '熱力學第二定律告訴我們什麼？', o: ['可用的能量會不斷減少', '能量會越來越多', '宇宙永遠不會改變'], a: 0, e: '亂度只增不減，宇宙像外衣漸漸舊了。' },
+    { q: '聖經給宇宙故事的結局是？', o: ['新天新地，有義居在其中', '永遠的寒冷寂靜', '一切歸於虛無'], a: 0, e: '「看哪，我將一切都更新了！」（啟 21:5）' }
+  ]
+}
+];
+
+/* 大哉問 → 單元 */
+QUESTIONS = [
+  { q: '宇宙是從哪裡來的？', u: 0 },
+  { q: '宇宙為什麼剛好適合生命？', u: 1 },
+  { q: '宇宙這麼大，我還重要嗎？', u: 2 },
+  { q: '科學和信仰一定互相衝突嗎？', u: 6 },
+  { q: '宇宙最後會怎樣？有盼望嗎？', u: 7 }
+];
+
+/* 尺度單元的資料 */
+var SCALE = [
+  { n: '地球', v: '直徑約 12,742 公里', l: '光繞地球一圈約 0.13 秒' },
+  { n: '月球', v: '距離約 38 萬公里', l: '月光約 1.3 秒到達地球' },
+  { n: '太陽', v: '距離約 1 億 5 千萬公里', l: '陽光約 8 分 20 秒到達地球' },
+  { n: '海王星', v: '太陽系最外側的行星', l: '陽光約 4 小時才到' },
+  { n: '比鄰星', v: '離太陽最近的恆星', l: '約 4.24 光年' },
+  { n: '銀河系', v: '一千億到四千億顆恆星', l: '直徑約 10 萬光年' },
+  { n: '仙女座星系', v: '肉眼可見最遠的天體之一', l: '約 250 萬光年' },
+  { n: '可觀測宇宙', v: '數千億到上兆個星系', l: '直徑約 930 億光年' }
+];
+
 (function () {
   'use strict';
   var KEY = 'wanxiang_v1';
-  var S = { view: 'home', step: 0, depth: 2, fs: 17, rate: 1, done: {}, seen: {}, attrs: {}, quiz: {} };
+  var S = { view: 'home', u: 0, step: 0, depth: 2, fs: 17, rate: 1, done: {}, seen: {}, attrs: {}, quiz: {} };
+  function cur() { return UNITS[S.u] || UNITS[0]; }
+  function doneCount() { var n = 0; for (var i = 0; i < UNITS.length; i++) { if (S.done[UNITS[i].id]) { n++; } } return n; }
+  function nextUndone() { for (var i = 0; i < UNITS.length; i++) { if (!S.done[UNITS[i].id]) { return i; } } return -1; }
 
   function load() {
     try {
@@ -332,13 +828,14 @@ var TODAY = {
     var html = '';
     if (S.view === 'home') { html = homeView(); }
     else if (S.view === 'unit') { html = unitView(); }
+    else if (S.view === 'hall') { html = hallView(); }
     else if (S.view === 'today') { html = todayView(); }
     else { html = meView(); }
     $('main').innerHTML = html;
     var tabs = document.querySelectorAll('.tabbar button');
     for (var i = 0; i < tabs.length; i++) {
       var v = tabs[i].getAttribute('data-go');
-      if (v === S.view || (v === 'home' && S.view === 'unit')) { tabs[i].setAttribute('aria-current', 'page'); }
+      if (v === S.view || (v === 'home' && (S.view === 'unit' || S.view === 'hall'))) { tabs[i].setAttribute('aria-current', 'page'); }
       else { tabs[i].removeAttribute('aria-current'); }
     }
     document.documentElement.style.setProperty('--fs', S.fs + 'px');
@@ -354,29 +851,40 @@ var TODAY = {
       '<div class="spec" aria-hidden="true"><i style="left:22%"></i><i style="left:39%"></i><i style="left:61%"></i><i style="left:83%"></i></div>' +
       '<div class="speclbl"><span>星系光譜</span><span>吸收譜線往紅端偏移 → 宇宙在膨脹</span></div>' +
       '</section>';
-    var done = S.done[UNIT.id];
-    h += '<section class="sec"><h2>繼續學習<span>' + (done ? '已完成 1 / 1 開放單元' : '從第一個單元開始') + '</span></h2>' +
-      '<button class="q" data-open="unit"><span class="m">宇</span><span class="t"><b>' + UNIT.title + '</b><br><span class="s">' + UNIT.hall + '・' + UNIT.no + '・約 10 分鐘</span></span><span class="s">' + (done ? '重溫' : '開始') + ' ›</span></button></section>';
+    var nu = nextUndone(), dc = doneCount();
+    var cu = UNITS[nu < 0 ? 0 : nu];
+    h += '<section class="sec"><h2>繼續學習<span>宇宙館 ' + dc + ' / ' + UNITS.length + ' 單元完成</span></h2>' +
+      '<button class="q" data-unit="' + (nu < 0 ? 0 : nu) + '"><span class="m">' + cu.mark + '</span><span class="t"><b>' + cu.title + '</b><br><span class="s">' + cu.hall + '・' + cu.no + '・約 ' + cu.mins + ' 分鐘</span></span><span class="s">' + (nu < 0 ? '重溫' : (dc ? '繼續' : '開始')) + ' ›</span></button></section>';
     h += '<section class="sec"><h2>八大展館<span>所造之物</span></h2><div class="halls">';
     for (var i = 0; i < HALLS.length; i++) {
       var a = HALLS[i];
-      h += '<button class="hall' + (a.open ? ' open' : '') + '"' + (a.open ? ' data-open="unit"' : ' disabled') + '><b>' + a.n + '</b><span class="d">' + a.d + '</span><span class="st">' + (a.open ? '1 個單元開放' : '即將開放') + '</span></button>';
+      h += '<button class="hall' + (a.open ? ' open' : '') + '"' + (a.open ? ' data-go="hall"' : ' disabled') + '><b>' + a.n + '</b><span class="d">' + a.d + '</span><span class="st">' + (a.open ? UNITS.length + ' 個單元・已完成 ' + dc : '即將開放') + '</span></button>';
     }
     h += '</div></section>';
     h += '<section class="sec"><h2>大哉問<span>從你心裡的問題開始</span></h2><div class="qlist">';
     for (var j = 0; j < QUESTIONS.length; j++) {
-      var q = QUESTIONS[j];
-      h += '<button class="q"' + (q.open ? ' data-open="unit"' : ' disabled style="opacity:.62"') + '><span class="m">？</span><span class="t">' + q.q + '<br><span class="s">' + q.s + '</span></span></button>';
+      var q = QUESTIONS[j], qu = UNITS[q.u];
+      h += '<button class="q" data-unit="' + q.u + '"><span class="m">？</span><span class="t">' + q.q + '<br><span class="s">' + qu.hall + '・' + qu.title + '</span></span></button>';
     }
     h += '</div></section>' + foot();
     return h;
   }
 
+  function hallView() {
+    var h = '<div class="uhead"><div class="eyebrow">八大展館</div><h1>宇宙館</h1><p class="sub">從宇宙的開端到新天新地，八個單元看見神的永能與神性。</p></div><div class="qlist" style="margin-top:18px">';
+    for (var i = 0; i < UNITS.length; i++) {
+      var u = UNITS[i], d = S.done[u.id];
+      h += '<button class="q" data-unit="' + i + '"><span class="m">' + u.mark + '</span><span class="t"><b>' + u.title + '</b><br><span class="s">' + u.no + '・約 ' + u.mins + ' 分鐘・彰顯' + u.attrs.join('、') + '</span></span><span class="s"' + (d ? ' style="color:var(--good);font-weight:700"' : '') + '>' + (d ? '已完成' : '›') + '</span></button>';
+    }
+    return h + '</div>' + foot();
+  }
+
   function foot() {
-    return '<p class="foot">原型版本：本單元為內容樣板，科學敘述附原始文獻，正式上線前將由科學與神學顧問委員會審查。經文引用《和合本》。國度 321 空中團契。</p>';
+    return '<p class="foot">原型版本：宇宙館內容為樣板，科學敘述附原始文獻，正式上線前將由科學與神學顧問委員會審查。經文引用《和合本》。國度 321 空中團契。</p>';
   }
 
   function unitView() {
+    var UNIT = cur();
     var st = UNIT.steps[S.step];
     var h = '<div class="uhead"><div class="eyebrow">' + UNIT.hall + '・' + UNIT.no + '</div><h1>' + UNIT.title + '</h1><p class="sub">' + UNIT.sub + '</p><div class="tags">';
     for (var i = 0; i < UNIT.attrs.length; i++) { h += '<span class="tag">彰顯神的' + UNIT.attrs[i] + '</span>'; }
@@ -388,7 +896,7 @@ var TODAY = {
     }
     h += '</div><nav class="steps" aria-label="學習步驟">';
     for (var s = 0; s < UNIT.steps.length; s++) {
-      h += '<button data-step="' + s + '"' + (s === S.step ? ' aria-current="step"' : '') + (S.seen[s] ? ' class="done"' : '') + '><span class="n">' + (s + 1) + '</span>' + UNIT.steps[s].k + '</button>';
+      h += '<button data-step="' + s + '"' + (s === S.step ? ' aria-current="step"' : '') + (S.seen[UNIT.id + '_' + s] ? ' class="done"' : '') + '><span class="n">' + (s + 1) + '</span>' + UNIT.steps[s].k + '</button>';
     }
     h += '</nav><div class="row" style="margin-top:12px"><button class="iconbtn readbtn" id="readBtn">朗讀這一步</button></div>';
     h += '<div class="body" id="stepBody">';
@@ -399,7 +907,7 @@ var TODAY = {
     h += '</div>';
     var last = S.step === UNIT.steps.length - 1;
     h += '<div class="nav"><button id="prevBtn"' + (S.step === 0 ? ' disabled' : '') + '>‹ 上一步</button>' +
-      '<button class="pri" id="nextBtn">' + (last ? (S.done[UNIT.id] ? '回到展館' : '完成單元，把榮耀歸給神') : '下一步：' + UNIT.steps[S.step + 1].k + ' ›') + '</button></div>';
+      '<button class="pri" id="nextBtn">' + (last ? (S.done[UNIT.id] ? (S.u < UNITS.length - 1 ? '下一個單元：' + UNITS[S.u + 1].title + ' ›' : '回到宇宙館') : '完成單元，把榮耀歸給神') : '下一步：' + UNIT.steps[S.step + 1].k + ' ›') + '</button></div>';
     return h + foot();
   }
 
@@ -432,17 +940,26 @@ var TODAY = {
         return '<div class="sim"><canvas id="simCv" width="800" height="500" aria-label="宇宙倒帶示意動畫"></canvas>' +
           '<div class="simctl"><input type="range" id="simT" min="0" max="1000" value="1000" aria-label="時間"><span class="num" id="simLbl"></span><button class="simbtn" id="simPlay">倒帶</button></div>' +
           '<p class="simnote">示意動畫：拖動滑桿，把宇宙的時間往回倒。比例與位置為示意，不是真實星系分布。</p></div>';
+      case 'dial':
+        return '<div class="sim"><div class="dialbar"><i class="win"></i><i class="mk" id="dialMk"></i></div>' +
+          '<div class="simctl"><input type="range" id="dialV" min="0" max="120" step="0.5" value="0" aria-label="宇宙常數倍數"><span class="num" id="dialLbl"></span></div>' +
+          '<p class="dialst" id="dialSt"></p>' +
+          '<p class="simnote">示意：橫軸是宇宙常數相對實際值的倍數，以 10 的次方表示，右端是量子物理粗略估計的約 10<sup>120</sup> 倍。綠色窄條是星系還能形成的範圍（依溫伯格 1987 年的估計，約數百倍以內）。</p></div>';
+      case 'scale':
+        return '<div class="sim scale"><div class="scn" id="scN"></div><div class="scv" id="scV"></div><div class="scl num" id="scL"></div>' +
+          '<div class="dots" id="scD"></div><div class="simctl"><input type="range" id="scT" min="0" max="' + (SCALE.length - 1) + '" value="0" aria-label="尺度"><button class="simbtn" id="scNext">放大一級</button></div>' +
+          '<p class="simnote">每往右一格，尺度都大上許多倍。數值為約略值。</p></div>';
       case 'share':
-        return '<div class="sharebox"><img id="shareImg" alt="宇宙有開端分享卡"><p>長按圖片即可儲存或分享。</p></div>';
+        return '<div class="sharebox"><img id="shareImg" alt="' + cur().title + '分享卡"><p>長按圖片即可儲存或分享。</p></div>';
       case 'quiz': return quizHtml();
     }
     return '';
   }
 
   function quizHtml() {
-    var h = '<div class="quiz">';
-    for (var i = 0; i < QUIZ.length; i++) {
-      var q = QUIZ[i], ans = S.quiz[i];
+    var U = cur(), QZ = U.quiz, h = '<div class="quiz">';
+    for (var i = 0; i < QZ.length; i++) {
+      var q = QZ[i], ans = S.quiz[U.id + '_' + i];
       h += '<div class="qz"><div class="qq">' + (i + 1) + '. ' + q.q + '</div>';
       for (var j = 0; j < q.o.length; j++) {
         var cls = '';
@@ -473,8 +990,9 @@ var TODAY = {
       var n = S.attrs[ATTRS[i]] || 0;
       h += '<div class="attr"><span>' + ATTRS[i] + '</span><span class="bar"><i style="width:' + Math.min(100, n * 25) + '%"></i></span><span class="num">' + n + '</span></div>';
     }
-    h += '</div>' + (total ? '' : '<p class="muted">完成「宇宙有開端」後，這裡會亮起「永能」與「永恆」。</p>') + '</div>';
-    h += '<div class="card"><b>閱讀設定</b>' +
+    h += '</div>' + (total ? '' : '<p class="muted">完成宇宙館的單元後，這裡會依單元亮起神的屬性。</p>') + '</div>';
+    h += '<div class="card"><b>學習進度</b><p class="muted">宇宙館：已完成 ' + doneCount() + ' / ' + UNITS.length + ' 單元</p></div>' +
+      '<div class="card"><b>閱讀設定</b>' +
       '<div class="row"><span class="muted" style="width:4em">字級</span><div class="seg">' +
       seg('fs', 15, '小') + seg('fs', 17, '中') + seg('fs', 20, '大') + '</div></div>' +
       '<div class="row"><span class="muted" style="width:4em">朗讀</span><div class="seg">' +
@@ -489,7 +1007,9 @@ var TODAY = {
     if ($('stars')) { drawStars($('stars')); }
     if ($('simCv')) { initSim(); }
     if ($('shareImg')) { makeShare($('shareImg')); }
-    if (S.view === 'unit') { S.seen[S.step] = true; }
+    if ($('dialV')) { initDial(); }
+    if ($('scT')) { initScale(); }
+    if (S.view === 'unit') { S.seen[cur().id + '_' + S.step] = true; }
   }
 
   function rng(seed) {
@@ -562,6 +1082,36 @@ var TODAY = {
     }
   }
 
+  /* ---------- fine-tuning dial ---------- */
+  function initDial() {
+    var inp = $('dialV');
+    function upd() {
+      var x = +inp.value;
+      $('dialMk').style.left = (x / 120 * 100) + '%';
+      $('dialLbl').textContent = x === 0 ? '實際值（1 倍）' : '實際值的 10^' + x + ' 倍';
+      var ok = x <= 2.5;
+      var st = $('dialSt');
+      st.textContent = ok ? '星系可以形成：恆星、行星、生命才有可能。' : '宇宙膨脹太快，物質來不及聚成星系。';
+      st.style.color = ok ? '#74C795' : '#EE9A62';
+    }
+    inp.oninput = upd; upd();
+  }
+
+  /* ---------- scale ---------- */
+  function initScale() {
+    var inp = $('scT');
+    function upd() {
+      var i = +inp.value, it = SCALE[i];
+      $('scN').textContent = it.n; $('scV').textContent = it.v; $('scL').textContent = it.l;
+      var d = '';
+      for (var k = 0; k < SCALE.length; k++) { d += '<i' + (k <= i ? ' class="on"' : '') + ' style="width:' + (6 + k * 3) + 'px;height:' + (6 + k * 3) + 'px"></i>'; }
+      $('scD').innerHTML = d;
+    }
+    inp.oninput = upd;
+    $('scNext').onclick = function () { inp.value = (+inp.value + 1) % SCALE.length; upd(); };
+    upd();
+  }
+
   /* ---------- share card ---------- */
   function wrapText(c, text, maxW) {
     var lines = [], cur = '';
@@ -573,6 +1123,7 @@ var TODAY = {
     return lines;
   }
   function makeShare(img) {
+    var U = cur();
     var cv = document.createElement('canvas'); cv.width = 1600; cv.height = 900;
     var c = cv.getContext('2d');
     var g = c.createRadialGradient(1300, 80, 50, 1000, 400, 1300);
@@ -585,12 +1136,12 @@ var TODAY = {
     }
     c.globalAlpha = 1;
     var serif = '"Noto Serif TC","PMingLiU","Songti TC",serif', sans = '"Noto Sans TC","Microsoft JhengHei",sans-serif';
-    c.fillStyle = '#EE8A6C'; c.font = '500 34px ' + sans; c.fillText('萬象見神・宇宙館', 120, 150);
-    c.fillStyle = '#FFFFFF'; c.font = '700 110px ' + serif; c.fillText('宇宙有開端', 120, 300);
+    c.fillStyle = '#EE8A6C'; c.font = '500 34px ' + sans; c.fillText('萬象見神・' + U.hall, 120, 150);
+    c.fillStyle = '#FFFFFF'; c.font = '700 110px ' + serif; c.fillText(U.title, 120, 300);
     c.fillStyle = '#E3E7F2'; c.font = '600 46px ' + serif;
-    var lines = wrapText(c, '「我們因著信，就知道諸世界是藉神話造成的；這樣，所看見的，並不是從顯然之物造出來的。」', 1300);
+    var lines = wrapText(c, '「' + U.share.v + '」', 1300);
     for (var j = 0; j < lines.length; j++) { c.fillText(lines[j], 120, 420 + j * 74); }
-    c.fillStyle = '#AAB4CC'; c.font = '400 34px ' + sans; c.fillText('希伯來書 11:3（和合本）', 120, 440 + lines.length * 74);
+    c.fillStyle = '#AAB4CC'; c.font = '400 34px ' + sans; c.fillText(U.share.r + '（和合本）', 120, 440 + lines.length * 74);
     var sy = 800, cols = ['#5b2ca0', '#2f5fe0', '#22b3d8', '#3fcf6a', '#e8e04a', '#f39a2d', '#d63a2a'];
     var sg = c.createLinearGradient(120, 0, 1480, 0);
     for (var k = 0; k < cols.length; k++) { sg.addColorStop(k / (cols.length - 1), cols[k]); }
@@ -634,40 +1185,44 @@ var TODAY = {
   }
 
   /* ---------- events ---------- */
-  function go(v) { S.view = v; if (v === 'unit' && S.step >= UNIT.steps.length) { S.step = 0; } render(); window.scrollTo(0, 0); }
+  function go(v) { S.view = v; if (v === 'unit' && S.step >= cur().steps.length) { S.step = 0; } render(); window.scrollTo(0, 0); }
 
   function finish() {
-    if (!S.done[UNIT.id]) {
-      S.done[UNIT.id] = true;
-      for (var i = 0; i < UNIT.attrs.length; i++) { S.attrs[UNIT.attrs[i]] = (S.attrs[UNIT.attrs[i]] || 0) + 1; }
+    var U = cur();
+    if (!S.done[U.id]) {
+      S.done[U.id] = true;
+      for (var i = 0; i < U.attrs.length; i++) { S.attrs[U.attrs[i]] = (S.attrs[U.attrs[i]] || 0) + 1; }
       S.step = 0; go('me');
-    } else { S.step = 0; go('home'); }
+    } else if (S.u < UNITS.length - 1) { S.u++; S.step = 0; go('unit'); }
+    else { S.step = 0; go('hall'); }
   }
 
   document.addEventListener('click', function (e) {
     var t = e.target;
-    while (t && t !== document && !(t.getAttribute && (t.hasAttribute('data-go') || t.hasAttribute('data-open') || t.hasAttribute('data-step') || t.hasAttribute('data-depth') || t.hasAttribute('data-q') || t.hasAttribute('data-set') || t.id))) { t = t.parentNode; }
+    while (t && t !== document && !(t.getAttribute && (t.hasAttribute('data-go') || t.hasAttribute('data-open') || t.hasAttribute('data-step') || t.hasAttribute('data-depth') || t.hasAttribute('data-q') || t.hasAttribute('data-unit') || t.hasAttribute('data-set') || t.id))) { t = t.parentNode; }
     if (!t || t === document) { return; }
     if (t.hasAttribute('data-go')) { go(t.getAttribute('data-go')); return; }
     if (t.hasAttribute('data-open')) { go(t.getAttribute('data-open')); return; }
+    if (t.hasAttribute('data-unit')) { S.u = +t.getAttribute('data-unit'); S.step = 0; go('unit'); return; }
     if (t.hasAttribute('data-step')) { S.step = +t.getAttribute('data-step'); render(); return; }
     if (t.hasAttribute('data-depth')) { S.depth = +t.getAttribute('data-depth'); render(); return; }
     if (t.hasAttribute('data-q')) {
       var qi = +t.getAttribute('data-q');
-      if (S.quiz[qi] === undefined) { S.quiz[qi] = +t.getAttribute('data-o'); render(); }
+      var qk = cur().id + '_' + qi;
+      if (S.quiz[qk] === undefined) { S.quiz[qk] = +t.getAttribute('data-o'); render(); }
       return;
     }
     if (t.hasAttribute('data-set')) { S[t.getAttribute('data-set')] = +t.getAttribute('data-val'); render(); return; }
     switch (t.id) {
       case 'prevBtn': if (S.step > 0) { S.step--; render(); window.scrollTo(0, 0); } break;
       case 'nextBtn':
-        if (S.step < UNIT.steps.length - 1) { S.step++; render(); window.scrollTo(0, 0); } else { finish(); }
+        if (S.step < cur().steps.length - 1) { S.step++; render(); window.scrollTo(0, 0); } else { finish(); }
         break;
       case 'readBtn': speak($('stepBody'), t, '朗讀這一步'); break;
       case 'readToday': speak(t.parentNode.parentNode, t, '朗讀'); break;
       case 'themeBtn':
-        var cur = document.documentElement.getAttribute('data-theme');
-        var dark = cur ? cur === 'dark' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        var curTheme = document.documentElement.getAttribute('data-theme');
+        var dark = curTheme ? curTheme === 'dark' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
         document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
         render(); break;
       case 'resetBtn':
@@ -680,7 +1235,10 @@ var TODAY = {
   });
 
   load();
-  if (S.view === 'unit' && !(S.step >= 0 && S.step < UNIT.steps.length)) { S.step = 0; }
+  if (!UNITS[S.u]) { S.u = 0; }
+  if (S.view === 'unit' && !(S.step >= 0 && S.step < cur().steps.length)) { S.step = 0; }
+  if (S.seen && S.seen[0] !== undefined) { S.seen = {}; }
+  for (var qk0 in S.quiz) { if (S.quiz.hasOwnProperty(qk0) && /^\d+$/.test(qk0)) { S.quiz = {}; break; } }
   render();
 })();
 
