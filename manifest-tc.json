@@ -1,0 +1,30 @@
+{
+ "name": "321萬象見神",
+ "short_name": "321萬象見神",
+ "description": "藉著上帝所造之物認識神的永能和神性",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#0F1628",
+ "theme_color": "#0F1628",
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

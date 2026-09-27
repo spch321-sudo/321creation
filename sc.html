@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hans">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0F1628">
-<link rel="manifest" href="manifest-tc.json">
+<link rel="manifest" href="manifest-sc.json">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="321萬象見神">
-<title>321萬象見神</title>
+<meta name="apple-mobile-web-app-title" content="321万象见神">
+<title>321万象见神</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
@@ -179,7 +179,7 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 @media (max-width:420px){.brand small{display:none}.proto{display:none}}
 :lang(en) .attr{grid-template-columns:8.6em 1fr 2.4em}
 :lang(en) .hero h1{letter-spacing:.04em}
-/* ---- 畫線、朗讀、小智 ---- */
+/* ---- 画线、朗读、小智 ---- */
 .blk{display:contents}
 #stepBody .sent,#todayText .sent{cursor:pointer;border-radius:2px}
 .sent[data-hl]{background:linear-gradient(transparent 55%,var(--hl-gold) 55%)}
@@ -265,25 +265,25 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 </style>
 </head>
 <body>
-<header class="top"><div class="in"><img class="brandicon" src="icons/icon-72.png" alt="" width="30" height="30"><span class="brand">321萬象見神<small>Creation Speaks</small></span><span class="sp"></span><nav class="langs" aria-label="語言"><a href="./" data-l="tc" aria-current="true">繁</a><a href="sc.html" data-l="sc">简</a><a href="en.html" data-l="en">EN</a></nav><span class="proto">原型</span><button class="iconbtn" id="themeBtn" aria-label="切換深淺色">深／淺</button></div></header>
+<header class="top"><div class="in"><img class="brandicon" src="icons/icon-72.png" alt="" width="30" height="30"><span class="brand">321万象见神<small>Creation Speaks</small></span><span class="sp"></span><nav class="langs" aria-label="语言"><a href="./" data-l="tc">繁</a><a href="sc.html" data-l="sc" aria-current="true">简</a><a href="en.html" data-l="en">EN</a></nav><span class="proto">原型</span><button class="iconbtn" id="themeBtn" aria-label="切换深浅色">深／浅</button></div></header>
 <main class="wrap" id="main"></main>
-<nav class="tabbar" aria-label="主選單"><div class="in">
-<button data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(-20 12 12)"/></svg>展館</button>
+<nav class="tabbar" aria-label="主选单"><div class="in">
+<button data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(-20 12 12)"/></svg>展馆</button>
 <button data-go="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>今日</button>
 <button data-go="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>小智</button>
 <button data-go="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6"/></svg>我的</button>
 </div></nav>
 <script>
 var VER = '202609271154';
-var DATA = 'halls/';
-var SPEECH = 'zh-TW';
+var DATA = 'halls-sc/';
+var SPEECH = 'zh-CN';
 var REFS = {};
-var CERT = {"1": "已確立", "2": "主流，仍有討論", "3": "研究中或有爭議", "4": "哲學推論"};
-var ATTRS = ["永能", "永恆", "智慧", "信實", "良善", "美善", "公義"];
-var TODAY = {"verse": "諸天述說神的榮耀；穹蒼傳揚他的手段。", "ref": "詩篇 19:1", "h": "天空沒有說一句話，卻天天向全地講道。今天的星光，許多在你出生之前很久就已經出發了。它們一路穿越宇宙來到你眼前，只為告訴你一件事：有一位比宇宙更大、更古老的神，祂的手段何等奇妙。", "pray": "主啊，今天當我看見天空，求你打開我心裡的眼睛，看見你的榮耀。"};
-var HALLS = [{"k": "cosmos", "n": "宇宙館", "d": "宇宙的開端與微調", "open": true, "sub": "從宇宙的開端到新天新地，八個單元看見神的永能與神性。"}, {"k": "earth", "n": "地球館", "d": "罕見的適居地球", "open": true, "sub": "從恰到好處的距離到託付給人的大地，八個單元看見神為人預備的家。"}, {"k": "life", "n": "生命館", "d": "DNA 與細胞機器", "open": true, "sub": "從 DNA 的文字到彼此成全的萬物，八個單元看見生命處處述說賜生命的主。"}, {"k": "body", "n": "人體館", "d": "眼、腦、胚胎的奇妙", "open": true, "sub": "從看見光的眼睛到發出讚美的聲音，八個單元看見我們受造奇妙可畏。"}, {"k": "mind", "n": "心智館", "d": "意識、理性與良心", "open": true, "sub": "從意識的奧秘到良心的呼喚，八個單元看見神在人心裡留下的印記。"}, {"k": "math", "n": "數學館", "d": "宇宙為何可以理解", "open": true, "sub": "從數字、公式到碎形，八個單元看見神的智慧、信實與美善。"}, {"k": "beauty", "n": "美善館", "d": "美、音樂與色彩", "open": true, "sub": "從雪花到滋味，八個單元看見一位不只大有能力、更是美善的神。"}, {"k": "history", "n": "科學史館", "d": "科學先驅的信仰", "open": true, "sub": "從克卜勒到勒梅特，八個單元看見信仰如何孕育、陪伴科學，並與科學真誠對話。"}];
-var HU = {"cosmos": [{"id": "cosmos-beginning", "title": "宇宙有開端", "mark": "始", "mins": 10, "no": "第 1 單元", "hall": "宇宙館", "attrs": ["永能", "永恆"]}, {"id": "fine-tuning", "title": "恰到好處的宇宙", "mark": "調", "mins": 10, "no": "第 2 單元", "hall": "宇宙館", "attrs": ["智慧"]}, {"id": "vastness", "title": "浩瀚的星空", "mark": "浩", "mins": 8, "no": "第 3 單元", "hall": "宇宙館", "attrs": ["永能"]}, {"id": "light", "title": "要有光", "mark": "光", "mins": 9, "no": "第 4 單元", "hall": "宇宙館", "attrs": ["良善", "智慧"]}, {"id": "stardust", "title": "恆星的熔爐", "mark": "星", "mins": 10, "no": "第 5 單元", "hall": "宇宙館", "attrs": ["智慧", "良善"]}, {"id": "privileged", "title": "看得見宇宙的地方", "mark": "觀", "mins": 9, "no": "第 6 單元", "hall": "宇宙館", "attrs": ["良善", "智慧"]}, {"id": "laws", "title": "天地的定例", "mark": "律", "mins": 9, "no": "第 7 單元", "hall": "宇宙館", "attrs": ["信實"]}, {"id": "new-creation", "title": "新天新地", "mark": "新", "mins": 10, "no": "第 8 單元", "hall": "宇宙館", "attrs": ["永恆", "公義"]}], "earth": [{"id": "distance", "title": "恰到好處的距離", "mark": "距", "mins": 9, "no": "第 1 單元", "hall": "地球館", "attrs": ["良善"]}, {"id": "moon", "title": "月亮的恩典", "mark": "月", "mins": 8, "no": "第 2 單元", "hall": "地球館", "attrs": ["信實", "良善"]}, {"id": "water", "title": "奇妙的水", "mark": "水", "mins": 10, "no": "第 3 單元", "hall": "地球館", "attrs": ["智慧"]}, {"id": "shield", "title": "看不見的盾牌", "mark": "盾", "mins": 9, "no": "第 4 單元", "hall": "地球館", "attrs": ["良善", "信實"]}, {"id": "breath", "title": "會呼吸的地球", "mark": "息", "mins": 9, "no": "第 5 單元", "hall": "地球館", "attrs": ["智慧", "良善"]}, {"id": "water-cycle", "title": "水的旅程", "mark": "雨", "mins": 8, "no": "第 6 單元", "hall": "地球館", "attrs": ["信實"]}, {"id": "soil", "title": "活的大地", "mark": "土", "mins": 9, "no": "第 7 單元", "hall": "地球館", "attrs": ["智慧"]}, {"id": "stewardship", "title": "地是耶和華的", "mark": "管", "mins": 9, "no": "第 8 單元", "hall": "地球館", "attrs": ["公義", "良善"]}], "life": [{"id": "life-dna", "title": "DNA：生命的語言", "mark": "碼", "mins": 10, "no": "第 1 單元", "hall": "生命館", "attrs": ["智慧"]}, {"id": "life-cell", "title": "細胞：微型城市", "mark": "胞", "mins": 10, "no": "第 2 單元", "hall": "生命館", "attrs": ["智慧"]}, {"id": "life-machines", "title": "分子機器", "mark": "機", "mins": 10, "no": "第 3 單元", "hall": "生命館", "attrs": ["智慧", "信實"]}, {"id": "life-fold", "title": "蛋白質摺疊", "mark": "摺", "mins": 10, "no": "第 4 單元", "hall": "生命館", "attrs": ["智慧", "美善"]}, {"id": "life-origin", "title": "生命從哪裡來？", "mark": "源", "mins": 10, "no": "第 5 單元", "hall": "生命館", "attrs": ["智慧", "良善"]}, {"id": "life-navigate", "title": "奇妙的導航", "mark": "航", "mins": 10, "no": "第 6 單元", "hall": "生命館", "attrs": ["智慧", "信實"]}, {"id": "life-seed", "title": "各從其類：種子與生命的延續", "mark": "種", "mins": 10, "no": "第 7 單元", "hall": "生命館", "attrs": ["信實", "良善"]}, {"id": "life-symbiosis", "title": "彼此成全：共生與生態", "mark": "共", "mins": 10, "no": "第 8 單元", "hall": "生命館", "attrs": ["智慧", "良善"]}], "body": [{"id": "body-eye", "title": "眼睛：看見的奇蹟", "mark": "眼", "mins": 10, "no": "第 1 單元", "hall": "人體館", "attrs": ["智慧"]}, {"id": "body-brain", "title": "大腦：最複雜的器官", "mark": "腦", "mins": 10, "no": "第 2 單元", "hall": "人體館", "attrs": ["智慧"]}, {"id": "body-heart", "title": "心臟：不停歇的幫浦", "mark": "心", "mins": 9, "no": "第 3 單元", "hall": "人體館", "attrs": ["智慧", "信實"]}, {"id": "body-immune", "title": "免疫系統：身體的守衛軍", "mark": "衛", "mins": 9, "no": "第 4 單元", "hall": "人體館", "attrs": ["良善", "信實"]}, {"id": "body-clot", "title": "血液凝固：精準的連鎖反應", "mark": "血", "mins": 10, "no": "第 5 單元", "hall": "人體館", "attrs": ["智慧", "良善"]}, {"id": "body-embryo", "title": "胚胎發育：我受造奇妙可畏", "mark": "胎", "mins": 10, "no": "第 6 單元", "hall": "人體館", "attrs": ["智慧", "美善"]}, {"id": "body-repair", "title": "傷口癒合與修復", "mark": "癒", "mins": 9, "no": "第 7 單元", "hall": "人體館", "attrs": ["信實", "良善"]}, {"id": "body-hand", "title": "手與聲音：受造為要服事與讚美", "mark": "手", "mins": 10, "no": "第 8 單元", "hall": "人體館", "attrs": ["美善", "智慧"]}], "mind": [{"id": "mind-consciousness", "title": "意識之謎", "mark": "識", "mins": 10, "no": "第 1 單元", "hall": "心智館", "attrs": ["智慧", "永能"]}, {"id": "mind-reason", "title": "理性可以信任嗎？", "mark": "理", "mins": 10, "no": "第 2 單元", "hall": "心智館", "attrs": ["智慧", "信實"]}, {"id": "mind-moral-law", "title": "寫在心上的道德律", "mark": "律", "mins": 10, "no": "第 3 單元", "hall": "心智館", "attrs": ["公義", "良善"]}, {"id": "mind-free-will", "title": "自由意志與責任", "mark": "擇", "mins": 10, "no": "第 4 單元", "hall": "心智館", "attrs": ["良善", "公義"]}, {"id": "mind-eternity", "title": "渴望永恆", "mark": "永", "mins": 9, "no": "第 5 單元", "hall": "心智館", "attrs": ["永恆", "美善"]}, {"id": "mind-language", "title": "語言：心靈的橋樑", "mark": "言", "mins": 9, "no": "第 6 單元", "hall": "心智館", "attrs": ["智慧", "信實"]}, {"id": "mind-relationship", "title": "為愛而造：位格與關係", "mark": "愛", "mins": 10, "no": "第 7 單元", "hall": "心智館", "attrs": ["良善", "美善"]}, {"id": "mind-conscience", "title": "良心與恩典", "mark": "恩", "mins": 10, "no": "第 8 單元", "hall": "心智館", "attrs": ["公義", "信實"]}], "math": [{"id": "math-why", "title": "數學為什麼管用？", "mark": "數", "mins": 10, "no": "第 1 單元", "hall": "數學館", "attrs": ["智慧", "信實"]}, {"id": "math-fibonacci", "title": "費氏數列與葉序", "mark": "葵", "mins": 9, "no": "第 2 單元", "hall": "數學館", "attrs": ["智慧", "美善"]}, {"id": "math-symmetry", "title": "對稱之美", "mark": "稱", "mins": 9, "no": "第 3 單元", "hall": "數學館", "attrs": ["信實", "美善"]}, {"id": "math-euler", "title": "最美的公式", "mark": "美", "mins": 9, "no": "第 4 單元", "hall": "數學館", "attrs": ["美善", "智慧"]}, {"id": "math-infinity", "title": "無限", "mark": "無", "mins": 10, "no": "第 5 單元", "hall": "數學館", "attrs": ["永恆"]}, {"id": "math-laws", "title": "簡潔的定律", "mark": "簡", "mins": 9, "no": "第 6 單元", "hall": "數學館", "attrs": ["智慧", "信實"]}, {"id": "math-primes", "title": "質數：數字的原子", "mark": "質", "mins": 9, "no": "第 7 單元", "hall": "數學館", "attrs": ["信實", "智慧"]}, {"id": "math-fractal", "title": "碎形：自然的幾何", "mark": "碎", "mins": 10, "no": "第 8 單元", "hall": "數學館", "attrs": ["美善", "智慧"]}], "beauty": [{"id": "beauty-snow", "title": "雪花：沒有兩片相同", "mark": "雪", "mins": 9, "no": "第 1 單元", "hall": "美善館", "attrs": ["美善", "智慧"]}, {"id": "beauty-peacock", "title": "孔雀與結構色", "mark": "羽", "mins": 9, "no": "第 2 單元", "hall": "美善館", "attrs": ["美善", "智慧"]}, {"id": "beauty-butterfly", "title": "蝴蝶的翅膀", "mark": "蝶", "mins": 9, "no": "第 3 單元", "hall": "美善館", "attrs": ["美善"]}, {"id": "beauty-birdsong", "title": "鳥鳴與音樂", "mark": "歌", "mins": 10, "no": "第 4 單元", "hall": "美善館", "attrs": ["美善", "良善"]}, {"id": "beauty-color", "title": "色彩的世界", "mark": "彩", "mins": 9, "no": "第 5 單元", "hall": "美善館", "attrs": ["美善", "智慧"]}, {"id": "beauty-sky", "title": "天空的顏色", "mark": "虹", "mins": 9, "no": "第 6 單元", "hall": "美善館", "attrs": ["美善", "良善"]}, {"id": "beauty-taste", "title": "美好的滋味", "mark": "甘", "mins": 9, "no": "第 7 單元", "hall": "美善館", "attrs": ["美善", "良善"]}, {"id": "beauty-why", "title": "人為什麼會為美感動？", "mark": "美", "mins": 10, "no": "第 8 單元", "hall": "美善館", "attrs": ["美善"]}], "history": [{"id": "history-rise", "title": "科學為何誕生？", "mark": "源", "mins": 9, "no": "第 1 單元", "hall": "科學史館", "attrs": ["智慧"]}, {"id": "history-kepler", "title": "克卜勒：追隨創造者的思想", "mark": "軌", "mins": 10, "no": "第 2 單元", "hall": "科學史館", "attrs": ["智慧", "信實"]}, {"id": "history-galileo", "title": "伽利略事件的真相", "mark": "真", "mins": 10, "no": "第 3 單元", "hall": "科學史館", "attrs": ["公義"]}, {"id": "history-newton", "title": "牛頓：自然哲學的數學原理", "mark": "律", "mins": 10, "no": "第 4 單元", "hall": "科學史館", "attrs": ["信實", "智慧"]}, {"id": "history-pascal-boyle", "title": "帕斯卡與波以耳", "mark": "火", "mins": 9, "no": "第 5 單元", "hall": "科學史館", "attrs": ["智慧", "信實"]}, {"id": "history-faraday-maxwell", "title": "法拉第與馬克士威", "mark": "光", "mins": 10, "no": "第 6 單元", "hall": "科學史館", "attrs": ["信實", "智慧"]}, {"id": "history-mendel", "title": "孟德爾：修道院裡的遺傳學", "mark": "豆", "mins": 9, "no": "第 7 單元", "hall": "科學史館", "attrs": ["智慧", "信實"]}, {"id": "history-dialogue", "title": "科學與信仰的對話", "mark": "談", "mins": 10, "no": "第 8 單元", "hall": "科學史館", "attrs": ["信實", "公義"]}]};
-var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"q": "宇宙為什麼剛好適合生命？", "h": "cosmos", "u": 1}, {"q": "宇宙這麼大，我還重要嗎？", "h": "cosmos", "u": 2}, {"q": "科學和信仰一定互相衝突嗎？", "h": "cosmos", "u": 6}, {"q": "宇宙最後會怎樣？有盼望嗎？", "h": "cosmos", "u": 7}, {"q": "地球為什麼剛好適合生命？", "h": "earth", "u": 0}, {"q": "我的一口氣、一杯水，和神有什麼關係？", "h": "earth", "u": 2}, {"q": "生命是偶然出現的化學反應，還是從一位賜生命的主而來？", "h": "life", "u": 4}, {"q": "我願意像一粒麥子落在地裡死了，讓生命結出許多子粒嗎？", "h": "life", "u": 6}, {"q": "我這個人，是偶然拼湊出來的，還是被用心織成的？", "h": "body", "u": 5}, {"q": "身體會自己修復，我破碎的心也能被醫治嗎？", "h": "body", "u": 6}, {"q": "為甚麼世上沒有一樣東西能真正滿足我的心？", "h": "mind", "u": 4}, {"q": "如果我只是一個大腦，我還能自由地去愛嗎？", "h": "mind", "u": 3}, {"q": "為什麼人在紙上算出的數學，能準確描述整個宇宙？", "h": "math", "u": 0}, {"q": "有限的人，能認識無限的神嗎？", "h": "math", "u": 4}, {"q": "為什麼世界不只是能用，還這麼美？", "h": "beauty", "u": 0}, {"q": "人為什麼會被美感動，甚至渴望更美的東西？", "h": "beauty", "u": 7}, {"q": "如果宇宙是偶然的，為什麼它有秩序、又能被人理解？", "h": "history", "u": 0}, {"q": "科學與信仰真的是敵人嗎？", "h": "history", "u": 7}];
+var CERT = {"1": "已确立", "2": "主流，仍有讨论", "3": "研究中或有争议", "4": "哲学推论"};
+var ATTRS = ["永能", "永恒", "智慧", "信实", "良善", "美善", "公义"];
+var TODAY = {"verse": "诸天述说神的荣耀；穹苍传扬他的手段。", "ref": "诗篇 19:1", "h": "天空没有说一句话，却天天向全地讲道。今天的星光，许多在你出生之前很久就已经出发了。它们一路穿越宇宙来到你眼前，只为告诉你一件事：有一位比宇宙更大、更古老的神，他的手段何等奇妙。", "pray": "主啊，今天当我看见天空，求你打开我心里的眼睛，看见你的荣耀。"};
+var HALLS = [{"k": "cosmos", "n": "宇宙馆", "d": "宇宙的开端与微调", "open": true, "sub": "从宇宙的开端到新天新地，八个单元看见神的永能与神性。"}, {"k": "earth", "n": "地球馆", "d": "罕见的适居地球", "open": true, "sub": "从恰到好处的距离到讬付给人的大地，八个单元看见神为人预备的家。"}, {"k": "life", "n": "生命馆", "d": "DNA 与细胞机器", "open": true, "sub": "从 DNA 的文字到彼此成全的万物，八个单元看见生命处处述说赐生命的主。"}, {"k": "body", "n": "人体馆", "d": "眼、脑、胚胎的奇妙", "open": true, "sub": "从看见光的眼睛到发出赞美的声音，八个单元看见我们受造奇妙可畏。"}, {"k": "mind", "n": "心智馆", "d": "意识、理性与良心", "open": true, "sub": "从意识的奥秘到良心的呼唤，八个单元看见神在人心里留下的印记。"}, {"k": "math", "n": "数学馆", "d": "宇宙为何可以理解", "open": true, "sub": "从数字、公式到碎形，八个单元看见神的智慧、信实与美善。"}, {"k": "beauty", "n": "美善馆", "d": "美、音乐与色彩", "open": true, "sub": "从雪花到滋味，八个单元看见一位不只大有能力、更是美善的神。"}, {"k": "history", "n": "科学史馆", "d": "科学先驱的信仰", "open": true, "sub": "从克卜勒到勒梅特，八个单元看见信仰如何孕育、陪伴科学，并与科学真诚对话。"}];
+var HU = {"cosmos": [{"id": "cosmos-beginning", "title": "宇宙有开端", "mark": "始", "mins": 10, "no": "第 1 单元", "hall": "宇宙馆", "attrs": ["永能", "永恒"]}, {"id": "fine-tuning", "title": "恰到好处的宇宙", "mark": "调", "mins": 10, "no": "第 2 单元", "hall": "宇宙馆", "attrs": ["智慧"]}, {"id": "vastness", "title": "浩瀚的星空", "mark": "浩", "mins": 8, "no": "第 3 单元", "hall": "宇宙馆", "attrs": ["永能"]}, {"id": "light", "title": "要有光", "mark": "光", "mins": 9, "no": "第 4 单元", "hall": "宇宙馆", "attrs": ["良善", "智慧"]}, {"id": "stardust", "title": "恒星的熔炉", "mark": "星", "mins": 10, "no": "第 5 单元", "hall": "宇宙馆", "attrs": ["智慧", "良善"]}, {"id": "privileged", "title": "看得见宇宙的地方", "mark": "观", "mins": 9, "no": "第 6 单元", "hall": "宇宙馆", "attrs": ["良善", "智慧"]}, {"id": "laws", "title": "天地的定例", "mark": "律", "mins": 9, "no": "第 7 单元", "hall": "宇宙馆", "attrs": ["信实"]}, {"id": "new-creation", "title": "新天新地", "mark": "新", "mins": 10, "no": "第 8 单元", "hall": "宇宙馆", "attrs": ["永恒", "公义"]}], "earth": [{"id": "distance", "title": "恰到好处的距离", "mark": "距", "mins": 9, "no": "第 1 单元", "hall": "地球馆", "attrs": ["良善"]}, {"id": "moon", "title": "月亮的恩典", "mark": "月", "mins": 8, "no": "第 2 单元", "hall": "地球馆", "attrs": ["信实", "良善"]}, {"id": "water", "title": "奇妙的水", "mark": "水", "mins": 10, "no": "第 3 单元", "hall": "地球馆", "attrs": ["智慧"]}, {"id": "shield", "title": "看不见的盾牌", "mark": "盾", "mins": 9, "no": "第 4 单元", "hall": "地球馆", "attrs": ["良善", "信实"]}, {"id": "breath", "title": "会呼吸的地球", "mark": "息", "mins": 9, "no": "第 5 单元", "hall": "地球馆", "attrs": ["智慧", "良善"]}, {"id": "water-cycle", "title": "水的旅程", "mark": "雨", "mins": 8, "no": "第 6 单元", "hall": "地球馆", "attrs": ["信实"]}, {"id": "soil", "title": "活的大地", "mark": "土", "mins": 9, "no": "第 7 单元", "hall": "地球馆", "attrs": ["智慧"]}, {"id": "stewardship", "title": "地是耶和华的", "mark": "管", "mins": 9, "no": "第 8 单元", "hall": "地球馆", "attrs": ["公义", "良善"]}], "life": [{"id": "life-dna", "title": "DNA：生命的语言", "mark": "码", "mins": 10, "no": "第 1 单元", "hall": "生命馆", "attrs": ["智慧"]}, {"id": "life-cell", "title": "细胞：微型城市", "mark": "胞", "mins": 10, "no": "第 2 单元", "hall": "生命馆", "attrs": ["智慧"]}, {"id": "life-machines", "title": "分子机器", "mark": "机", "mins": 10, "no": "第 3 单元", "hall": "生命馆", "attrs": ["智慧", "信实"]}, {"id": "life-fold", "title": "蛋白质摺叠", "mark": "摺", "mins": 10, "no": "第 4 单元", "hall": "生命馆", "attrs": ["智慧", "美善"]}, {"id": "life-origin", "title": "生命从哪里来？", "mark": "源", "mins": 10, "no": "第 5 单元", "hall": "生命馆", "attrs": ["智慧", "良善"]}, {"id": "life-navigate", "title": "奇妙的导航", "mark": "航", "mins": 10, "no": "第 6 单元", "hall": "生命馆", "attrs": ["智慧", "信实"]}, {"id": "life-seed", "title": "各从其类：种子与生命的延续", "mark": "种", "mins": 10, "no": "第 7 单元", "hall": "生命馆", "attrs": ["信实", "良善"]}, {"id": "life-symbiosis", "title": "彼此成全：共生与生态", "mark": "共", "mins": 10, "no": "第 8 单元", "hall": "生命馆", "attrs": ["智慧", "良善"]}], "body": [{"id": "body-eye", "title": "眼睛：看见的奇迹", "mark": "眼", "mins": 10, "no": "第 1 单元", "hall": "人体馆", "attrs": ["智慧"]}, {"id": "body-brain", "title": "大脑：最复杂的器官", "mark": "脑", "mins": 10, "no": "第 2 单元", "hall": "人体馆", "attrs": ["智慧"]}, {"id": "body-heart", "title": "心脏：不停歇的泵", "mark": "心", "mins": 9, "no": "第 3 单元", "hall": "人体馆", "attrs": ["智慧", "信实"]}, {"id": "body-immune", "title": "免疫系统：身体的守卫军", "mark": "卫", "mins": 9, "no": "第 4 单元", "hall": "人体馆", "attrs": ["良善", "信实"]}, {"id": "body-clot", "title": "血液凝固：精准的连锁反应", "mark": "血", "mins": 10, "no": "第 5 单元", "hall": "人体馆", "attrs": ["智慧", "良善"]}, {"id": "body-embryo", "title": "胚胎发育：我受造奇妙可畏", "mark": "胎", "mins": 10, "no": "第 6 单元", "hall": "人体馆", "attrs": ["智慧", "美善"]}, {"id": "body-repair", "title": "伤口愈合与修复", "mark": "愈", "mins": 9, "no": "第 7 单元", "hall": "人体馆", "attrs": ["信实", "良善"]}, {"id": "body-hand", "title": "手与声音：受造为要服事与赞美", "mark": "手", "mins": 10, "no": "第 8 单元", "hall": "人体馆", "attrs": ["美善", "智慧"]}], "mind": [{"id": "mind-consciousness", "title": "意识之谜", "mark": "识", "mins": 10, "no": "第 1 单元", "hall": "心智馆", "attrs": ["智慧", "永能"]}, {"id": "mind-reason", "title": "理性可以信任吗？", "mark": "理", "mins": 10, "no": "第 2 单元", "hall": "心智馆", "attrs": ["智慧", "信实"]}, {"id": "mind-moral-law", "title": "写在心上的道德律", "mark": "律", "mins": 10, "no": "第 3 单元", "hall": "心智馆", "attrs": ["公义", "良善"]}, {"id": "mind-free-will", "title": "自由意志与责任", "mark": "择", "mins": 10, "no": "第 4 单元", "hall": "心智馆", "attrs": ["良善", "公义"]}, {"id": "mind-eternity", "title": "渴望永恒", "mark": "永", "mins": 9, "no": "第 5 单元", "hall": "心智馆", "attrs": ["永恒", "美善"]}, {"id": "mind-language", "title": "语言：心灵的桥梁", "mark": "言", "mins": 9, "no": "第 6 单元", "hall": "心智馆", "attrs": ["智慧", "信实"]}, {"id": "mind-relationship", "title": "为爱而造：位格与关系", "mark": "爱", "mins": 10, "no": "第 7 单元", "hall": "心智馆", "attrs": ["良善", "美善"]}, {"id": "mind-conscience", "title": "良心与恩典", "mark": "恩", "mins": 10, "no": "第 8 单元", "hall": "心智馆", "attrs": ["公义", "信实"]}], "math": [{"id": "math-why", "title": "数学为什么管用？", "mark": "数", "mins": 10, "no": "第 1 单元", "hall": "数学馆", "attrs": ["智慧", "信实"]}, {"id": "math-fibonacci", "title": "费氏数列与叶序", "mark": "葵", "mins": 9, "no": "第 2 单元", "hall": "数学馆", "attrs": ["智慧", "美善"]}, {"id": "math-symmetry", "title": "对称之美", "mark": "称", "mins": 9, "no": "第 3 单元", "hall": "数学馆", "attrs": ["信实", "美善"]}, {"id": "math-euler", "title": "最美的公式", "mark": "美", "mins": 9, "no": "第 4 单元", "hall": "数学馆", "attrs": ["美善", "智慧"]}, {"id": "math-infinity", "title": "无限", "mark": "无", "mins": 10, "no": "第 5 单元", "hall": "数学馆", "attrs": ["永恒"]}, {"id": "math-laws", "title": "简洁的定律", "mark": "简", "mins": 9, "no": "第 6 单元", "hall": "数学馆", "attrs": ["智慧", "信实"]}, {"id": "math-primes", "title": "素数：数字的原子", "mark": "质", "mins": 9, "no": "第 7 单元", "hall": "数学馆", "attrs": ["信实", "智慧"]}, {"id": "math-fractal", "title": "碎形：自然的几何", "mark": "碎", "mins": 10, "no": "第 8 单元", "hall": "数学馆", "attrs": ["美善", "智慧"]}], "beauty": [{"id": "beauty-snow", "title": "雪花：没有两片相同", "mark": "雪", "mins": 9, "no": "第 1 单元", "hall": "美善馆", "attrs": ["美善", "智慧"]}, {"id": "beauty-peacock", "title": "孔雀与结构色", "mark": "羽", "mins": 9, "no": "第 2 单元", "hall": "美善馆", "attrs": ["美善", "智慧"]}, {"id": "beauty-butterfly", "title": "蝴蝶的翅膀", "mark": "蝶", "mins": 9, "no": "第 3 单元", "hall": "美善馆", "attrs": ["美善"]}, {"id": "beauty-birdsong", "title": "鸟鸣与音乐", "mark": "歌", "mins": 10, "no": "第 4 单元", "hall": "美善馆", "attrs": ["美善", "良善"]}, {"id": "beauty-color", "title": "色彩的世界", "mark": "彩", "mins": 9, "no": "第 5 单元", "hall": "美善馆", "attrs": ["美善", "智慧"]}, {"id": "beauty-sky", "title": "天空的颜色", "mark": "虹", "mins": 9, "no": "第 6 单元", "hall": "美善馆", "attrs": ["美善", "良善"]}, {"id": "beauty-taste", "title": "美好的滋味", "mark": "甘", "mins": 9, "no": "第 7 单元", "hall": "美善馆", "attrs": ["美善", "良善"]}, {"id": "beauty-why", "title": "人为什么会为美感动？", "mark": "美", "mins": 10, "no": "第 8 单元", "hall": "美善馆", "attrs": ["美善"]}], "history": [{"id": "history-rise", "title": "科学为何诞生？", "mark": "源", "mins": 9, "no": "第 1 单元", "hall": "科学史馆", "attrs": ["智慧"]}, {"id": "history-kepler", "title": "克卜勒：追随创造者的思想", "mark": "轨", "mins": 10, "no": "第 2 单元", "hall": "科学史馆", "attrs": ["智慧", "信实"]}, {"id": "history-galileo", "title": "伽利略事件的真相", "mark": "真", "mins": 10, "no": "第 3 单元", "hall": "科学史馆", "attrs": ["公义"]}, {"id": "history-newton", "title": "牛顿：自然哲学的数学原理", "mark": "律", "mins": 10, "no": "第 4 单元", "hall": "科学史馆", "attrs": ["信实", "智慧"]}, {"id": "history-pascal-boyle", "title": "帕斯卡与波以耳", "mark": "火", "mins": 9, "no": "第 5 单元", "hall": "科学史馆", "attrs": ["智慧", "信实"]}, {"id": "history-faraday-maxwell", "title": "法拉第与马克士威", "mark": "光", "mins": 10, "no": "第 6 单元", "hall": "科学史馆", "attrs": ["信实", "智慧"]}, {"id": "history-mendel", "title": "孟德尔：修道院里的遗传学", "mark": "豆", "mins": 9, "no": "第 7 单元", "hall": "科学史馆", "attrs": ["智慧", "信实"]}, {"id": "history-dialogue", "title": "科学与信仰的对话", "mark": "谈", "mins": 10, "no": "第 8 单元", "hall": "科学史馆", "attrs": ["信实", "公义"]}]};
+var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"q": "宇宙为什么刚好适合生命？", "h": "cosmos", "u": 1}, {"q": "宇宙这么大，我还重要吗？", "h": "cosmos", "u": 2}, {"q": "科学和信仰一定互相冲突吗？", "h": "cosmos", "u": 6}, {"q": "宇宙最后会怎样？有盼望吗？", "h": "cosmos", "u": 7}, {"q": "地球为什么刚好适合生命？", "h": "earth", "u": 0}, {"q": "我的一口气、一杯水，和神有什么关系？", "h": "earth", "u": 2}, {"q": "生命是偶然出现的化学反应，还是从一位赐生命的主而来？", "h": "life", "u": 4}, {"q": "我愿意像一粒麦子落在地里死了，让生命结出许多子粒吗？", "h": "life", "u": 6}, {"q": "我这个人，是偶然拼凑出来的，还是被用心织成的？", "h": "body", "u": 5}, {"q": "身体会自己修复，我破碎的心也能被医治吗？", "h": "body", "u": 6}, {"q": "为什么世上没有一样东西能真正满足我的心？", "h": "mind", "u": 4}, {"q": "如果我只是一个大脑，我还能自由地去爱吗？", "h": "mind", "u": 3}, {"q": "为什么人在纸上算出的数学，能准确描述整个宇宙？", "h": "math", "u": 0}, {"q": "有限的人，能认识无限的神吗？", "h": "math", "u": 4}, {"q": "为什么世界不只是能用，还这么美？", "h": "beauty", "u": 0}, {"q": "人为什么会被美感动，甚至渴望更美的东西？", "h": "beauty", "u": 7}, {"q": "如果宇宙是偶然的，为什么它有秩序、又能被人理解？", "h": "history", "u": 0}, {"q": "科学与信仰真的是敌人吗？", "h": "history", "u": 7}];
 
 (function () {
   'use strict';
@@ -337,18 +337,18 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
   function render() {
     stopSpeak();
     if (S.view === 'unit' && !HD[S.hall]) {
-      $('main').innerHTML = '<div class="uhead"><div class="eyebrow">' + hallMeta(S.hall).n + '</div><h1>載入中……</h1><p class="sub" id="loadMsg">正在打開展館內容。</p></div>';
+      $('main').innerHTML = '<div class="uhead"><div class="eyebrow">' + hallMeta(S.hall).n + '</div><h1>加载中……</h1><p class="sub" id="loadMsg">正在打开展馆内容。</p></div>';
       loadHall(S.hall, function (ok) {
         if (ok) { render(); }
-        else { var m = $('loadMsg'); if (m) { m.textContent = '內容載入失敗，請確認網路連線後再試一次。'; } }
+        else { var m = $('loadMsg'); if (m) { m.textContent = '内容加载失败，请确认网络连接后再试一次。'; } }
       });
       return;
     }
     if (S.view === 'unit' && S.step === 6 && !SD[S.hall]) {
-      $('main').innerHTML = '<div class="uhead"><div class="eyebrow">教學講章</div><h1>載入中……</h1><p class="sub" id="loadMsg">正在打開講章。</p></div>';
+      $('main').innerHTML = '<div class="uhead"><div class="eyebrow">教学讲章</div><h1>加载中……</h1><p class="sub" id="loadMsg">正在打开讲章。</p></div>';
       loadSermon(S.hall, function (ok) {
         if (ok) { render(); }
-        else { var m = $('loadMsg'); if (m) { m.textContent = '講章載入失敗，請確認網路連線後再試一次。'; } }
+        else { var m = $('loadMsg'); if (m) { m.textContent = '讲章加载失败，请确认网络连接后再试一次。'; } }
       });
       return;
     }
@@ -373,24 +373,24 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
 
   function homeView() {
     var h = '<section class="hero"><canvas class="stars" id="stars"></canvas>' +
-      '<h1>321萬象見神</h1>' +
-      '<p class="v">自從造天地以來，神的永能和神性是明明可知的，雖是眼不能見，但藉著所造之物就可以曉得，叫人無可推諉。</p>' +
-      '<cite>羅馬書 1:20</cite>' +
+      '<h1>321万象见神</h1>' +
+      '<p class="v">自从造天地以来，神的永能和神性是明明可知的，虽是眼不能见，但藉着所造之物就可以晓得，叫人无可推诿。</p>' +
+      '<cite>罗马书 1:20</cite>' +
       '<div class="spec" aria-hidden="true"><i style="left:22%"></i><i style="left:39%"></i><i style="left:61%"></i><i style="left:83%"></i></div>' +
-      '<div class="speclbl"><span>星系光譜</span><span>吸收譜線往紅端偏移 → 宇宙在膨脹</span></div>' +
+      '<div class="speclbl"><span>星系光谱</span><span>吸收谱线往红端偏移 → 宇宙在膨胀</span></div>' +
       '</section>';
     var nu = nextUndone(), tot = 0, dall = 0;
     for (var hk in HU) { if (HU.hasOwnProperty(hk)) { tot += HU[hk].length; dall += doneCount(hk); } }
     var nh = nu ? nu.h : 'cosmos', ni = nu ? nu.u : 0, cu = HU[nh][ni];
-    h += '<section class="sec"><h2>繼續學習<span>已完成 ' + dall + ' / ' + tot + ' 單元</span></h2>' +
-      '<button class="q" data-unit="' + nh + ':' + ni + '"><span class="m">' + cu.mark + '</span><span class="t"><b>' + cu.title + '</b><br><span class="s">' + cu.hall + '・' + cu.no + '・約 ' + cu.mins + ' 分鐘</span></span><span class="s">' + (nu ? (dall ? '繼續' : '開始') : '重溫') + ' ›</span></button></section>';
-    h += '<section class="sec"><h2>八大展館<span>所造之物</span></h2><div class="halls">';
+    h += '<section class="sec"><h2>继续学习<span>已完成 ' + dall + ' / ' + tot + ' 单元</span></h2>' +
+      '<button class="q" data-unit="' + nh + ':' + ni + '"><span class="m">' + cu.mark + '</span><span class="t"><b>' + cu.title + '</b><br><span class="s">' + cu.hall + '・' + cu.no + '・约 ' + cu.mins + ' 分钟</span></span><span class="s">' + (nu ? (dall ? '继续' : '开始') : '重温') + ' ›</span></button></section>';
+    h += '<section class="sec"><h2>八大展馆<span>所造之物</span></h2><div class="halls">';
     for (var i = 0; i < HALLS.length; i++) {
       var a = HALLS[i], L = HU[a.k];
-      h += '<button class="hall' + (a.open ? ' open' : '') + '"' + (a.open ? ' data-hall="' + a.k + '"' : ' disabled') + '><b>' + a.n + '</b><span class="d">' + a.d + '</span><span class="st">' + (a.open && L ? L.length + ' 個單元・已完成 ' + doneCount(a.k) : '即將開放') + '</span></button>';
+      h += '<button class="hall' + (a.open ? ' open' : '') + '"' + (a.open ? ' data-hall="' + a.k + '"' : ' disabled') + '><b>' + a.n + '</b><span class="d">' + a.d + '</span><span class="st">' + (a.open && L ? L.length + ' 个单元・已完成 ' + doneCount(a.k) : '即将开放') + '</span></button>';
     }
     h += '</div></section>';
-    h += '<section class="sec"><h2>大哉問<span>從你心裡的問題開始</span></h2><div class="qlist">';
+    h += '<section class="sec"><h2>大哉问<span>从你心里的问题开始</span></h2><div class="qlist">';
     for (var j = 0; j < QUESTIONS.length; j++) {
       var q = QUESTIONS[j], qu = HU[q.h][q.u];
       h += '<button class="q" data-unit="' + q.h + ':' + q.u + '"><span class="m">？</span><span class="t">' + q.q + '<br><span class="s">' + qu.hall + '・' + qu.title + '</span></span></button>';
@@ -401,16 +401,16 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
 
   function hallView() {
     var M = hallMeta(S.hall), L = HL();
-    var h = '<div class="uhead"><div class="eyebrow">八大展館</div><h1>' + M.n + '</h1><p class="sub">' + M.sub + '</p></div><div class="qlist" style="margin-top:18px">';
+    var h = '<div class="uhead"><div class="eyebrow">八大展馆</div><h1>' + M.n + '</h1><p class="sub">' + M.sub + '</p></div><div class="qlist" style="margin-top:18px">';
     for (var i = 0; i < L.length; i++) {
       var u = L[i], d = S.done[u.id];
-      h += '<button class="q" data-unit="' + S.hall + ':' + i + '"><span class="m">' + u.mark + '</span><span class="t"><b>' + u.title + '</b><br><span class="s">' + u.no + '・約 ' + u.mins + ' 分鐘・彰顯' + u.attrs.join('、') + '</span></span><span class="s"' + (d ? ' style="color:var(--good);font-weight:700"' : '') + '>' + (d ? '已完成' : '›') + '</span></button>';
+      h += '<button class="q" data-unit="' + S.hall + ':' + i + '"><span class="m">' + u.mark + '</span><span class="t"><b>' + u.title + '</b><br><span class="s">' + u.no + '・约 ' + u.mins + ' 分钟・彰显' + u.attrs.join('、') + '</span></span><span class="s"' + (d ? ' style="color:var(--good);font-weight:700"' : '') + '>' + (d ? '已完成' : '›') + '</span></button>';
     }
     return h + '</div>' + foot();
   }
 
   function foot() {
-    return '<p class="foot">原型版本：展館內容為樣板，科學敘述附原始文獻，正式上線前將由科學與神學顧問委員會審查。經文引用《和合本》。國度 321 空中團契。</p>';
+    return '<p class="foot">原型版本：展馆内容为模板，科学语句附原始文献，正式上线前将由科学与神学顾问委员会审查。经文引用《和合本》。国度 321 空中团契。</p>';
   }
 
   function unitView() {
@@ -418,19 +418,19 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     var SER = S.step === 6;
     var st = SER ? null : UNIT.steps[S.step];
     var h = '<div class="uhead"><div class="eyebrow">' + UNIT.hall + '・' + UNIT.no + '</div><h1>' + UNIT.title + '</h1><p class="sub">' + UNIT.sub + '</p><div class="tags">';
-    for (var i = 0; i < UNIT.attrs.length; i++) { h += '<span class="tag">彰顯神的' + UNIT.attrs[i] + '</span>'; }
+    for (var i = 0; i < UNIT.attrs.length; i++) { h += '<span class="tag">彰显神的' + UNIT.attrs[i] + '</span>'; }
     h += '</div></div>';
-    var dl = [['驚嘆', '1 分鐘'], ['明白', '10 分鐘'], ['深究', '看文獻']];
-    h += '<div class="depth"' + (SER ? ' hidden' : '') + ' role="group" aria-label="閱讀深度">';
+    var dl = [['惊叹', '1 分钟'], ['明白', '10 分钟'], ['深究', '看文献']];
+    h += '<div class="depth"' + (SER ? ' hidden' : '') + ' role="group" aria-label="阅读深度">';
     for (var d = 0; d < 3; d++) {
       h += '<button data-depth="' + (d + 1) + '" aria-pressed="' + (S.depth === d + 1) + '">' + dl[d][0] + '<small>' + dl[d][1] + '</small></button>';
     }
-    h += '</div><nav class="steps" aria-label="學習步驟">';
+    h += '</div><nav class="steps" aria-label="学习步骤">';
     for (var s = 0; s < UNIT.steps.length; s++) {
       h += '<button data-step="' + s + '"' + (s === S.step ? ' aria-current="step"' : '') + (S.seen[UNIT.id + '_' + s] ? ' class="done"' : '') + '><span class="n">' + (s + 1) + '</span>' + UNIT.steps[s].k + '</button>';
     }
-    h += '<button data-step="6" class="sertab"' + (SER ? ' aria-current="step"' : '') + '>講章</button>';
-    h += '</nav><div class="row" style="margin-top:12px"><button class="iconbtn readbtn" id="readBtn">' + (SER ? '朗讀講章' : '朗讀這一步') + '</button></div>';
+    h += '<button data-step="6" class="sertab"' + (SER ? ' aria-current="step"' : '') + '>讲章</button>';
+    h += '</nav><div class="row" style="margin-top:12px"><button class="iconbtn readbtn" id="readBtn">' + (SER ? '朗读讲章' : '朗读这一步') + '</button></div>';
     h += '<div class="body' + (SER ? ' sermon' : '') + '" id="stepBody">';
     if (SER) { h += sermonHtml(); }
     else {
@@ -442,14 +442,14 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     h += '</div>';
     var last = S.step >= UNIT.steps.length - 1;
     h += '<div class="nav"><button id="prevBtn"' + (S.step === 0 ? ' disabled' : '') + '>‹ 上一步</button>' +
-      '<button class="pri" id="nextBtn">' + (last ? (S.done[UNIT.id] ? (S.u < HL().length - 1 ? '下一個單元：' + HL()[S.u + 1].title + ' ›' : '回到' + hallMeta(S.hall).n) : '完成單元，把榮耀歸給神') : '下一步：' + (S.step + 1 < UNIT.steps.length ? UNIT.steps[S.step + 1].k : '講章') + ' ›') + '</button></div>';
+      '<button class="pri" id="nextBtn">' + (last ? (S.done[UNIT.id] ? (S.u < HL().length - 1 ? '下一个单元：' + HL()[S.u + 1].title + ' ›' : '回到' + hallMeta(S.hall).n) : '完成单元，把荣耀归给神') : '下一步：' + (S.step + 1 < UNIT.steps.length ? UNIT.steps[S.step + 1].k : '讲章') + ' ›') + '</button></div>';
     return h + foot();
   }
 
   function sermonHtml() {
     var L = SD[S.hall] && SD[S.hall][S.u];
-    if (!L) { return '<p class="muted">講章載入失敗，請確認網路連線後再試一次。</p>'; }
-    var h = '<p class="muted">教學講章：可在小組或主日直接宣講，約 25 至 30 分鐘。</p>';
+    if (!L) { return '<p class="muted">讲章加载失败，请确认网络连接后再试一次。</p>'; }
+    var h = '<p class="muted">教学讲章：可在小组或主日直接宣讲，约 25 至 30 分钟。</p>';
     for (var i = 0; i < L.length; i++) {
       var tg = L[i][0], tx = esc(L[i][1]);
       var db = ' data-b="' + i + '"';
@@ -482,7 +482,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
 
   function refsHtml(list) {
     if (!list || !list.length) { return ''; }
-    var h = '<details class="refs"><summary>出處 ' + list.length + '</summary><ol>';
+    var h = '<details class="refs"><summary>出处 ' + list.length + '</summary><ol>';
     for (var i = 0; i < list.length; i++) { h += '<li>' + REFS[list[i]] + '</li>'; }
     return h + '</ol></details>';
   }
@@ -506,25 +506,25 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
         for (var j = 0; j < b.items.length; j++) { v += '<div class="view"><b>' + b.items[j].n + '</b><p>' + b.items[j].h + '</p></div>'; }
         return v + '</div>';
       case 'sim':
-        return '<div class="sim"><canvas id="simCv" width="800" height="500" aria-label="宇宙倒帶示意動畫"></canvas>' +
-          '<div class="simctl"><input type="range" id="simT" min="0" max="1000" value="1000" aria-label="時間"><span class="num" id="simLbl"></span><button class="simbtn" id="simPlay">倒帶</button></div>' +
-          '<p class="simnote">示意動畫：拖動滑桿，把宇宙的時間往回倒。比例與位置為示意，不是真實星系分布。</p></div>';
+        return '<div class="sim"><canvas id="simCv" width="800" height="500" aria-label="宇宙倒带示意动画"></canvas>' +
+          '<div class="simctl"><input type="range" id="simT" min="0" max="1000" value="1000" aria-label="时间"><span class="num" id="simLbl"></span><button class="simbtn" id="simPlay">倒带</button></div>' +
+          '<p class="simnote">示意动画：拖动滑杆，把宇宙的时间往回倒。比例与位置为示意，不是真实星系分布。</p></div>';
       case 'dial':
         return '<div class="sim"><div class="dialbar"><i class="win"></i><i class="mk" id="dialMk"></i></div>' +
-          '<div class="simctl"><input type="range" id="dialV" min="0" max="120" step="0.5" value="0" aria-label="宇宙常數倍數"><span class="num" id="dialLbl"></span></div>' +
+          '<div class="simctl"><input type="range" id="dialV" min="0" max="120" step="0.5" value="0" aria-label="宇宙常量倍数"><span class="num" id="dialLbl"></span></div>' +
           '<p class="dialst" id="dialSt"></p>' +
-          '<p class="simnote">示意：橫軸是宇宙常數相對實際值的倍數，以 10 的次方表示，右端是量子物理粗略估計的約 10<sup>120</sup> 倍。綠色窄條是星系還能形成的範圍（依溫伯格 1987 年的估計，約數百倍以內）。</p></div>';
+          '<p class="simnote">示意：横轴是宇宙常量相对实际值的倍数，以 10 的次方表示，右端是量子物理粗略估计的约 10<sup>120</sup> 倍。绿色窄条是星系还能形成的范围（依温伯格 1987 年的估计，约数百倍以内）。</p></div>';
       case 'zone':
         return '<div class="sim"><div class="zonebar"><i class="zin"></i><i class="zok"></i><i class="zout"></i><i class="mk" id="zMk"></i></div>' +
-          '<div class="zlab"><span>0.5</span><span>1.0</span><span>1.5</span><span>2.0 天文單位</span></div>' +
-          '<div class="simctl"><input type="range" id="zV" min="50" max="200" value="100" aria-label="與太陽的距離"><span class="num" id="zLbl"></span></div>' +
-          '<p class="dialst" id="zSt"></p><p class="simnote">示意：拖動滑桿，把地球移近或移遠太陽。綠色為較保守的適居帶估計（約 0.95–1.37），淡綠為較寬的估計（至約 1.67）；實際範圍依模型而不同。</p></div>';
+          '<div class="zlab"><span>0.5</span><span>1.0</span><span>1.5</span><span>2.0 天文单位</span></div>' +
+          '<div class="simctl"><input type="range" id="zV" min="50" max="200" value="100" aria-label="与太阳的距离"><span class="num" id="zLbl"></span></div>' +
+          '<p class="dialst" id="zSt"></p><p class="simnote">示意：拖动滑杆，把地球移近或移远太阳。绿色为较保守的适居带估计（约 0.95–1.37），淡绿为较宽的估计（至约 1.67）；实际范围依模型而不同。</p></div>';
       case 'scale':
         return '<div class="sim scale"><div class="scn" id="scN"></div><div class="scv" id="scV"></div><div class="scl num" id="scL"></div>' +
-          '<div class="dots" id="scD"></div><div class="simctl"><input type="range" id="scT" min="0" max="' + (HD.cosmos.scale.length - 1) + '" value="0" aria-label="尺度"><button class="simbtn" id="scNext">放大一級</button></div>' +
-          '<p class="simnote">每往右一格，尺度都大上許多倍。數值為約略值。</p></div>';
+          '<div class="dots" id="scD"></div><div class="simctl"><input type="range" id="scT" min="0" max="' + (HD.cosmos.scale.length - 1) + '" value="0" aria-label="尺度"><button class="simbtn" id="scNext">放大一级</button></div>' +
+          '<p class="simnote">每往右一格，尺度都大上许多倍。数值为约略值。</p></div>';
       case 'share':
-        return '<div class="sharebox"><img id="shareImg" alt="' + cur().title + '分享卡"><p>長按圖片即可儲存或分享。</p></div>';
+        return '<div class="sharebox"><img id="shareImg" alt="' + cur().title + '分享卡"><p>长按图片即可存储或分享。</p></div>';
       case 'quiz': return quizHtml();
     }
     return '';
@@ -540,7 +540,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
         if (ans !== undefined) { if (j === q.a) { cls = 'ok'; } else if (j === ans) { cls = 'no'; } }
         h += '<button data-q="' + i + '" data-o="' + j + '"' + (cls ? ' class="' + cls + '"' : '') + '>' + q.o[j] + '</button>';
       }
-      if (ans !== undefined) { h += '<p class="fb">' + (ans === q.a ? '答對了。' : '再想一想。') + q.e + '</p>'; }
+      if (ans !== undefined) { h += '<p class="fb">' + (ans === q.a ? '答对了。' : '再想一想。') + q.e + '</p>'; }
       h += '</div>';
     }
     return h + '</div>';
@@ -549,11 +549,11 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
   function todayView() {
     var d = new Date();
     var ds = d.getFullYear() + '.' + (d.getMonth() + 1) + '.' + d.getDate();
-    return '<div class="uhead"><div class="eyebrow">每日造物靈修</div><h1>今天抬頭看天</h1></div>' +
+    return '<div class="uhead"><div class="eyebrow">每日造物灵修</div><h1>今天抬头看天</h1></div>' +
       '<div class="card"><span class="date">' + ds + '</span>' +
       '<blockquote class="verse"><p>' + TODAY.verse + '</p><cite>' + TODAY.ref + '（和合本）</cite></blockquote>' +
       '<div id="todayText"><p data-b="1">' + TODAY.h + '</p><div class="pray" data-b="2"><p>' + TODAY.pray + '</p></div></div>' +
-      '<div class="row"><button class="iconbtn" id="readToday">朗讀</button><button class="iconbtn" data-open="unit">延伸閱讀：宇宙有開端 ›</button></div></div>' + foot();
+      '<div class="row"><button class="iconbtn" id="readToday">朗读</button><button class="iconbtn" data-open="unit">扩展阅读：宇宙有开端 ›</button></div></div>' + foot();
   }
 
   function meView() {
@@ -561,25 +561,25 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     for (var hk in HU) { if (HU.hasOwnProperty(hk)) { for (var ui = 0; ui < HU[hk].length; ui++) { var mu = HU[hk][ui]; if (S.done[mu.id]) { for (var ai = 0; ai < mu.attrs.length; ai++) { AC[mu.attrs[ai]] = (AC[mu.attrs[ai]] || 0) + 1; } } } } }
     var mx = 4;
     for (i = 0; i < ATTRS.length; i++) { total += AC[ATTRS[i]] || 0; mx = Math.max(mx, AC[ATTRS[i]] || 0); }
-    var h = '<div class="uhead"><div class="eyebrow">我的</div><h1>我所認識的神</h1><p class="sub">每完成一個單元，就更認識神的一個面向。</p></div><div class="card"><div class="attrs">';
+    var h = '<div class="uhead"><div class="eyebrow">我的</div><h1>我所认识的神</h1><p class="sub">每完成一个单元，就更认识神的一个面向。</p></div><div class="card"><div class="attrs">';
     for (i = 0; i < ATTRS.length; i++) {
       var n = AC[ATTRS[i]] || 0;
       h += '<div class="attr"><span>' + ATTRS[i] + '</span><span class="bar"><i style="width:' + Math.round(n / mx * 100) + '%"></i></span><span class="num">' + n + '</span></div>';
     }
-    h += '</div>' + (total ? '' : '<p class="muted">完成展館的單元後，這裡會依單元亮起神的屬性。</p>') + '</div>';
-    h += '<div class="card"><b>學習進度</b>' + progHtml() + '</div>' +
-      '<div class="card"><b>閱讀設定</b>' +
-      '<div class="row"><span class="muted" style="width:4em">字級</span><div class="seg">' +
+    h += '</div>' + (total ? '' : '<p class="muted">完成展馆的单元后，这里会依单元亮起神的属性。</p>') + '</div>';
+    h += '<div class="card"><b>学习进度</b>' + progHtml() + '</div>' +
+      '<div class="card"><b>阅读设置</b>' +
+      '<div class="row"><span class="muted" style="width:4em">字级</span><div class="seg">' +
       seg('fs', 15, '小') + seg('fs', 17, '中') + seg('fs', 20, '大') + '</div></div>' +
-      '<div class="row"><span class="muted" style="width:4em">朗讀</span><div class="seg">' +
+      '<div class="row"><span class="muted" style="width:4em">朗读</span><div class="seg">' +
       seg('rate', 0.8, '慢') + seg('rate', 1, '正常') + seg('rate', 1.2, '快') + '</div></div>' +
-      '<div class="row"><span class="muted" style="width:4em">聲音</span><div class="seg">' + voiceList().map(function (v, i) { return seg('voice', i, v.n); }).join('') + '</div></div>' +
-      '<div class="row"><button class="iconbtn" id="resetBtn">清除學習紀錄</button><span class="muted" id="resetMsg"></span></div></div>';
+      '<div class="row"><span class="muted" style="width:4em">声音</span><div class="seg">' + voiceList().map(function (v, i) { return seg('voice', i, v.n); }).join('') + '</div></div>' +
+      '<div class="row"><button class="iconbtn" id="resetBtn">清除学习纪录</button><span class="muted" id="resetMsg"></span></div></div>';
     return h + foot();
   }
   function progHtml() {
     var h = '';
-    for (var i = 0; i < HALLS.length; i++) { var L = HU[HALLS[i].k]; if (L) { h += '<p class="muted">' + HALLS[i].n + '：已完成 ' + doneCount(HALLS[i].k) + ' / ' + L.length + ' 單元</p>'; } }
+    for (var i = 0; i < HALLS.length; i++) { var L = HU[HALLS[i].k]; if (L) { h += '<p class="muted">' + HALLS[i].n + '：已完成 ' + doneCount(HALLS[i].k) + ' / ' + L.length + ' 单元</p>'; } }
     return h;
   }
   function seg(k, v, t) { return '<button data-set="' + k + '" data-val="' + v + '" aria-pressed="' + (S[k] === v) + '">' + t + '</button>'; }
@@ -663,9 +663,9 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     c.globalAlpha = 1;
     var lbl = $('simLbl');
     if (lbl) {
-      if (t >= 0.999) { lbl.textContent = '現在'; }
-      else if (t <= 0.001) { lbl.textContent = '約 138 億年前・開端'; }
-      else { lbl.textContent = '往回約 ' + Math.round(138 * (1 - t)) + ' 億年（示意）'; }
+      if (t >= 0.999) { lbl.textContent = '现在'; }
+      else if (t <= 0.001) { lbl.textContent = '约 138 亿年前・开端'; }
+      else { lbl.textContent = '往回约 ' + Math.round(138 * (1 - t)) + ' 亿年（示意）'; }
     }
   }
 
@@ -675,10 +675,10 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     function upd() {
       var x = +inp.value;
       $('dialMk').style.left = (x / 120 * 100) + '%';
-      $('dialLbl').textContent = x === 0 ? '實際值（1 倍）' : '實際值的 10^' + x + ' 倍';
+      $('dialLbl').textContent = x === 0 ? '实际值（1 倍）' : '实际值的 10^' + x + ' 倍';
       var ok = x <= 2.5;
       var st = $('dialSt');
-      st.textContent = ok ? '星系可以形成：恆星、行星、生命才有可能。' : '宇宙膨脹太快，物質來不及聚成星系。';
+      st.textContent = ok ? '星系可以形成：恒星、行星、生命才有可能。' : '宇宙膨胀太快，物质来不及聚成星系。';
       st.style.color = ok ? '#74C795' : '#EE9A62';
     }
     inp.oninput = upd; upd();
@@ -690,11 +690,11 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     function upd() {
       var d = inp.value / 100, st = $('zSt'), txt, col;
       $('zMk').style.left = ((d - 0.5) / 1.5 * 100) + '%';
-      $('zLbl').textContent = d.toFixed(2) + ' 天文單位' + (Math.abs(d - 0.72) < 0.03 ? '（金星）' : Math.abs(d - 1) < 0.015 ? '（地球）' : Math.abs(d - 1.52) < 0.03 ? '（火星）' : '');
-      if (d < 0.95) { txt = '太熱：水會蒸發殆盡，可能像金星一樣失控增溫。'; col = '#EE9A62'; }
-      else if (d <= 1.37) { txt = '適居帶：表面可能保有液態水。'; col = '#74C795'; }
-      else if (d <= 1.67) { txt = '適居帶外緣：需要更厚的溫室大氣才可能保有液態水。'; col = '#B9D98C'; }
-      else { txt = '太冷：水會結成冰。'; col = '#8DB1EE'; }
+      $('zLbl').textContent = d.toFixed(2) + ' 天文单位' + (Math.abs(d - 0.72) < 0.03 ? '（金星）' : Math.abs(d - 1) < 0.015 ? '（地球）' : Math.abs(d - 1.52) < 0.03 ? '（火星）' : '');
+      if (d < 0.95) { txt = '太热：水会蒸发殆尽，可能像金星一样失控增温。'; col = '#EE9A62'; }
+      else if (d <= 1.37) { txt = '适居带：表面可能保有液态水。'; col = '#74C795'; }
+      else if (d <= 1.67) { txt = '适居带外缘：需要更厚的温室大气才可能保有液态水。'; col = '#B9D98C'; }
+      else { txt = '太冷：水会结成冰。'; col = '#8DB1EE'; }
       st.textContent = txt; st.style.color = col;
     }
     inp.oninput = upd; upd();
@@ -741,7 +741,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     }
     c.globalAlpha = 1;
     var serif = '"Noto Serif TC","PMingLiU","Songti TC",serif', sans = '"Noto Sans TC","Microsoft JhengHei",sans-serif';
-    c.fillStyle = '#EE8A6C'; c.font = '500 34px ' + sans; c.fillText('321萬象見神・' + U.hall, 120, 150);
+    c.fillStyle = '#EE8A6C'; c.font = '500 34px ' + sans; c.fillText('321万象见神・' + U.hall, 120, 150);
     c.fillStyle = '#FFFFFF'; c.font = '700 110px ' + serif; c.fillText(U.title, 120, 300);
     c.fillStyle = '#E3E7F2'; c.font = '600 46px ' + serif;
     var lines = wrapText(c, '「' + U.share.v + '」', 1300);
@@ -798,8 +798,8 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
       case 'nextBtn':
         if (S.step < cur().steps.length - 1) { S.step++; render(); window.scrollTo(0, 0); } else { finish(); }
         break;
-      case 'readBtn': ttsToggle($('stepBody'), t, S.step === 6 ? '朗讀講章' : '朗讀這一步'); break;
-      case 'readToday': ttsToggle($('todayText'), t, '朗讀'); break;
+      case 'readBtn': ttsToggle($('stepBody'), t, S.step === 6 ? '朗读讲章' : '朗读这一步'); break;
+      case 'readToday': ttsToggle($('todayText'), t, '朗读'); break;
       case 'themeBtn':
         var curTheme = document.documentElement.getAttribute('data-theme');
         var dark = curTheme ? curTheme === 'dark' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -809,13 +809,13 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
         if (t.getAttribute('data-arm') === '1') {
           S.done = {}; S.seen = {}; S.attrs = {}; S.quiz = {}; S.step = 0; render();
           $('resetMsg').textContent = '已清除。';
-        } else { t.setAttribute('data-arm', '1'); t.textContent = '再按一次確認清除'; }
+        } else { t.setAttribute('data-arm', '1'); t.textContent = '再按一次确认清除'; }
         break;
     }
   });
 
   /* ======================================================================
-     讀經工具：畫線、小智、朗讀（移植自《321互動聖經》，改寫為 ES5）
+     读经工具：画线、小智、朗读（移植自《321交互圣经》，改写为 ES5）
      ====================================================================== */
   var API = {
     chat: 'https://xiaozhi-proxy.spch321.workers.dev',
@@ -825,8 +825,8 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
   var TTS_SIL = 140, TTS_SILC = 140, TTS_SILE = 260;
   var TTS_CHUNK = IS_EN ? 320 : 130, TTS_LOOKAHEAD = 2, TTS_RETRY = [800, 1600], RA_COOLDOWN = 4000;
   var VOICES = {
-    'halls/': [{ n: '雲哲', v: 'zh-TW-YunJheNeural' }, { n: '雲帆', v: 'zh-CN-Yunfan:DragonHDLatestNeural' }, { n: '曉辰', v: 'zh-CN-Xiaochen:DragonHDLatestNeural' }],
-    'halls-sc/': [{ n: '雲帆', v: 'zh-CN-Yunfan:DragonHDLatestNeural' }, { n: '雲哲', v: 'zh-TW-YunJheNeural' }, { n: '曉辰', v: 'zh-CN-Xiaochen:DragonHDLatestNeural' }],
+    'halls/': [{ n: '云哲', v: 'zh-TW-YunJheNeural' }, { n: '云帆', v: 'zh-CN-Yunfan:DragonHDLatestNeural' }, { n: '晓辰', v: 'zh-CN-Xiaochen:DragonHDLatestNeural' }],
+    'halls-sc/': [{ n: '云帆', v: 'zh-CN-Yunfan:DragonHDLatestNeural' }, { n: '云哲', v: 'zh-TW-YunJheNeural' }, { n: '晓辰', v: 'zh-CN-Xiaochen:DragonHDLatestNeural' }],
     'halls-en/': [{ n: 'Andrew', v: 'en-US-AndrewNeural' }, { n: 'Emma', v: 'en-US-EmmaNeural' }, { n: 'Brian', v: 'en-US-BrianNeural' }]
   };
   function voiceList() { return VOICES[DATA] || VOICES['halls/']; }
@@ -886,7 +886,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
       });
     });
   }
-  /* 同一句可能被 <b> 切成好幾個 span；依 data-k 併成一組，照畫面先後排好 */
+  /* 同一句可能被 <b> 切成好几个 span；依 data-k 并成一组，照画面先后排好 */
   function groups(root) {
     var gs = [], idx = {};
     qsa('.sent', root).forEach(function (el) {
@@ -899,7 +899,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
   function gText(g) { return g.els.map(function (e) { return e.textContent; }).join('').replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, ''); }
   function unitPrefix() { var U = cur(); return (U ? U.id : 'x') + '|' + S.step; }
 
-  /* ---------- 畫線 ---------- */
+  /* ---------- 画线 ---------- */
   function paintHl() {
     var body = $('stepBody'); if (!body) { return; }
     var gs = groups(body), cover = [];
@@ -916,7 +916,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
         else { el.removeAttribute('data-hl'); el.removeAttribute('data-color'); el.removeAttribute('data-own'); }
       });
     });
-    /* 筆記掛在那一段畫線的最後一句所在的段落後面 */
+    /* 笔记挂在那一段画线的最后一句所在的段落后面 */
     gs.forEach(function (g, i) {
       var o = cover[i]; if (!o || !o.head || !o.h.n) { return; }
       var last = i; while (last + 1 < gs.length && cover[last + 1] && cover[last + 1].own === o.own) { last++; }
@@ -951,14 +951,14 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     var h = HLS[k]; if (!h) { return; }
     var mask = document.createElement('div'); mask.className = 'hlsheet-mask';
     var sw = HL_COLORS.map(function (c) { return '<button class="hlswatch' + (h.c === c ? ' active' : '') + '" data-c="' + c + '" style="background:' + HL_SWATCH[c] + '" aria-label="' + c + '"></button>'; }).join('');
-    mask.innerHTML = '<div class="hlsheet-card" role="dialog" aria-label="畫線">' +
-      '<div class="hlsheet-title">這一句</div><span class="hlsheet-quote" id="hlQuote">' + esc(h.t) + '</span>' +
-      '<div class="hlsheet-row"><span class="hlsheet-label">顏色</span><div class="hlsheet-colors">' + sw + '</div></div>' +
-      '<div class="hlsheet-row"><span class="hlsheet-label">範圍</span><div class="spanrow"><button class="spanbtn" data-sp="-1" aria-label="少畫一句">－</button><span class="spannum" id="spanNum">' + h.sp + ' 句</span><button class="spanbtn" data-sp="1" aria-label="多畫一句">＋</button></div></div>' +
-      '<p class="hl-hint">按 ＋ 往下多畫一句，可以連成一整段；問小智與朗讀都會帶整段。</p>' +
-      '<textarea class="hlsheet-ta" id="hlNote" placeholder="寫下默想……">' + esc(h.n || '') + '</textarea>' +
-      '<div class="hlsheet-acts"><button class="sbtn pri" data-a="save">儲存</button><button class="sbtn" data-a="ask">問小智</button><button class="sbtn" data-a="read">朗讀</button></div>' +
-      '<div class="hlsheet-acts"><button class="sbtn danger" data-a="del">刪除畫線</button><button class="sbtn" data-a="close">關閉</button></div></div>';
+    mask.innerHTML = '<div class="hlsheet-card" role="dialog" aria-label="画线">' +
+      '<div class="hlsheet-title">这一句</div><span class="hlsheet-quote" id="hlQuote">' + esc(h.t) + '</span>' +
+      '<div class="hlsheet-row"><span class="hlsheet-label">颜色</span><div class="hlsheet-colors">' + sw + '</div></div>' +
+      '<div class="hlsheet-row"><span class="hlsheet-label">范围</span><div class="spanrow"><button class="spanbtn" data-sp="-1" aria-label="少画一句">－</button><span class="spannum" id="spanNum">' + h.sp + ' 句</span><button class="spanbtn" data-sp="1" aria-label="多画一句">＋</button></div></div>' +
+      '<p class="hl-hint">按 ＋ 往下多画一句，可以连成一整段；问小智与朗读都会带整段。</p>' +
+      '<textarea class="hlsheet-ta" id="hlNote" placeholder="写下默想……">' + esc(h.n || '') + '</textarea>' +
+      '<div class="hlsheet-acts"><button class="sbtn pri" data-a="save">存储</button><button class="sbtn" data-a="ask">问小智</button><button class="sbtn" data-a="read">朗读</button></div>' +
+      '<div class="hlsheet-acts"><button class="sbtn danger" data-a="del">删除画线</button><button class="sbtn" data-a="close">关闭</button></div></div>';
     document.body.appendChild(mask);
     function close() { if (mask.parentNode) { mask.parentNode.removeChild(mask); } }
     function keepNote() { var ta = document.getElementById('hlNote'); if (ta) { h.n = ta.value.replace(/^\s+|\s+$/g, ''); } }
@@ -986,15 +986,15 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
       else if (a === 'ask') {
         keepNote(); saveHl(); close();
         chatSrc = { t: h.t, ut: h.ut };
-        chatPending = IS_EN ? 'Please help me understand and reflect on this: “' + h.t + '”' : '請幫助我明白並默想這一段：「' + h.t + '」';
+        chatPending = IS_EN ? 'Please help me understand and reflect on this: “' + h.t + '”' : '请帮助我明白并默想这一段：「' + h.t + '」';
         S.view = 'chat'; render(); window.scrollTo(0, 0);
       }
     });
   }
 
-  /* ---------- 朗讀（Azure 真人語音，失敗改用裝置語音） ---------- */
-  var TTS_FIX = [[/長老/g, '掌老'], [/長子/g, '掌子'], [/家長/g, '家掌'], [/長大/g, '掌大'], [/行為/g, '行圍'], [/為大/g, '圍大'], [/中了/g, '衷了'],
-    [/教會/g, '叫會'], [/傳道/g, '船道'], [/朝見/g, '潮見'], [/應當/g, '英當'], [/應許/g, '英許'], [/相應/g, '相映'], [/看守/g, '刊守'], [/種子/g, '腫子'], [/中間/g, '衷間']];
+  /* ---------- 朗读（Azure 真人语音，失败改用设备语音） ---------- */
+  var TTS_FIX = [[/长老/g, '掌老'], [/长子/g, '掌子'], [/家长/g, '家掌'], [/长大/g, '掌大'], [/行为/g, '行围'], [/为大/g, '围大'], [/中了/g, '衷了'],
+    [/教会/g, '叫会'], [/传道/g, '船道'], [/朝见/g, '潮见'], [/应当/g, '英当'], [/应许/g, '英许'], [/相应/g, '相映'], [/看守/g, '刊守'], [/种子/g, '肿子'], [/中间/g, '衷间']];
   function ttsRef(x) {
     if (IS_EN) {
       return String(x).replace(/\b(Psalms?|[1-3]? ?[A-Z][a-z]+) (\d+):(\d+)(?:[–-](\d+))?/g, function (m, bk, c, v, v2) {
@@ -1002,8 +1002,8 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
       });
     }
     return String(x).replace(/([一-鿿]{1,6})\s*(\d+)\s*[:：]\s*(\d+)(?:\s*[–\-—~～、至]\s*(\d+))?/g, function (m, bk, c, v, v2) {
-      var ps = /^詩篇$|^诗篇$/.test(bk);
-      return bk + c + (ps ? '篇' : '章') + v + (v2 ? '到' + v2 : '') + (DATA === 'halls-sc/' ? '节' : '節');
+      var ps = /^诗篇$|^诗篇$/.test(bk);
+      return bk + c + (ps ? '篇' : '章') + v + (v2 ? '到' + v2 : '') + (DATA === 'halls-sc/' ? '节' : '节');
     });
   }
   function ttsPrep(s) {
@@ -1021,7 +1021,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     if (!ttsEl) { ttsEl = new Audio(); ttsEl.preload = 'auto'; try { ttsEl.setAttribute('playsinline', ''); } catch (e) {} }
     return ttsEl;
   }
-  /* 必須在點擊的當下同步呼叫（iOS 規定），之後程式才能自己播 */
+  /* 必须在点击的当下同步调用（iOS 规定），之后程序才能自己播 */
   function ttsUnlock() {
     if (ttsUnlocked) { return; }
     try {
@@ -1093,7 +1093,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
   function ttsBtn(state) {
     var b = spk.btn; if (!b) { return; }
     b.setAttribute('data-state', state || '');
-    b.textContent = state ? (state === 'loading' ? '準備中……' : '停止朗讀') : spk.label;
+    b.textContent = state ? (state === 'loading' ? '准备中……' : '停止朗读') : spk.label;
   }
   function ttsPrefetch(i, cb) {
     var it = spk.items[i];
@@ -1134,8 +1134,8 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     });
   }
   function ttsNativeFrom(i) {
-    if (!('speechSynthesis' in window)) { toast('此裝置不支援朗讀'); ttsStop(); return; }
-    if (!spk.native) { spk.native = true; toast('改用本機語音朗讀' + (ttsLastErr ? '（' + ttsLastErr + '）' : '')); }
+    if (!('speechSynthesis' in window)) { toast('此设备不支持朗读'); ttsStop(); return; }
+    if (!spk.native) { spk.native = true; toast('改用本机语音朗读' + (ttsLastErr ? '（' + ttsLastErr + '）' : '')); }
     if (!spk.on || spk.abort || i >= spk.items.length) { ttsStop(); return; }
     spk.idx = i; spk.items[i].at = -1; raSeg(spk.items[i], 0); ttsBtn('playing');
     var say = ttsPrep(spk.items[i].text);
@@ -1167,7 +1167,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     qsa('.msg-act[data-a="tts"]').forEach(function (b) {
       var on = sayId === +b.getAttribute('data-i');
       b.className = 'msg-act' + (on ? ' on' : '');
-      b.textContent = on ? '⏸ 停止' : '🔊 朗讀';
+      b.textContent = on ? '⏸ 停止' : '🔊 朗读';
     });
   }
   function ttsSayStop() {
@@ -1192,8 +1192,8 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
         var u = new window.SpeechSynthesisUtterance(clean);
         u.lang = SPEECH; u.rate = 0.95 * (S.rate || 1); u.onend = done; u.onerror = done;
         window.speechSynthesis.speak(u);
-        toast('改用本機語音朗讀');
-      } else { toast('此裝置不支援朗讀'); done(); }
+        toast('改用本机语音朗读');
+      } else { toast('此设备不支持朗读'); done(); }
     });
   }
 
@@ -1250,18 +1250,18 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     }).join('');
   }
 
-  /* ---------- 小智：確實可信、深入淺出的回答規範 ---------- */
-  var SYS_ZH = '你是「小智」，國度321空中團契「321萬象見神」App 的屬靈學伴，一位通曉科學與神學、敬虔愛主的福音派良師。你的使命是藉著上帝所造之物，幫助人認識神的存在、永能和神性（羅馬書 1:20），並把知識帶到敬拜與生命的改變。\n' +
-    '回答原則：\n' +
-    '一、確實可信：只陳述你確知的事實，數字、年份、人名、研究結論都要準確。不確定就直說「目前不確定」或「學界仍有討論」，絕不編造文獻、數據、名人引言或經文。\n' +
-    '二、分清確定程度：清楚區分「已確立的科學事實」「主流但仍有討論」「研究中或有爭議」「哲學推論」。由自然現象推論到造物主是合理的推論，要誠實說明是推論，不可說「科學證明了神」。\n' +
-    '三、經文準確：引用聖經一律用和合本原文並註明卷章節；沒有把握逐字正確時，只寫出處並用自己的話概述，不要拼湊經文。\n' +
-    '四、深入淺出：先用一兩句話直接回答問題，再用生活中的比喻把道理講清楚，然後帶出相關經文與屬靈意義。必要的專有名詞要用白話解釋。\n' +
-    '五、公允謙卑：遇到爭議議題（例如地球年齡、演化機制），採取「核心合一、周邊寬容」，公平介紹福音派內部的主要觀點，不貶低任何人；對懷疑與提問的人溫柔尊重。\n' +
-    '六、生命應用：適時自然地連結 321 理念——耶穌是我的榜樣、聖經是我的準則、聖靈是我的引導；讓耶穌作王、讓耶穌得著一切的榮耀；建立屬神的體系——幫助人從人的觀點轉向神的觀點，謙卑回到受造者的本位。不要生硬堆砌口號。\n' +
-    '七、詳細完整：一般回答約 600 到 1000 字，條理分明、內容紮實，不要只給結論。建議架構：（1）一兩句直接回答；（2）分點詳細說明，交代關鍵事實、它是怎麼被發現或怎麼推論出來的，並標明確定程度；（3）一個貼切的生活比喻；（4）相關經文與屬靈意義；（5）321 生命應用與一個具體可行的回應。使用者要求簡短時再精簡。\n' +
-    '八、界線：涉及醫療、法律或個人重大決定時，給予屬靈的鼓勵並建議請教專業人士或牧者。\n' +
-    '回答格式：可以用短小標題與條列；需要並列或對照時可以用 markdown 表格。請把最重要的一句用「> 」標成引言。不要用程式碼區塊或唸不出來的裝飾符號。若寫到禱告，結尾一律用「奉主耶穌的名禱告，阿們」。';
+  /* ---------- 小智：确实可信、深入浅出的回答规范 ---------- */
+  var SYS_ZH = '你是「小智」，国度321空中团契「321万象见神」App 的属灵学伴，一位通晓科学与神学、敬虔爱主的福音派良师。你的使命是藉着上帝所造之物，帮助人认识神的存在、永能和神性（罗马书 1:20），并把知识带到敬拜与生命的改变。\n' +
+    '回答原则：\n' +
+    '一、确实可信：只陈述你确知的事实，数字、年份、人名、研究结论都要准确。不确定就直说「当前不确定」或「学界仍有讨论」，绝不编造文献、数据、名人引言或经文。\n' +
+    '二、分清确定程度：清楚区分「已确立的科学事实」「主流但仍有讨论」「研究中或有争议」「哲学推论」。由自然现象推论到造物主是合理的推论，要诚实说明是推论，不可说「科学证明了神」。\n' +
+    '三、经文准确：引用圣经一律用和合本原文并注明卷章节；没有把握逐字正确时，只写出处并用自己的话概述，不要拼凑经文。\n' +
+    '四、深入浅出：先用一两句话直接回答问题，再用生活中的比喻把道理讲清楚，然后带出相关经文与属灵意义。必要的专有名词要用白话解释。\n' +
+    '五、公允谦卑：遇到争议议题（例如地球年龄、演化机制），采取「核心合一、周边宽容」，公平介绍福音派内部的主要观点，不贬低任何人；对怀疑与提问的人温柔尊重。\n' +
+    '六、生命应用：适时自然地连结 321 理念——耶稣是我的榜样、圣经是我的准则、圣灵是我的引导；让耶稣作王、让耶稣得着一切的荣耀；创建属神的体系——帮助人从人的观点转向神的观点，谦卑回到受造者的本位。不要生硬堆砌口号。\n' +
+    '七、详细完整：一般回答约 600 到 1000 字，条理分明、内容扎实，不要只给结论。推荐结构：（1）一两句直接回答；（2）分点详细说明，交代关键事实、它是怎么被发现或怎么推论出来的，并标明确定程度；（3）一个贴切的生活比喻；（4）相关经文与属灵意义；（5）321 生命应用与一个具体可行的响应。用户要求简短时再精简。\n' +
+    '八、界线：涉及医疗、法律或个人重大决定时，给予属灵的鼓励并推荐请教专业人士或牧者。\n' +
+    '回答格式：可以用短小标题与条列；需要并行或对照时可以用 markdown 表格。请把最重要的一句用「> 」标成引言。不要用代码块或念不出来的装饰符号。若写到祷告，结尾一律用「奉主耶稣的名祷告，阿们」。';
   var SYS_EN = 'You are Xiaozhi, the study companion in the "321 Creation Speaks" app of Kingdom 321 Fellowship: an evangelical teacher who knows both science and theology and loves the Lord. Your mission is to help people know God\'s existence, eternal power and divine nature through the things he has made (Romans 1:20), and to turn knowledge into worship and a changed life.\n' +
     'Rules for every answer:\n' +
     '1. Be reliable: state only what you actually know; numbers, dates, names and research findings must be accurate. When unsure, say so plainly ("this is not settled" or "scholars still debate this"). Never invent sources, data, quotations or Bible verses.\n' +
@@ -1273,7 +1273,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     '7. Be thorough: usually 400 to 700 words, well organized and substantial; do not give only a conclusion. Suggested shape: (1) a direct answer in one or two sentences; (2) a detailed explanation in points, giving the key facts, how they were discovered or reasoned out, and how certain they are; (3) one fitting everyday picture; (4) related Scripture and its spiritual meaning; (5) a 321 life application with one concrete response. Be brief only when the user asks.\n' +
     '8. Boundaries: on medical, legal or major personal decisions, give spiritual encouragement and suggest asking a professional or a pastor.\n' +
     'Format: short headings and lists are fine; use a markdown table when comparing things. Mark the single most important sentence as a "> " blockquote. No code blocks or decorative symbols that cannot be read aloud. If you write a prayer, close it with "in the name of the Lord Jesus we pray, Amen."';
-  var QBANK_ZH = ['科學和信仰一定會衝突嗎？', '這個單元的重點，可以用三句話講給孩子聽嗎？', '這個單元的科學說法有多確定？哪些是推論？', '設計論證是在「證明」神存在嗎？', '如果神創造了美好的世界，為什麼還有苦難？', '基督徒應該怎麼看地球的年齡？', '我可以怎樣把今天學到的分享給不信的朋友？', '請根據這個單元幫我寫一段禱告。'];
+  var QBANK_ZH = ['科学和信仰一定会冲突吗？', '这个单元的重点，可以用三句话讲给孩子听吗？', '这个单元的科学说法有多确定？哪些是推论？', '设计论证是在「证明」神存在吗？', '如果神创造了美好的世界，为什么还有苦难？', '基督徒应该怎么看地球的年龄？', '我可以怎样把今天学到的分享给不信的朋友？', '请根据这个单元帮我写一段祷告。'];
   var QBANK_EN = ['Do science and faith have to conflict?', 'Can you explain this unit to a child in three sentences?', 'How certain are the scientific claims in this unit, and which parts are inferences?', 'Does the design argument "prove" that God exists?', 'If God made a good world, why is there suffering?', 'How should Christians think about the age of the earth?', 'How can I share what I learned today with a friend who does not believe?', 'Please write a prayer for me based on this unit.'];
   function unitContext() {
     var U = (HD[S.hall] && cur()) || null;
@@ -1286,7 +1286,7 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     });
     return IS_EN
       ? '\n\nThe reader is studying ' + U.hall + ', ' + U.no + ': "' + U.title + '"' + (st ? ' (step: ' + st.k + ')' : ' (teaching sermon)') + '. Unit content for grounding (use it as your main source; you may add what you reliably know):\n' + txt
-      : '\n\n讀者目前在讀：' + U.hall + '・' + U.no + '〈' + U.title + '〉' + (st ? '的「' + st.k + '」步驟' : '的教學講章') + '。以下是本單元內容，請以此為主要依據，並可補充你確知的知識：\n' + txt;
+      : '\n\n读者当前在读：' + U.hall + '・' + U.no + '〈' + U.title + '〉' + (st ? '的「' + st.k + '」步骤' : '的教学讲章') + '。以下是本单元内容，请以此为主要依据，并可补充你确知的知识：\n' + txt;
   }
   function extractReply(d) {
     if (!d) { return ''; }
@@ -1302,22 +1302,22 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
   function chatView() {
     var U = (HD[S.hall] && cur()) || null;
     var qs = (IS_EN ? QBANK_EN : QBANK_ZH).map(function (q) { return '<button class="qs-chip">' + esc(q) + '</button>'; }).join('');
-    return '<div class="chatwrap"><div class="uhead"><div class="eyebrow">屬靈學伴</div><h1>問小智</h1>' +
-      '<p class="sub">科學與信仰的問題都可以問。小智會分清哪些是確定的事實、哪些是推論，並引用經文。</p></div>' +
-      (U ? '<div class="chatctx">目前單元：' + esc(U.hall + '・' + U.title) + '</div>' : '') +
-      '<button class="qs-toggle" id="qsBtn">💡 提問範例</button><div class="qs-panel" id="qsPanel" hidden>' + qs + '</div>' +
+    return '<div class="chatwrap"><div class="uhead"><div class="eyebrow">属灵学伴</div><h1>问小智</h1>' +
+      '<p class="sub">科学与信仰的问题都可以问。小智会分清哪些是确定的事实、哪些是推论，并引用经文。</p></div>' +
+      (U ? '<div class="chatctx">当前单元：' + esc(U.hall + '・' + U.title) + '</div>' : '') +
+      '<button class="qs-toggle" id="qsBtn">💡 提问样例</button><div class="qs-panel" id="qsPanel" hidden>' + qs + '</div>' +
       '<div class="chatlog" id="chatlog"></div>' +
-      '<div class="chatinput"><textarea id="chatIn" rows="2" placeholder="輸入你的問題……"></textarea><button id="chatSend">送出</button></div>' +
-      '<p class="muted chatnote">小智是 AI，可能出錯；重要的事請對照聖經並請教牧者。</p></div>';
+      '<div class="chatinput"><textarea id="chatIn" rows="2" placeholder="输入你的问题……"></textarea><button id="chatSend">送出</button></div>' +
+      '<p class="muted chatnote">小智是 AI，可能出错；重要的事请对照圣经并请教牧者。</p></div>';
   }
   function paintChat() {
     var log = $('chatlog'); if (!log) { return; }
-    if (!CHAT.length) { log.innerHTML = '<p class="muted">從上面的「提問範例」開始，或在單元中畫一句線，按「問小智」。</p>'; return; }
+    if (!CHAT.length) { log.innerHTML = '<p class="muted">从上面的「提问样例」开始，或在单元中画一句线，按「问小智」。</p>'; return; }
     log.innerHTML = CHAT.map(function (m, i) {
       if (m.role === 'user') { return '<div class="msg user">' + esc(m.text) + '</div>'; }
       return '<div class="msg ai"><div class="msg-body">' + mdToHtml(m.text) + '</div>' +
-        (m.text === THINKING ? '' : '<div class="msg-actions"><button class="msg-act' + (sayId === i ? ' on' : '') + '" data-a="tts" data-i="' + i + '">' + (sayId === i ? '⏸ 停止' : '🔊 朗讀') + '</button>' +
-        '<button class="msg-act" data-a="copy" data-i="' + i + '">複製</button><button class="msg-act" data-a="del" data-i="' + i + '">刪除</button></div>') + '</div>';
+        (m.text === THINKING ? '' : '<div class="msg-actions"><button class="msg-act' + (sayId === i ? ' on' : '') + '" data-a="tts" data-i="' + i + '">' + (sayId === i ? '⏸ 停止' : '🔊 朗读') + '</button>' +
+        '<button class="msg-act" data-a="copy" data-i="' + i + '">复制</button><button class="msg-act" data-a="del" data-i="' + i + '">删除</button></div>') + '</div>';
     }).join('');
     log.scrollTop = log.scrollHeight;
     var last = log.lastElementChild; if (last && last.scrollIntoView) { try { last.scrollIntoView({ block: 'end' }); } catch (e) {} }
@@ -1329,13 +1329,13 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
     CHAT.push({ role: 'user', text: text });
     CHAT.push({ role: 'ai', text: THINKING });
     chatBusy = true; paintChat();
-    var sys = (IS_EN ? SYS_EN : SYS_ZH) + unitContext() + (chatSrc ? (IS_EN ? '\nThe reader highlighted: "' + chatSrc.t + '"' : '\n讀者畫線的句子：「' + chatSrc.t + '」') : '');
+    var sys = (IS_EN ? SYS_EN : SYS_ZH) + unitContext() + (chatSrc ? (IS_EN ? '\nThe reader highlighted: "' + chatSrc.t + '"' : '\n读者画线的句子：「' + chatSrc.t + '」') : '');
     chatSrc = null;
     var msgs = CHAT.filter(function (m) { return m.text !== THINKING; }).slice(-12).map(function (m) { return { role: m.role === 'user' ? 'user' : 'assistant', content: m.text }; });
     var payload = JSON.stringify({ system: sys, messages: msgs });
     var tries = 0, delays = [900, 1800];
     function finish(reply, why) {
-      CHAT[CHAT.length - 1] = { role: 'ai', text: reply || ('小智暫時連不上，請確認網路後再試一次。' + (why ? '（' + why + '）' : '')) };
+      CHAT[CHAT.length - 1] = { role: 'ai', text: reply || ('小智暂时连不上，请确认网络后再试一次。' + (why ? '（' + why + '）' : '')) };
       chatBusy = false; saveChat(); paintChat();
     }
     function attempt() {
@@ -1370,8 +1370,8 @@ var QUESTIONS = [{"q": "宇宙是從哪裡來的？", "h": "cosmos", "u": 0}, {"
       if (a === 'del') { CHAT.splice(i, 1); if (CHAT[i - 1] && CHAT[i - 1].role === 'user') { CHAT.splice(i - 1, 1); } saveChat(); paintChat(); }
       else if (a === 'copy') {
         var txt = mdStrip(m.text);
-        try { navigator.clipboard.writeText(txt).then(function () { toast('已複製'); }, function () { toast('無法複製，請長按文字自行複製'); }); }
-        catch (err) { toast('無法複製，請長按文字自行複製'); }
+        try { navigator.clipboard.writeText(txt).then(function () { toast('已复制'); }, function () { toast('不能复制，请长按文字自行复制'); }); }
+        catch (err) { toast('不能复制，请长按文字自行复制'); }
       }
       else if (a === 'tts') {
         if (sayId === i) { ttsSayStop(); return; }
