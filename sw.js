@@ -1,4 +1,4 @@
-var CACHE = 'wanxiang-202610200230-gxu1020';
+var CACHE = 'wanxiang-202610200230-vp1023-gxu1020';
 self.addEventListener('install', function (e) { self.skipWaiting(); });
 self.addEventListener('activate', function (e) {
   e.waitUntil(caches.keys().then(function (ks) { return Promise.all(ks.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); })); }).then(function () { return self.clients.claim(); }));
