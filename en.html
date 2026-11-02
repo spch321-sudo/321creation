@@ -294,7 +294,7 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 <button data-go="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6"/></svg>Me</button>
 </div></nav>
 <script>
-var VER = '202610200230-vp1023-co1';
+var VER = '202611031200-vp1023-gx1103-co1';
 var DATA = 'en-';
 var SPEECH = 'en-US';
 var REFS = {};
@@ -989,21 +989,49 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
       HLS[k] = h; saveHl(); paintHl();
     } else { openHlSheet(k); }
   }
+  function spanTo(k, mode) {
+    /* 整段：這一個段落（或條列項）剩下的句子；整節：到下一個小標題之前（最多 40 句） */
+    var first = document.querySelector('.sent[data-k="' + k + '"]');
+    var gs = groups(rootOf(first) || $('stepBody')), i = -1, j;
+    for (j = 0; j < gs.length; j++) { if (gs[j].k === k) { i = j; break; } }
+    if (i < 0) { return 1; }
+    var PSEL = 'p,li,h1,h2,h3,h4,blockquote,td,th';
+    function para(g) { var e = g.els[0]; return e && e.closest ? e.closest(PSEL) : null; }
+    var n = 1, base = para(gs[i]);
+    if (mode === 'p') {
+      while (i + n < gs.length && base && para(gs[i + n]) === base) { n++; }
+      return n;
+    }
+    function head(g) { var e = g.els[0], b = e && e.closest ? e.closest('h1,h2,h3,h4') : null; return b; }
+    while (i + n < gs.length && n < 40 && !head(gs[i + n])) { n++; }
+    return n;
+  }
   function openHlSheet(k) {
     var h = HLS[k]; if (!h) { return; }
+    var X = window.GXR ? GXR.hl : null;
+    function LB(zh, en) { return X ? X.t(zh, en) : (IS_EN ? en : zh); }
+    function UN(n) { return n + (IS_EN ? ' sent.' : ' 句'); }
     var mask = document.createElement('div'); mask.className = 'hlsheet-mask';
     var sw = HL_COLORS.map(function (c) { return '<button class="hlswatch' + (h.c === c ? ' active' : '') + '" data-c="' + c + '" style="background:' + HL_SWATCH[c] + '" aria-label="' + c + '"></button>'; }).join('');
-    mask.innerHTML = '<div class="hlsheet-card" role="dialog" aria-label="Highlight">' +
-      '<div class="hlsheet-title">This passage</div><span class="hlsheet-quote" id="hlQuote">' + esc(h.t) + '</span>' +
-      '<div class="hlsheet-row"><span class="hlsheet-label">Color</span><div class="hlsheet-colors">' + sw + '</div></div>' +
-      '<div class="hlsheet-row"><span class="hlsheet-label">Range</span><div class="spanrow"><button class="spanbtn" data-sp="-1" aria-label="One sentence less">－</button><span class="spannum" id="spanNum">' + h.sp + ' sent.</span><button class="spanbtn" data-sp="1" aria-label="One sentence more">＋</button></div></div>' +
-      '<p class="hl-hint">Tap + to extend to the next sentence; Ask Xiaozhi and Read aloud use the whole passage.</p>' +
-      '<textarea class="hlsheet-ta" id="hlNote" placeholder="Write your reflection…">' + esc(h.n || '') + '</textarea>' +
-      '<div class="hlsheet-acts"><button class="sbtn pri" data-a="save">Save</button><button class="sbtn" data-a="ask">Ask Xiaozhi</button><button class="sbtn" data-a="read">Read aloud</button></div>' +
-      '<div class="hlsheet-acts"><button class="sbtn danger" data-a="del">Remove highlight</button><button class="sbtn" data-a="close">Close</button></div></div>';
+    mask.innerHTML = '<div class="hlsheet-card" role="dialog" aria-label="' + LB('畫線', 'Highlight') + '">' +
+      '<div class="hlsheet-title">' + LB('這一句', 'This passage') + '</div><span class="hlsheet-quote" id="hlQuote">' + esc(h.t) + '</span>' +
+      '<div class="hlsheet-row"><span class="hlsheet-label">' + LB('顏色', 'Color') + '</span><div class="hlsheet-colors">' + sw + '</div></div>' +
+      '<div class="hlsheet-row"><span class="hlsheet-label">' + LB('範圍', 'Range') + '</span><div class="spanrow"><button class="spanbtn" data-sp="-1" aria-label="' + LB('少畫一句', 'One sentence less') + '">－</button><span class="spannum" id="spanNum">' + UN(h.sp) + '</span><button class="spanbtn" data-sp="1" aria-label="' + LB('多畫一句', 'One sentence more') + '">＋</button>' +
+        '<button class="spanbtn wide" data-sp="v">' + LB('整節', 'Section') + '</button><button class="spanbtn wide" data-sp="p">' + LB('整段', 'Paragraph') + '</button></div></div>' +
+      '<p class="hl-hint">' + LB('按 ＋ 往下多畫一句，或按「整段」「整節」一次畫完；問小智、朗讀、做成美圖都會帶整段。', 'Tap + to extend to the next sentence, or Paragraph / Section to take it all; Ask Xiaozhi, Read aloud and Make a card use the whole passage.') + '</p>' +
+      '<textarea class="hlsheet-ta" id="hlNote" placeholder="' + LB('寫下默想……', 'Write your reflection…') + '">' + esc(h.n || '') + '</textarea>' +
+      '<div class="hlsheet-acts"><button class="sbtn pri" data-a="save">' + LB('儲存', 'Save') + '</button><button class="sbtn" data-a="ask">' + LB('問小智', 'Ask Xiaozhi') + '</button><button class="sbtn" data-a="card">🖼 ' + LB('做成美圖', 'Make a card') + '</button></div>' +
+      '<div class="hlsheet-acts"><button class="sbtn" data-a="read">' + LB('朗讀這句', 'Read this') + '</button><button class="sbtn" data-a="copy">' + LB('複製', 'Copy') + '</button><button class="sbtn" data-a="share">' + LB('分享', 'Share') + '</button></div>' +
+      '<div class="hlsheet-acts"><button class="sbtn" data-a="from">' + LB('從這句朗讀', 'Read from here') + '</button><button class="sbtn danger" data-a="del">' + LB('刪除畫線', 'Remove') + '</button><button class="sbtn" data-a="close">' + LB('關閉', 'Close') + '</button></div></div>';
     document.body.appendChild(mask);
     function close() { if (mask.parentNode) { mask.parentNode.removeChild(mask); } }
     function keepNote() { var ta = document.getElementById('hlNote'); if (ta) { h.n = ta.value.replace(/^\s+|\s+$/g, ''); } }
+    function setSpan(n) {
+      var r = spanText(k, n);
+      h.sp = r.n; h.t = r.t; saveHl(); paintHl();
+      document.getElementById('hlQuote').textContent = h.t;
+      document.getElementById('spanNum').textContent = UN(h.sp);
+    }
     mask.addEventListener('click', function (e) {
       var t = e.target;
       if (t === mask) { close(); return; }
@@ -1013,10 +1041,15 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
         return;
       }
       if (t.hasAttribute('data-sp')) {
-        var r = spanText(k, (h.sp || 1) + (+t.getAttribute('data-sp')));
-        h.sp = r.n; h.t = r.t; saveHl(); paintHl();
-        document.getElementById('hlQuote').textContent = h.t;
-        document.getElementById('spanNum').textContent = h.sp + ' sent.';
+        var v = t.getAttribute('data-sp');
+        if (v === 'v' || v === 'p') {
+          var was = h.sp || 1, n2 = spanTo(k, v);
+          setSpan(n2);
+          if (X) { X.toast(n2 === was ? (v === 'v' ? LB('這一節已經整節畫起來了', 'This section is already fully highlighted') : LB('這一段已經整段畫起來了', 'This paragraph is already fully highlighted'))
+            : (v === 'v' ? LB('已畫整節，共 ' + n2 + ' 句', 'Section highlighted: ' + n2 + ' sentences') : LB('已畫整段，共 ' + n2 + ' 句', 'Paragraph highlighted: ' + n2 + ' sentences')), 2400); }
+          return;
+        }
+        setSpan((h.sp || 1) + (+v));
         return;
       }
       var a = t.getAttribute('data-a'); if (!a) { return; }
@@ -1024,11 +1057,15 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
       if (a === 'save') { keepNote(); saveHl(); close(); paintHl(); }
       else if (a === 'close') { close(); }
       else if (a === 'del') { delete HLS[k]; saveHl(); close(); paintHl(); }
-      else if (a === 'read') { keepNote(); saveHl(); close(); ttsStop(); ttsUnlock(); sayId = -1; ttsSpeakText(h.t, -1); }
+      else if (a === 'read') { keepNote(); saveHl(); close(); ttsStop(); ttsUnlock(); sayId = -1; paintSay(); ttsSpeakText(h.t, -1); }
+      else if (a === 'from') { keepNote(); saveHl(); close(); ttsFromKey(k); }
+      else if (a === 'card') { keepNote(); saveHl(); close(); if (X) { X.card(h); } }
+      else if (a === 'copy') { keepNote(); saveHl(); if (X) { X.copy(h); } }
+      else if (a === 'share') { keepNote(); saveHl(); if (X) { X.share(h); } }
       else if (a === 'ask') {
         keepNote(); saveHl(); close();
         chatSrc = { t: h.t, ut: h.ut };
-        chatPending = IS_EN ? 'Please explain this passage so I can understand it: “' + h.t + '”' : '請解釋這一段，幫助我Understand它的意思：“' + h.t + '”';
+        chatPending = IS_EN ? 'Please explain this passage so I can understand it: “' + h.t + '”' : (DATA === 'sc-' ? '请解释这一段，帮助我明白它的意思：「' : '請解釋這一段，幫助我明白它的意思：「') + h.t + '」';
         S.view = 'chat'; render(); window.scrollTo(0, 0);
       }
     });
@@ -1049,11 +1086,11 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
     });
   }
   function ttsPrep(s) {
-    var x = ttsRef(s).replace(/[←-⇿⌀-➿⬀-⯿]/g, '');
+    var x = ttsRef(window.GXR ? GXR.pre(s) : s).replace(/[←-⇿⌀-➿⬀-⯿]/g, '');
     if (IS_EN) { return x.replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, ''); }
     x = x.replace(/[“”『』（)()]/g, '');
     if (DATA === 'tc-') { TTS_FIX.forEach(function (f) { x = x.replace(f[0], f[1]); }); }
-    return x.replace(/^\s+|\s+$/g, '');
+    return (window.GXR ? GXR.pron(x) : x).replace(/^\s+|\s+$/g, '');
   }
   var SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=';
   var ttsEl = null, ttsUnlocked = false, ttsLastErr = '', raManualAt = 0, sayId = null;
@@ -1115,9 +1152,10 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
     for (j = 0; j < item.lens.length; j++) { acc += item.lens[j]; k = j; if (target < acc) { break; } }
     raSeg(item, k);
   }
-  function buildQueue(root) {
+  function buildQueue(root, fromKey) {
     /* 一律從這一步（或Sermon)的第一句Start唸，不從畫面M間Start */
     var gs = groups(root);
+    if (fromKey) { for (var fi = 0; fi < gs.length; fi++) { if (gs[fi].k === fromKey) { gs = gs.slice(fi); break; } } }
     var items = [], it = null;
     function push() { if (it && it.text) { items.push(it); } it = { text: '', segs: [], lens: [], at: -1 }; }
     push();
@@ -1132,6 +1170,7 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
     return items.filter(function (x) { return ttsPrep(x.text).length > 0; });
   }
   function ttsBtn(state) {
+    if (window.GXR) { GXR.ttsState(state); }
     var b = spk.btn; if (!b) { return; }
     b.setAttribute('data-state', state || '');
     b.textContent = state ? (state === 'loading' ? 'Preparing…' : 'Stop reading') : spk.label;
@@ -1197,6 +1236,18 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
     ttsBtn('loading');
     ttsPlayFrom(0);
   }
+  function ttsFromKey(k) {
+    var first = document.querySelector('.sent[data-k="' + k + '"]'), root = rootOf(first);
+    if (!root) { return; }
+    if (spk.on) { ttsStop(); }
+    ttsSayStop(); ttsUnlock();
+    var items = buildQueue(root, k);
+    if (!items.length) { return; }
+    var rb = $('readBtn');
+    spk = { on: true, items: items, idx: 0, cache: {}, native: false, abort: false, btn: rb, label: rb ? rb.textContent : '' };
+    ttsBtn('loading');
+    ttsPlayFrom(0);
+  }
   function ttsStop() {
     spk.on = false; spk.abort = true;
     try { if (ttsEl) { ttsEl.pause(); } } catch (e) {}
@@ -1205,6 +1256,7 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
     ttsSayStop();
   }
   function paintSay() {
+    if (window.GXR) { GXR.ttsState(sayId !== null ? 'playing' : ''); }
     qsa('.msg-act[data-a="tts"]').forEach(function (b) {
       var on = sayId === (b.getAttribute('data-w') + b.getAttribute('data-i'));
       b.className = 'msg-act' + (on ? ' on' : '');
@@ -1602,6 +1654,7 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
     var lastAi = CHAT.length && CHAT[CHAT.length - 1].role === 'ai' ? CHAT[CHAT.length - 1] : null;
     var contMode = !!lastAi && CONT_RE.test(text);
     if (!contMode) {
+      CHAT.forEach(function (m) { if (m.role === 'ai') { m.col = true; } });
       CHAT.push({ role: 'user', text: text, id: newId() });
       CHAT.push({ role: 'ai', text: THINKING, id: newId() });
     }
@@ -1611,6 +1664,7 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
     var sys = (IS_EN ? SYS_EN : SYS_ZH) + unitContext() + (chatSrc ? (IS_EN ? '\nThe reader highlighted: "' + chatSrc.t + '"' : '\n讀者Highlight的句子：“' + chatSrc.t + '”') : '') +
       (hlMode ? (IS_EN ? '\nThis question comes from a highlighted passage. Focus on explaining the passage clearly and answering what it means, so the reader understands it: key facts, how certain they are, and the related Scripture. Do not add devotional guidance or meditation prompts. Keep it focused and concise (about 200 to 400 words).'
         : '\n這個問題來自讀者Highlight的一段文。重點是把這一段解釋清楚, 回答它的意思，讓讀者Understand：交代關鍵事實, 確定程度與相關經文即可，不需要默想或靈修引導。回答要聚焦, 精簡（約 300 到 600 )。') : '');
+    if (window.GXR) { sys += GXR.sysExtra(); }
     chatSrc = null;
     var msgs = CHAT.filter(function (m) { return m.text !== THINKING; }).slice(contMode ? -13 : -12, contMode ? -1 : undefined).map(function (m) { return { role: m.role === 'user' ? 'user' : 'assistant', content: m.text }; });
     /* 回答太長時，伺服器會在M途截斷；偵測到截斷就自動請Xiaozhi接著寫，最後合成完整的一篇 */
@@ -1745,6 +1799,21 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
   window.setTimeout(checkUpdate, 2500);
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') { checkUpdate(); } });
   window.setInterval(checkUpdate, 30 * 60 * 1000);
+
+  /* GXR 橋接：讓補件（gxr）可以呼叫本 App 裡的小智、朗讀與字級 */
+  window.GXR_BR = {
+    chat: function () { return CHAT; },
+    send: function (t) { sendChat(t); },
+    busy: function () { return chatBusy; },
+    title: function () { var U = (S.view === 'unit' && HD[S.hall]) ? cur() : null; return U ? U.title : ''; },
+    voice: function () { try { return curVoice(); } catch (e) { return ''; } },
+    setFs: function () { var L = [15, 17, 20], i = L.indexOf(S.fs), n = (i + 1) % L.length; S.fs = L[n]; document.documentElement.style.setProperty('--fs', S.fs + 'px'); save(); return (n + 1) + '/' + L.length; },
+    pause: function () { try { if (ttsEl && !ttsEl.paused) { ttsEl.pause(); } if ('speechSynthesis' in window && window.speechSynthesis.speaking) { window.speechSynthesis.pause(); } } catch (e) {} },
+    resume: function () { try { if (ttsEl && ttsEl.paused && ttsEl.src) { var p = ttsEl.play(); if (p && p.then) { p.then(null, function () {}); } } if ('speechSynthesis' in window && window.speechSynthesis.paused) { window.speechSynthesis.resume(); } } catch (e) {} },
+    stop: function () { ttsStop(); },
+    from: function (k) { ttsFromKey(k); },
+    readPage: function () { var b = $('readBtn'); if (b) { b.click(); return true; } return false; }
+  };
 
   load();
   if (!HU[S.hall]) { S.hall = 'cosmos'; }
@@ -4279,6 +4348,456 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 })();
 </script>
 
+<script id="gxrScript">
+window.GXR_CFG={"key": "creation-en", "app": "321萬象見神", "appEn": "321 Creation Speaks"};
+window.GXR_DATA={"keys":["adult","teen","kid","seeker","elder","single_parent","single","parent","couple","pastor"],"icon":{"adult":"🧑","teen":"🧒","kid":"🧸","seeker":"🌱","elder":"👴","single_parent":"👩‍👧","single":"🙋","parent":"👨‍👩‍👧","couple":"💑","pastor":"⛪"},"names":{"adult":"Adult","teen":"Teen","kid":"Child","seeker":"Seeker","elder":"Elder","single_parent":"Single parent","single":"Single","parent":"Parent","couple":"Couple","pastor":"Pastor"},"hints":{"adult":"Thoughtful, with depth for work, family and relationships","teen":"Funny and real — no lecturing, pictures from your world","kid":"Super simple, like a story","seeker":"Plain words for someone exploring faith — no pressure, practical help","elder":"Respectful, gentle and unhurried, in clear words","single_parent":"Hear your weariness first — small doable steps and hope","single":"Sincere and equal — no pressure about marriage; identity, waiting and purpose","parent":"Close to raising children: talking, discipline, presence and prayer","couple":"Walking together: talking, forgiving, unity and praying as a couple","pastor":"As a fellow worker: shepherding, sermon prep, team and avoiding burnout"},"lenNames":{"brief":"Brief","mid":"Medium","full":"Detailed"},"len":{"brief":" Length: BRIEF. Keep the whole answer to about 3–5 short sentences (roughly 120 words): the core answer, one key verse or picture, and a one-line prayer or step. No tables, no long lists.","full":" Length: DETAILED. Give a fuller, well-organised answer (roughly 600–900 words): the passage context, the meaning of key words, cross-references, a clear 3-2-1 application, a practical step for this week, and a closing prayer. Short headings are welcome."},"aud":{"adult":{"sys":" Audience: an adult. Speak with a mature, steady and warm voice. You may go a little deeper — note the context and the meaning of key words — and connect the passage to work, marriage, parenting, relationships and spiritual battle. Close with one concrete step the reader can practise this week.","q":["What does this passage show me about who God is?","What self-centred old nature does this passage expose in me?","If I let Jesus reign in this situation, what would I do?","What example does Jesus set for me here?","What one step is the Holy Spirit guiding me to take today?","Why did the people here fail — was the root pride, or fear?","How does this passage help me practise a self-emptied life?","Which relationship of mine should I bring this passage into?","How does this connect with “Your Kingdom come” in the Lord's Prayer?","Give me one everyday picture that opens up the heart of this passage."],"fu":[["💍","Marriage","Based on your answer, explain how to apply it in my marriage, and give me one concrete step I can take this week."],["👨‍👩‍👧","Family","Based on your answer, explain how to apply it in my family and parenting (or with my parents), and give me one concrete step I can take this week."],["💼","Work","Based on your answer, explain how to apply it at work (colleagues, boss, pressure, integrity), and give me one concrete step I can take this week."],["🏡","Daily life","Based on your answer, explain how to apply it in everyday life (time, money, habits), and give me one concrete step I can take this week."],["💭","Inner life","Based on your answer, explain how to apply it in facing my inner struggles (anxiety, anger, pride), and give me one concrete step I can take this week."],["🙏","Prayer","Please turn the key point of your answer into a short, sincere prayer I can pray."]]},"teen":{"sys":" Audience: a teenager (about 12–18). Be funny, witty and real — like a cool older brother or sister chatting, never lecturing or talking down. Use pictures from their world: phone at 1% battery, game levels, binge-watching, likes and followers, exams, peer pressure, sports. A light joke or current slang now and then is welcome, but NEVER joke about God, Jesus or Scripture itself, and never be flippant about sin or pain; after the laugh, land firmly on the truth. Keep it short, put the main point first, use short paragraphs, and end with one small challenge they can try today. If they mention being hurt, bullied, or wanting to harm themselves, answer gently and encourage them to tell a trusted adult (parent, teacher, pastor) right away.","q":["How does this passage connect to my everyday life — school, friends, my phone?","If this passage were a message from God to me, what would it say?","Everyone is doing it — is it weird if I don't? What does Scripture say?","Can you explain this passage with a game or a movie?","What's surprising or little-known about this passage?","Exam stress is huge — what strength does this passage give me?","I can't forgive someone. How does this passage help?","Does God really see me? What makes me worth loving?"],"fu":[["🏫","School","Using what you just said, help me think through how to use it at school and with my studies — give me one small move I can try today."],["🤝","Friends","Using what you just said, help me think through how to use it with my friends — give me one small move I can try today."],["🏠","Family","Using what you just said, help me think through how to use it with my parents and family — give me one small move I can try today."],["📱","Phone & online","Using what you just said, help me think through how to use it on my phone, online and on social media — give me one small move I can try today."],["💭","Stress","Using what you just said, help me think through how to use it with stress and emotions — give me one small move I can try today."],["🌟","Future","Using what you just said, help me think through how to use it for my future and dreams — give me one small move I can try today."],["🎯","Challenge","Give me one small, specific, slightly fun challenge related to this that I can finish today."]]},"kid":{"sys":" Audience: a young child (about 5–11). Use VERY simple words, like telling a story to a little one. Short sentences, one idea each. Use concrete everyday pictures (a seed, a teddy bear, holding hands, hide-and-seek, a birthday cake). Avoid theological terms; if one is needed, explain it in one simple sentence. Be warm and lively — you may ask \"Did you know?\" or \"Let's think!\" and add a few cute emojis. Keep the whole answer to about 5–7 short sentences. Do NOT use tables. Quote only one short verse. For violent or frightening passages, tell it gently without graphic detail. End with a tiny prayer or one simple question the child can answer. If the child says someone hurts them or they are very sad, answer kindly and tell them to talk to a trusted grown-up (mom, dad, teacher, pastor) right away.","q":["What is this story about? Tell it to me.","What did God do in this story?","Does Jesus love me? How do I know?","Who is the bravest in this story? Why?","How can I be like the people in this story?","Teach me one short verse I can remember.","I had a fight with my best friend. What would Jesus do?","Can you teach me a little prayer?"],"fu":[["🏠","At home","About what you just said — what can I do at home? Please tell me in simple words."],["🏫","At school","About what you just said — what can I do at school? Please tell me in simple words."],["🤝","With friends","About what you just said — what can I do with my friends? Please tell me in simple words."],["🙏","Little prayer","Please teach me a very short little prayer I can say to Jesus."],["📖","Story","Can you tell me another little story about this?"]]},"seeker":{"sys":" Audience: a seeker — a friend who is not yet a believer and is exploring the Christian faith. Stand fully in their shoes: they may never have read the Bible, do not know church language, and may have questions or reservations. (1) Start from their real situation, feelings or question, then bring in the passage, so they feel \"this is about me\". (2) Use plain everyday words; the 321 vision is only your inner compass — never use insider words like \"self-emptied\", \"let Jesus reign\", \"overcomer\" or \"spiritual\", and no church or theological jargon; if a word like grace, sin or salvation is unavoidable, explain it at once in everyday terms. (3) Be honest and respectful — no preaching, no pressure, no demand to believe now, no judging; doubts and objections are normal, so acknowledge the weight of the question first, then answer it honestly. (4) State clearly what the Bible says about it (what God is like, what Jesus did for us) through stories, pictures and everyday examples they can understand and remember. (5) Always give practical help: one or two small steps they can try this week by themselves (something to notice, a question to ask, a simple action). (6) When it fits, gently invite them to keep exploring (read a short passage, ask a question) — never force the conversation toward a decision. (7) Never say things like \"we Christians all know\", which assumes they already believe. Quote the World English Bible and explain it in plain words. If you include a prayer, offer it only as \"if you like, you could say something like this to God\" — never forced. Keep the whole answer concise, with short paragraphs.","q":["How does this passage connect to my life right now?","I am not a Christian — what could this mean for me?","Is there a God? What reasons are there to believe?","Why does the Bible say everyone needs Jesus?","I am under a lot of stress — what practical help does the Bible offer?","What does \"sin\" mean here, and does it apply to me?","Christians talk about \"grace\" — what does it mean in plain words?","If I want to know more, where can I start?"],"fu":[["🤝","Relationships","Applying what you just said in relationships (family, friends, colleagues), what practical help would it be for someone who is not yet a Christian? Please give an everyday example."],["💍","Marriage & family","Applying what you just said in marriage and family, what practical help would it be for someone who is not yet a Christian? Please give an everyday example."],["💼","Work","Applying what you just said at work, what practical help would it be for someone who is not yet a Christian? Please give an everyday example."],["😟","Stress","Applying what you just said in stress and anxiety, what practical help would it be for someone who is not yet a Christian? Please give an everyday example."],["🌍","Meaning","Applying what you just said in searching for meaning and direction in life, what practical help would it be for someone who is not yet a Christian? Please give an everyday example."],["❓","My doubts","I still have doubts. Please tell me honestly: what practical difference does faith in Jesus make to a person's life? And how could I check it out for myself?"],["🌱","Next step","If I want to learn more, what could my next step be? Please give one or two no-pressure suggestions."]]},"elder":{"sys":" Audience: an elder (about 65 and older). Speak respectfully, gently and unhurriedly, like a younger person reading Scripture with an older one they honour. Short, clear sentences; no internet slang or abbreviations; pictures from a long life (fields, family, the years, illness, grandchildren, old neighbours). Main point first, in short paragraphs. Honour the road they have walked and their faithfulness in the Lord; never preach, scold, or say \"you should\". You may speak of health and frailty, loneliness, letting go and entrusting, passing faith to the next generation, eternal hope and gratitude. End with one simple thing that is easy to do (a short prayer, a phone call to family, counting one blessing). If they mention illness, loneliness or loss, comfort them first and encourage them to reach out to family or the church care team.","q":["In the simplest words, what is this passage saying?","What comfort does this passage give to those who are older?","My body is growing weaker — how does God watch over me?","I often feel lonely — what does this passage give me?","How can I pass my faith on to my children and grandchildren?","There are things I cannot let go of — how does this passage teach me to entrust them?","I am old — what can I still do for God?","Please write me a short prayer I can read to the Lord."],"fu":[["🩺","Health","Based on your answer, explain how to apply it to physical frailty and health, and give me one concrete step I can take this week."],["🤍","Loneliness","Based on your answer, explain how to apply it to loneliness and missing loved ones, and give me one concrete step I can take this week."],["👨‍👩‍👧‍👦","Family","Based on your answer, explain how to apply it to my relationship with my children and grandchildren, and give me one concrete step I can take this week."],["🕊️","Entrusting","Based on your answer, explain how to apply it to letting go of my worries and entrusting them to the Lord, and give me one concrete step I can take this week."],["🌅","Hope","Based on your answer, explain how to apply it to eternal hope and gratitude, and give me one concrete step I can take this week."],["🙏","Prayer","Please turn the key point of your answer into a short, simple prayer I can read slowly to the Lord."]]},"single_parent":{"sys":" Audience: a single parent (carrying a household alone). First receive their weariness: they are often exhausted, carry guilt and loneliness, and face pressure over money, time and raising children. Be warm, accepting and non-judging; do not ask why they are single, never say \"you should find a partner\", and never describe single parenting as a lack. Bring in God's heart: he is a father to the fatherless and a defender of widows (Psalm 68:5), and he is with us. Then give hope and practicality — every small step must be doable in a busy life (a five-minute prayer, one small ritual with the child, asking brothers and sisters for help). Keep it short, in short paragraphs. End with one step they can take this week. If they mention being abused, being too exhausted to go on, or wanting to harm themselves, answer gently and encourage them to contact someone they trust, a church worker or professional help right away.","q":["What comfort does this passage give me as I carry a family alone?","I am so tired and feel I owe my children more — how does God see me?","How does God care for orphans and widows, and what does that mean for me?","Money is very tight — what does this passage give me?","My child talks back and has big emotions — what should I do?","I do not know how to talk to my child about Dad (or Mom) not being around.","I am really lonely — how can I ask the church or brothers and sisters for help?","Please write me a short prayer I can pray in five minutes."],"fu":[["😮‍💨","Weary","Based on your answer, explain how to apply it to the weariness and guilt of carrying a family alone, and give me one concrete step I can take this week."],["👧","Child","Based on your answer, explain how to apply it to being with my child and parenting, and give me one concrete step I can take this week."],["💰","Money","Based on your answer, explain how to apply it to pressure over money and time, and give me one concrete step I can take this week."],["🤝","Help","Based on your answer, explain how to apply it to asking brothers, sisters or the church for help, and give me one concrete step I can take this week."],["🌤️","Hope","Based on your answer, explain how to apply it to seeing God's presence and hope in this season, and give me one concrete step I can take this week."],["🙏","Prayer","Please turn the key point of your answer into a short prayer I can finish in five minutes in the middle of a busy day."]]},"single":{"sys":" Audience: a single person (never married, divorced, widowed, or still waiting — do not assume they want or do not want to marry). Never describe being single as a lack, a \"preparation stage\" or \"life not yet begun\", and never use a pushy-about-marriage tone. Speak of an identity in Christ that is already whole and loved; of connecting with God, friends and fellowship in loneliness; of using time, money and gifts for a purpose; of trusting while waiting; of wisdom in dating and marriage and of purity in heart and body, respectfully and without judging. Be sincere, equal and light. End with one step they can take this week. If they mention loneliness so deep they want to harm themselves, answer gently and encourage them to contact someone they trust or professional help right away.","q":["As a single person, what does this passage say to me?","I feel lonely — what does this passage give me?","Who am I in Christ, and what am I worth?","How do I trust God while I wait?","What wisdom does the Bible give about relationships?","How can my time and energy as a single person be used for God?","How do I build good relationships in church and with friends?","Please write me a short prayer for a single person."],"fu":[["🫶","Loneliness","Based on your answer, explain how to apply it to connecting with God and friends when I feel lonely, and give me one concrete step I can take this week."],["💝","Identity","Based on your answer, explain how to apply it to my identity and worth in Christ, and give me one concrete step I can take this week."],["⏳","Waiting","Based on your answer, explain how to apply it to trusting God while I wait, and give me one concrete step I can take this week."],["💞","Relationships","Based on your answer, explain how to apply it to wisdom in dating and friendship, and give me one concrete step I can take this week."],["🎯","Purpose","Based on your answer, explain how to apply it to using my time and gifts for God's purposes, and give me one concrete step I can take this week."],["🙏","Prayer","Please turn the key point of your answer into a short, sincere prayer I can pray."]]},"parent":{"sys":" Audience: a parent raising children (from babies to adult children). Stand in the parent's shoes: they are often tired, worried about their children, and often feel guilty. Be warm, down-to-earth and non-judging; acknowledge that every child and every family is different. Speak of presence and example, balancing discipline and grace, parent–child communication (how to listen, how to speak), praying for children, husband and wife standing together, and facing one's own weakness and failure; use everyday scenes as pictures (mealtime, homework, phones, bedtime). End with one concrete step for this week (one sentence, a hug, a bedtime prayer). If a child is being harmed, there is domestic violence, or the child has thoughts of self-harm, answer gently and encourage seeking professional help and a trusted person right away.","q":["What does this passage remind me of as a parent?","My child will not listen and has big emotions — how should I respond?","How do I balance discipline and grace?","How do I talk well with a teenager?","I often lose my temper with my child and feel guilty afterwards — what now?","How do I lead my child to know God, not just go to church?","My spouse and I disagree on parenting — what does this passage say?","Please write me a short prayer of blessing for my child."],"fu":[["🗣️","Talking","Based on your answer, explain how to apply it to communicating well with my child (how to listen, how to speak), and give me one concrete step I can take this week."],["⚖️","Discipline","Based on your answer, explain how to apply it to balancing discipline and grace, and give me one concrete step I can take this week."],["😔","Guilt","Based on your answer, explain how to apply it to the guilt of losing my temper or feeling I owe my child more, and give me one concrete step I can take this week."],["💑","Spouse","Based on your answer, explain how to apply it to husband and wife being united in parenting, and give me one concrete step I can take this week."],["📖","Faith","Based on your answer, explain how to apply it to leading my child to know God and drawing near to him together, and give me one concrete step I can take this week."],["🙏","Prayer","Please turn the key point of your answer into a short prayer of blessing I can pray over my child."]]},"couple":{"sys":" Audience: a married couple (husband and wife — newlyweds, parents in the thick of life, or long-time partners). Stand beside them as a fellow traveler: warm, sincere, never judging and never taking one side; admit every marriage has seasons of friction, weariness and hurt. Speak of love as a decision and a gift, forgiving one another, listening and speaking well, respect and unity, money and household work, in-laws and raising children, praying and reading Scripture together, becoming one in the Lord. Use everyday pictures (the dinner table, holding hands, after an argument, bedtime). Close with one small step the two of them can do together this week (a word of thanks, a short prayer together, a phone-free walk). Never lay one-sided demands on the wife to submit or the husband to rule; stress mutual love and mutual submission. If domestic violence, an affair, threats or thoughts of self-harm come up, respond gently, put safety first, and encourage reaching out at once to professionals and trusted people — never urge someone just to endure.","q":["What does this passage say to us as a couple?","After an argument we go cold — how can one of us reach out first?","How can I say what's in my heart so my spouse can hear it?","My spouse hurt me — do I really have to forgive?","We disagree about money and chores — what do we do?","How can we pray and draw near to God together?","We've drifted apart in our busy days — how do we reconnect?","Please write a short prayer of blessing over our marriage."],"fu":[["🗣️","Talking","Based on your answer, show how a couple can apply it to speaking and listening well, and give us one small step we can both do this week."],["🤝","Forgiving","Based on your answer, show how a couple can apply it to owning mistakes and forgiving, and give us one small step we can both do this week."],["💞","Closeness","Based on your answer, show how a couple can apply it to reconnecting and expressing love and thanks, and give us one small step we can both do this week."],["👨‍👩‍👧","Unity","Based on your answer, show how a couple can apply it to being united on money, chores and parenting, and give us one small step we can both do this week."],["📖","Together","Based on your answer, show how a couple can read Scripture and draw near to God together, and give us one small step we can both do this week."],["🙏","Prayer","Turn the main points of your answer into a short prayer a couple can pray together."]]},"pastor":{"sys":" Audience: a pastor or ministry worker (pastor, preacher, small-group leader, church staff or volunteer). Stand beside them as a fellow worker: they carry many people's burdens and can themselves be weary, lonely, misunderstood or discouraged. Be respectful, equal and sincere — never lecturing or talking down. You may go deeper: the context of the passage, the sense of key words, shepherding and building lives, sermon and lesson preparation, leading groups and discipleship, team unity and conflict, criticism and loneliness, spiritual warfare, one's own walk and family, and resting in God without burning out. You may offer a sermon or Bible-study outline with points and applications, but remind them to receive the word from God themselves first. Close with one small step for this week (a quiet hour with God, a caring phone call, an honest talk with a coworker). If extreme exhaustion, depression, wanting to quit or self-harm come up, respond gently and encourage reaching out at once to trusted coworkers, spiritual elders and professionals.","q":["What does this passage say to me in ministry?","Help me find a sermon outline and entry point for this passage.","I'm exhausted and close to burning out — how does this comfort me?","How do I face criticism and misunderstanding in church?","How does this passage speak to leading a team in unity?","How can I guard my own walk with God amid a busy ministry?","How do I shepherd the weak, the hurting and those who left?","Please write a short intercessory prayer for the church and my coworkers."],"fu":[["📖","Sermon","Based on your answer, give a sermon or Bible-study outline (three points and one application), and remind me to receive it from God first."],["🐑","Shepherd","Based on your answer, show how to apply it to shepherding the flock and caring for individuals, and give me one small step for this week."],["🤝","Team","Based on your answer, show how to apply it to leading a team, unity among coworkers and handling conflict, and give me one small step for this week."],["🕊️","Rest","Based on your answer, show how to apply it to my own weariness and guarding my walk with God, and give me one small step for this week."],["⚔️","Warfare","Based on your answer, show how to apply it to criticism, loneliness and spiritual warfare, and give me one small step for this week."],["🙏","Intercede","Turn the main points of your answer into a short prayer I can pray for the church and my coworkers."]]}}};
+/* ═══════════════════════════════════════════════════════════════════
+   GXR · 321 互動聖經標準補件 v1（B 組：萬象見神與早期製作的 App）
+   不改動各 App 原有結構，只補上互動聖經標準裡缺的功能：
+   ① 畫線面板：整節／整段、🖼 做成美圖、複製、分享、朗讀這句、從這句朗讀
+   ② 小智：十種回答對象、回答長度（切換＝重新回答）、追問、範例問題跟著對象換、字級鈕
+   ③ 朗讀：多音字修正（PRON321）、括號出處與表情符號不唸、背景播放（Media Session＋螢幕不休眠）、浮動控制列
+   ④ 美圖工作室與我的作品入口、小智設定卡（我的／設定頁）
+   各 App 只要在自己的程式裡留幾個掛點（window.GXR_BR 橋接），其餘都在這裡。
+   ═══════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  if (window.GXR) return;
+  var CFG = window.GXR_CFG || {};
+  var D = window.GXR_DATA || null;
+  var SCM = window.GXR_SCM || null;
+  var HL = String(document.documentElement.getAttribute('lang') || '').toLowerCase();
+  var EN = /^en/.test(HL), SC = /hans|zh-cn|zh-sg/.test(HL);
+
+  /* ── 簡體轉換（只有簡體入口頁用得到） ── */
+  var SC_M = {}, SC_P = {}, SC_H = {}, SC_L = [];
+  if (SC && SCM) {
+    (function () {
+      var tc = SCM.m[0], sc = SCM.m[1], i, Ls = {};
+      for (i = 0; i < tc.length; i++) SC_M[tc[i]] = sc[i];
+      (SCM.p || []).forEach(function (pr) { SC_P[pr[0]] = pr[1]; Ls[pr[0].length] = 1; SC_H[pr[0][0]] = 1; });
+      SC_L = Object.keys(Ls).map(Number).sort(function (a, b) { return b - a; });
+    })();
+  }
+  function toSC(s) {
+    s = String(s == null ? '' : s);
+    if (!SC || !SCM) return s;
+    var out = '', i = 0, n = s.length, c, hit, k, r;
+    while (i < n) {
+      c = s.charAt(i);
+      if (SC_H[c]) {
+        hit = false;
+        for (k = 0; k < SC_L.length; k++) { r = SC_P[s.substr(i, SC_L[k])]; if (r !== undefined) { out += r; i += SC_L[k]; hit = true; break; } }
+        if (hit) continue;
+      }
+      r = SC_M[c]; out += (r === undefined ? c : r); i++;
+    }
+    return out;
+  }
+  function T(zh, en) { return EN ? (en == null ? zh : en) : toSC(zh); }
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function q1(s, r) { return (r || document).querySelector(s); }
+  function qa(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function BR() { return window.GXR_BR || {}; }
+  function APP() { return EN ? (CFG.appEn || CFG.app || '') : (CFG.app || ''); }
+
+  /* ── 設定（自己存，不動 App 原有資料） ── */
+  var KEY = 'gxr_' + (CFG.key || 'app');
+  var ST = { aud: 'adult', len: 'mid' };
+  try { var o = JSON.parse(localStorage.getItem(KEY) || '{}'); if (o && typeof o === 'object') { if (o.aud) ST.aud = o.aud; if (o.len) ST.len = o.len; } } catch (e) {}
+  function saveST() { try { localStorage.setItem(KEY, JSON.stringify(ST)); } catch (e) {} }
+
+  var toastT = 0;
+  function toast(m, ms) {
+    var el = q1('#gxrToast');
+    if (!el) { el = document.createElement('div'); el.id = 'gxrToast'; document.body.appendChild(el); }
+    el.textContent = m; el.className = 'on';
+    clearTimeout(toastT); toastT = setTimeout(function () { el.className = ''; }, ms || 2200);
+  }
+
+  /* ══════════ 回答對象與長度 ══════════ */
+  var KEYS = D ? D.keys : [];
+  function aud() { return KEYS.indexOf(ST.aud) >= 0 ? ST.aud : 'adult'; }
+  function alen() { return ['brief', 'mid', 'full'].indexOf(ST.len) >= 0 ? ST.len : 'mid'; }
+  function A() { return D.aud[aud()] || { sys: '', q: [], fu: [] }; }
+  function sysExtra() {
+    if (!D) return '';
+    var s = (EN ? '\n\n[Audience]' : '\n\n【回答對象】') + A().sys, k = alen();
+    if (k !== 'mid') {
+      s += (EN ? '\n\n[Length]' : '\n\n【回答長度】') + D.len[k] +
+        (EN ? ' (This length request overrides any earlier instruction about length; still follow the answer-format rules above.)'
+          : '（這一條長度要求優先於上面其他關於篇幅的原則；仍然照上面的「回答格式」排版。）');
+    }
+    if (SC) s += '\n\n【語言】這位讀者使用简体中文，請一律用简体中文回答。';
+    return s;
+  }
+  function audBtns() {
+    return KEYS.map(function (k) {
+      return '<button type="button" class="gxa' + (aud() === k ? ' on' : '') + '" data-gxr-aud="' + k + '">' + D.icon[k] + ' ' + esc(T(D.names[k], D.names[k])) + '</button>';
+    }).join('');
+  }
+  function lenBtns(cls) {
+    var L = alen();
+    return ['brief', 'mid', 'full'].map(function (x) {
+      return '<button type="button" class="' + (cls || '') + (L === x ? ' on' : '') + '" data-gxr-len="' + x + '">' + esc(T(D.lenNames[x], D.lenNames[x])) + '</button>';
+    }).join('');
+  }
+  var audOpen = false;
+  function ctlHTML() {
+    var k = aud(), b = BR(), fsOn = typeof b.setFs === 'function';
+    return '<div class="gxrow"><button type="button" class="gxsm" data-gxr-togaud="1">' + D.icon[k] + ' ' + esc(T('對象：', 'For: ') + T(D.names[k], D.names[k])) + ' ' + (audOpen ? '▴' : '▾') + '</button>' +
+      (fsOn ? '<button type="button" class="gxsm gxfs" data-gxr-fs="1" aria-label="' + esc(T('字級', 'Text size')) + '">A</button>' : '') + '</div>' +
+      '<div class="gxrow" style="margin-top:6px"><span class="gxlen"><span class="gxlab">' + esc(T('長度', 'Length')) + '</span>' + lenBtns('') + '</span></div>' +
+      (audOpen ? '<div class="gxaud">' + audBtns() + '</div><p class="gxhint">' + esc(T(D.hints[k], D.hints[k])) + '</p>' : '');
+  }
+  function paintCtl() {
+    qa('#gxrCtl').forEach(function (el) { el.innerHTML = ctlHTML(); });
+    qa('.gxr-me-aud').forEach(function (el) {
+      var k = aud();
+      el.innerHTML = '<div class="gxaud">' + audBtns() + '</div><p class="gxhint">' + esc(T(D.hints[k], D.hints[k])) + '</p>';
+    });
+    qa('.gxr-me-len').forEach(function (el) { el.innerHTML = lenBtns('gxpill'); });
+  }
+  function setAud(k) {
+    if (KEYS.indexOf(k) < 0) return;
+    ST.aud = k; saveST();
+    toast(T('回答對象：', 'Answering for: ') + T(D.names[k], D.names[k]));
+    paintCtl(); quickRefresh(true); fuRefresh(true);
+  }
+  function reask() {
+    var b = BR();
+    if (!b.chat || !b.send || (b.busy && b.busy()) || !q1('#chatlog')) return false;
+    var c = b.chat(), n = c.length;
+    if (n < 2) return false;
+    var a = c[n - 1], u = c[n - 2];
+    if (!a || !u || a.role !== 'ai' || u.role !== 'user') return false;
+    if (/^(小智)?(請)?(繼續|接著)|^(please )?(continue|keep going)/i.test(String(u.text))) return false;
+    c.splice(n - 2, 2);
+    b.send(u.text);
+    return true;
+  }
+  function setLen(k, fromChat) {
+    if (alen() === k) return;
+    ST.len = k; saveST();
+    var nm = T(D.lenNames[k], D.lenNames[k]);
+    if (fromChat && reask()) toast(T('用「' + nm + '」重新回答…', 'Answering again: ' + nm + '…'));
+    else toast(T('回答長度：', 'Answer length: ') + nm);
+    paintCtl();
+  }
+  /* 範例問題跟著回答對象換 */
+  function quickRefresh(force) {
+    var p = q1('#qsPanel'); if (!p) return;
+    if (!p._gxrBase) { p._gxrBase = qa('.qs-chip', p).map(function (b) { return b.textContent; }); p.setAttribute('data-gxr', 'orig'); if (aud() === 'adult') return; }
+    if (!force && p.getAttribute('data-gxr') === aud()) return;
+    var base = p._gxrBase, list = aud() === 'adult' ? base : base.slice(0, 2).concat((A().q || []).slice(0, 6));
+    p.innerHTML = list.map(function (q) { return '<button type="button" class="qs-chip" data-gxr-q="1">' + esc(aud() === 'adult' ? q : T(q, q)) + '</button>'; }).join('');
+    p.setAttribute('data-gxr', aud());
+  }
+  /* 追問：回答完成後，依對象列出幾個常用追問 */
+  function fuRefresh(force) {
+    var log = q1('#chatlog'); if (!log || !D) return;
+    var b = BR();
+    if (b.busy && b.busy()) { qa('.gxr-fu', log).forEach(function (x) { x.remove(); }); return; }
+    var cards = qa('.msg.ai', log), last = cards[cards.length - 1];
+    var ex = qa('.gxr-fu', log);
+    if (!last || !last.querySelector('.msg-actions') || last !== log.lastElementChild) { ex.forEach(function (x) { x.remove(); }); return; }
+    if (ex.length === 1 && ex[0].parentNode === last && !force) return;
+    ex.forEach(function (x) { x.remove(); });
+    var fu = A().fu || []; if (!fu.length) return;
+    var d = document.createElement('div'); d.className = 'gxr-fu';
+    d.innerHTML = '<span class="gxlab">' + esc(T('追問', 'Follow up')) + '</span>' + fu.map(function (f, i) {
+      return '<button type="button" class="gxq" data-gxr-fu="' + i + '">' + esc(f[0]) + ' ' + esc(T(f[1], f[1])) + '</button>';
+    }).join('');
+    last.appendChild(d);
+  }
+
+  /* ══════════ 朗讀：多音字、括號出處、表情符號 ══════════ */
+  var EMOJI_RE = /[\u{1F000}-\u{1FAFF}\u{2190}-\u{21FF}\u{2300}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE00}-\u{FE0F}\u{1F1E6}-\u{1F1FF}\u{200D}\u{20E3}]/gu;
+  var REF_PART = /^(?:[1-3一二三]?\s*[一-鿿A-Za-z]{1,18}\.?\s*)?\d+\s*[:：]\s*\d+(?:\s*[-–—~～至]\s*\d+)?$/;
+  function dropRefParens(s) {
+    return String(s || '').replace(/[（(]([^（）()]{1,80})[）)]/g, function (m, inner) {
+      var x = inner.replace(/^\s*(?:另見|參看|參見|参看|参见|參|参|見|见|cf\.?|see)\s*/i, '').replace(/^\s+|\s+$/g, '');
+      if (!x) return m;
+      var parts = x.split(/[；;、，,]/).map(function (p) { return p.replace(/^\s+|\s+$/g, ''); }).filter(Boolean);
+      return parts.length && parts.every(function (p) { return REF_PART.test(p); }) ? '' : m;
+    });
+  }
+  /* 送去語音之前先處理：括號裡只有出處不唸、表情符號不唸 */
+  function pre(s) {
+    var x = String(s == null ? '' : s);
+    try { x = dropRefParens(x).replace(EMOJI_RE, '').replace(/[ \t]{2,}/g, ' '); } catch (e) {}
+    return x;
+  }
+  var PRON = (function () {
+    var NUM = '[〇零一二三四五六七八九十百千萬万兩两幾几]+';
+    var UNIT = '(?:肘|尺|丈|寸|虎口|竿|掌|里|步)';
+    function R(s) { return new RegExp(s, 'g'); }
+    var SHARED = [
+      [R('重生'), '蟲生'], [R('重新'), '蟲新'], [R('重建'), '蟲建'], [R('重擔'), '眾擔'], [R('重担'), '众担'],
+      [R('長(?=' + NUM + UNIT + ')'), '常'], [R('长(?=' + NUM + UNIT + ')'), '常'],
+      [R('長(老|子|大|進|輩|執)'), '掌$1'], [R('长(老|子|大|进|辈|执)'), '掌$1'],
+      [R('(成|生|年|家|族|官|兄|師|师|首|牧|夫|組|组|團|团|校|部|區|区|社)(長|长)(?![久遠远存期])'), '$1掌'],
+      [R('差(遣|派|役)'), '拆$1'], [R('([主神祂他我])差(?=[人你我他門门使])'), '$1拆'],
+      [R('得[著着](?![急涼凉迷火慌])'), '得酌'],
+      [R('(^|[^成作行認认稱称以視视])([為为])(?=(?:主|神|祂|基督|耶穌|耶稣)(?:而活|而死|作工|做工|擺上|摆上|受苦|犧牲|牺牲|捨命|舍命|捨己|舍己|發熱心|发热心))'), '$1衛'],
+      [R('([為为])(?=(?:人|別人|别人|眾人|众人|你|你們|你们|我們|我们|他們|他们|弟兄姊妹)(?:禱告|祷告|代禱|代祷|代求|捨命|舍命))'), '衛'],
+      [R('(供|補|补)[給给]'), '$1己'], [R('[給给]予'), '己予'],
+      [R('應許'), '映許'], [R('应许'), '映许'], [R('應驗'), '映驗'], [R('应验'), '映验'], [R('應當'), '英當'], [R('应当'), '英当'],
+      [R('傳道'), '船道'], [R('传道'), '船道'], [R('(行|自)傳'), '$1賺'], [R('(行|自)传'), '$1赚'], [R('傳記'), '賺記'], [R('传记'), '赚记'],
+      [R('沒藥'), '莫藥'], [R('没药'), '莫药'], [R('嗎哪'), '馬哪'], [R('吗哪'), '马哪'], [R('撒種'), '撒腫'], [R('撒种'), '撒肿'], [R('撒但'), '仨但'],
+      [R('數一數'), '鼠一鼠'], [R('数一数'), '鼠一鼠'], [R('數(點|算)'), '鼠$1'], [R('数(点|算)'), '鼠$1'],
+      [R('參孫'), '餐孫'], [R('参孙'), '餐孙'], [R('阿們'), '阿門'], [R('阿们'), '阿门'], [R('冠冕'), '官冕'],
+      [R('朝(見|拜)'), '潮$1'], [R('朝(见|拜)'), '潮$1'], [R('背(起|負|负)'), '揹$1'], [R('看守'), '刊守'],
+      [R('說客'), '稅客'], [R('说客'), '税客'], [R('年少'), '年紹'], [R('(^|[^多不減减缺很太至最])少年'), '$1紹年'],
+      [R('盛(滿|满)'), '成$1'], [R('([一兩两三那這这])宿(?![舍])'), '$1朽'], [R('乾(?!坤)'), '甘'], [R('鴿'), '哥']
+    ];
+    var TW = [
+      [R('[說说]服'), '稅服'], [R('[遊游][說说]'), '遊稅'], [R('期'), '奇'], [R('企'), '器'], [R('[危微]'), '圍'], [R('寂'), '疾'],
+      [R('(^|[^人])[質质]'), '$1直'], [R('[暫暂]'), '站'], [R('[攜携]'), '西'], [R('曝'), '瀑'], [R('垃圾'), '樂色'], [R('[蝸蜗]'), '瓜'], [R('[結结]果子'), '節果子']
+    ];
+    var CN = [
+      [R('期'), '七'], [R('企'), '起'], [R('[危微]'), '威'], [R('寂'), '寄'], [R('(^|[^人])[质質]'), '$1至'],
+      [R('[暂暫]'), '赞'], [R('[携攜]'), '鞋'], [R('曝光'), '爆光'], [R('垃圾'), '拉鸡'], [R('[蜗蝸]'), '窝']
+    ];
+    function run(list, s) { for (var i = 0; i < list.length; i++) s = s.replace(list[i][0], list[i][1]); return s; }
+    function fix(s, std, voice) {
+      s = String(s == null ? '' : s);
+      if (!/[㐀-鿿]/.test(s)) return s;
+      s = run(SHARED, s);
+      var v = String(voice || ''), vTW = /zh[-_]TW|zh[-_]HK/i.test(v), vCN = /zh[-_]CN|cmn/i.test(v);
+      if (std === 'tw' && vCN) s = run(TW, s);
+      else if (std === 'cn' && vTW) s = run(CN, s);
+      return s;
+    }
+    var stdNow = function () { return SC ? 'cn' : 'tw'; };
+    function hookNative() {
+      try {
+        var ss = window.speechSynthesis;
+        if (!ss || ss.__pron) return;
+        var sp = ss.speak.bind(ss);
+        ss.speak = function (u) { try { if (u && u.text) u.text = fix(u.text, stdNow(), u.lang || ''); } catch (e) {} return sp(u); };
+        ss.__pron = 1;
+      } catch (e) {}
+    }
+    return { fix: fix, hookNative: hookNative };
+  })();
+  PRON.hookNative();
+  /* 語音端：Azure 聲音名稱（zh-TW／zh-CN）決定要不要套兩岸差異 */
+  function pron(x) {
+    if (EN) return x;
+    var v = ''; try { v = BR().voice ? BR().voice() : ''; } catch (e) {}
+    return PRON.fix(x, SC ? 'cn' : 'tw', v);
+  }
+
+  /* ══════════ 朗讀：背景播放、螢幕不休眠、浮動控制列 ══════════ */
+  var wl = null, msInit = false, barPaused = false;
+  function wlAcquire() { try { if (navigator.wakeLock && !wl && document.visibilityState === 'visible') { navigator.wakeLock.request('screen').then(function (w) { wl = w; w.addEventListener('release', function () { wl = null; }); }, function () { wl = null; }); } } catch (e) { wl = null; } }
+  function wlRelease() { try { if (wl) wl.release(); } catch (e) {} wl = null; }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible' && speaking) wlAcquire(); });
+  function msSet() {
+    if (!('mediaSession' in navigator) || typeof MediaMetadata === 'undefined') return;
+    try {
+      var b = BR(), ttl = (b.title && b.title()) || APP();
+      navigator.mediaSession.metadata = new MediaMetadata({ title: String(ttl).slice(0, 80), artist: T('國度321空中團契', 'Kingdom 321 Online Fellowship'), album: APP(), artwork: [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }] });
+      if (!msInit) {
+        msInit = true;
+        navigator.mediaSession.setActionHandler('play', function () { barToggle(true); });
+        navigator.mediaSession.setActionHandler('pause', function () { barToggle(false); });
+        navigator.mediaSession.setActionHandler('stop', function () { if (BR().stop) BR().stop(); });
+      }
+      navigator.mediaSession.playbackState = barPaused ? 'paused' : 'playing';
+    } catch (e) {}
+  }
+  function msClear() { try { if ('mediaSession' in navigator) { navigator.mediaSession.playbackState = 'none'; navigator.mediaSession.metadata = null; } } catch (e) {} }
+  var speaking = false;
+  function tbH() { var t = q1('.tabbar,#tabbar,nav.tabs'); return t && t.offsetHeight ? t.offsetHeight : 0; }
+  function barEl() {
+    var el = q1('#gxrBar');
+    if (!el) {
+      el = document.createElement('div'); el.id = 'gxrBar';
+      el.innerHTML = '<span class="gxbt">🔊 <b></b></span><button type="button" data-gxr-bar="pp" aria-label="pause">⏸</button><button type="button" data-gxr-bar="stop" aria-label="stop">⏹</button>';
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+  function ttsState(st) {
+    if (st) {
+      speaking = true; barPaused = false;
+      var el = barEl(), b = BR();
+      el.style.bottom = 'calc(' + (tbH() + 10) + 'px + env(safe-area-inset-bottom,0px))';
+      q1('b', el).textContent = T('朗讀中', 'Reading') + ((b.title && b.title()) ? '・' + String(b.title()).slice(0, 14) : '');
+      q1('[data-gxr-bar=pp]', el).textContent = '⏸';
+      el.className = 'on';
+      wlAcquire(); msSet();
+    } else {
+      speaking = false; barPaused = false;
+      var e2 = q1('#gxrBar'); if (e2) e2.className = '';
+      wlRelease(); msClear();
+    }
+  }
+  function barToggle(play) {
+    var b = BR(), el = q1('#gxrBar');
+    if (play === undefined) play = barPaused;
+    try { if (play) { b.resume && b.resume(); barPaused = false; wlAcquire(); } else { b.pause && b.pause(); barPaused = true; wlRelease(); } } catch (e) {}
+    if (el) q1('[data-gxr-bar=pp]', el).textContent = barPaused ? '▶' : '⏸';
+    try { if ('mediaSession' in navigator) navigator.mediaSession.playbackState = barPaused ? 'paused' : 'playing'; } catch (e) {}
+  }
+
+  /* ══════════ 畫線面板補件 ══════════ */
+  function copyText(t, ok) {
+    function done() { toast(ok || T('已複製', 'Copied')); }
+    function fallback() {
+      try {
+        var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0';
+        document.body.appendChild(ta); ta.select(); var r = document.execCommand('copy'); document.body.removeChild(ta);
+        if (r) done(); else toast(T('無法複製，請長按文字自行複製', 'Cannot copy — press and hold the text'));
+      } catch (e) { toast(T('無法複製，請長按文字自行複製', 'Cannot copy — press and hold the text')); }
+    }
+    try { navigator.clipboard.writeText(t).then(done, fallback); } catch (e) { fallback(); }
+  }
+  function pageUrl() { return location.protocol.indexOf('http') === 0 ? location.origin + location.pathname.replace(/index\.html$/, '') : ''; }
+  function hlRef(h) { return (h && h.ut && h.src !== 'chat') ? h.ut : ''; }
+  function hlLine(h) {
+    var r = hlRef(h), t = String(h.t || '');
+    return (EN ? '“' : '「') + t + (EN ? '”' : '」') + '\n—— ' + APP() + (r ? '・' + r : '') + (h.n ? '\n' + (EN ? 'Note: ' : '默想：') + h.n : '') + (pageUrl() ? '\n' + pageUrl() : '');
+  }
+  var HLX = {
+    card: function (h) {
+      if (window.GXU && GXU.open) { GXU.open({ text: h.t, ref: APP() + (hlRef(h) ? '・' + hlRef(h) : ''), note: h.n || '', plain: true }); return true; }
+      toast(T('美圖工作室還沒載入，請稍後再試', 'Card studio is not ready yet')); return false;
+    },
+    copy: function (h) { copyText(hlLine(h), T('已複製這一句', 'Copied')); },
+    share: function (h) {
+      var body = hlLine(h);
+      if (navigator.share) { try { navigator.share({ title: APP(), text: body }).then(null, function (e) { if (!e || e.name !== 'AbortError') copyText(body, T('已複製，可以貼到群組或社群', 'Copied — paste it anywhere')); }); return; } catch (e) {} }
+      copyText(body, T('已複製，可以貼到群組或社群', 'Copied — paste it anywhere'));
+    },
+    toast: toast,
+    t: function (zh, en) { return T(zh, en); }
+  };
+
+  /* ══════════ 美圖／我的作品入口＋小智設定卡（我的／設定頁） ══════════ */
+  function meMount() {
+    if (!D || q1('#gxrMe')) return;
+    var anchor = null;
+    var hlb = q1('[data-go="hls"]');
+    if (hlb && hlb.closest('.card')) anchor = hlb.closest('.card');
+    if (!anchor) { var rg = q1('input[type=range][oninput*="set.fs"]'); if (rg && rg.closest('.card')) anchor = rg.closest('.card'); }
+    if (!anchor) return;
+    var c = document.createElement('div'); c.className = 'card'; c.id = 'gxrMe';
+    c.innerHTML = '<b>' + esc(T('小智與美圖', 'Xiaozhi & card studio')) + '</b>' +
+      '<p class="gxlab" style="margin:10px 0 6px">' + esc(T('小智回答對象', 'Who Xiaozhi answers for')) + '</p><div class="gxr-me-aud"></div>' +
+      '<p class="gxlab" style="margin:10px 0 6px">' + esc(T('回答長度', 'Answer length')) + '</p><div class="gxr-me-len gxpills"></div>' +
+      '<div class="gxrow" style="margin-top:12px"><button type="button" class="iconbtn btn alt" data-gxr-studio="panel">🖼 ' + esc(T('美圖工作室', 'Card studio')) + '</button>' +
+      '<button type="button" class="iconbtn btn alt" data-gxr-studio="works">📂 ' + esc(T('我的作品', 'My creations')) + '</button></div>';
+    anchor.parentNode.insertBefore(c, anchor.nextSibling);
+    paintCtl();
+  }
+  function chatMount() {
+    var w = q1('.chatwrap'); if (!w || !D) return;
+    if (!q1('#gxrCtl')) {
+      var c = document.createElement('div'); c.id = 'gxrCtl'; c.innerHTML = ctlHTML();
+      var qb = q1('#qsBtn', w);
+      if (qb) qb.parentNode.insertBefore(c, qb); else w.insertBefore(c, w.firstChild);
+    }
+    quickRefresh(false); fuRefresh(false);
+  }
+  /* 每個小標題旁的「🔊」：從這一段開始朗讀下去 */
+  function paraMount() {
+    var b = BR(); if (!b.from) return;
+    qa('#stepBody,#doc').forEach(function (root) {
+      qa('h2,h3,h4', root).forEach(function (h) {
+        if (h.querySelector('.gxr-pb') || h.closest('.hl-note')) return;
+        var nx = null, all = qa('.sent', root), i;
+        for (i = 0; i < all.length; i++) { if (h.compareDocumentPosition(all[i]) & 4) { nx = all[i]; break; } }
+        if (!nx) return;
+        var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'gxr-pb'; btn.textContent = '🔊';
+        btn.setAttribute('aria-label', T('從這一段朗讀', 'Read from this section')); btn.setAttribute('data-gxr-pb', nx.getAttribute('data-k'));
+        h.appendChild(btn);
+      });
+    });
+  }
+  /* 頂列的「🔊」：整頁跟讀（這一步／這一課有朗讀鈕時才顯示；再按一次停止） */
+  function topMount() {
+    var hd = q1('header.top .in'); if (!hd || !BR().readPage) return;
+    var b = q1('#gxrTop');
+    if (!b) {
+      b = document.createElement('button'); b.type = 'button'; b.id = 'gxrTop'; b.className = 'iconbtn'; b.textContent = '🔊';
+      b.setAttribute('aria-label', T('朗讀整頁', 'Read this page'));
+      var tb = q1('#themeBtn', hd); if (tb) hd.insertBefore(b, tb); else hd.appendChild(b);
+    }
+    b.style.display = q1('#readBtn') ? '' : 'none';
+  }
+  var scanT = 0;
+  function scan() { clearTimeout(scanT); scanT = setTimeout(function () { try { chatMount(); meMount(); paraMount(); topMount(); } catch (e) {} }, 60); }
+  new MutationObserver(scan).observe(document.documentElement, { childList: true, subtree: true });
+
+  /* ── 點擊（全部用事件委派，重畫之後不會失效） ── */
+  document.addEventListener('click', function (e) {
+    var t = e.target; if (!t || !t.closest) return;
+    var x;
+    if ((x = t.closest('[data-gxr-aud]'))) { e.preventDefault(); setAud(x.getAttribute('data-gxr-aud')); return; }
+    if ((x = t.closest('[data-gxr-len]'))) { e.preventDefault(); setLen(x.getAttribute('data-gxr-len'), !!q1('#chatlog')); return; }
+    if ((x = t.closest('[data-gxr-togaud]'))) { e.preventDefault(); audOpen = !audOpen; paintCtl(); return; }
+    if ((x = t.closest('[data-gxr-fs]'))) { e.preventDefault(); var b = BR(); if (b.setFs) { var n = b.setFs(); toast(T('字級 ', 'Text size ') + n); } return; }
+    if ((x = t.closest('[data-gxr-q]'))) { e.preventDefault(); var p = q1('#qsPanel'); if (p) p.hidden = true; if (BR().send) BR().send(x.textContent); return; }
+    if ((x = t.closest('[data-gxr-fu]'))) {
+      e.preventDefault();
+      var f = (A().fu || [])[+x.getAttribute('data-gxr-fu')]; if (f && BR().send) BR().send(T(f[2], f[2]));
+      return;
+    }
+    if (t.closest('#gxrTop')) { e.preventDefault(); if (BR().readPage) BR().readPage(); return; }
+    if ((x = t.closest('[data-gxr-pb]'))) { e.preventDefault(); e.stopPropagation(); if (BR().from) BR().from(x.getAttribute('data-gxr-pb')); return; }
+    if ((x = t.closest('[data-gxr-bar]'))) { e.preventDefault(); if (x.getAttribute('data-gxr-bar') === 'stop') { if (BR().stop) BR().stop(); } else barToggle(); return; }
+    if ((x = t.closest('[data-gxr-studio]'))) {
+      e.preventDefault();
+      if (!window.GXU) { toast(T('美圖工作室還沒載入', 'Card studio is not ready')); return; }
+      if (x.getAttribute('data-gxr-studio') === 'works') GXU.works(); else GXU.panel();
+    }
+  });
+
+  /* ── 樣式 ── */
+  var css = document.createElement('style'); css.id = 'gxrCss';
+  css.textContent = [
+    '#gxrToast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:rgba(20,24,32,.92);color:#fff;font-size:14px;padding:9px 16px;border-radius:999px;z-index:400;max-width:86vw;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}',
+    '#gxrToast.on{opacity:1}',
+    '.hlsheet-card{max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch}',
+    '.spanrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px}',
+    '.spanbtn.wide{min-width:0;padding:0 12px;font-size:.88em;white-space:nowrap}',
+    '.hlsheet-acts .sbtn{padding:10px 4px;font-size:.92em;white-space:nowrap}',
+    '#gxrCtl{margin:8px 0 6px}',
+    '#gxrCtl .gxrow,#gxrMe .gxrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}',
+    '.gxsm{border:1px solid var(--line,#D5D9E3);background:var(--surface,var(--card,#fff));color:var(--ink,#1A2233);border-radius:999px;padding:6px 12px;font:inherit;font-size:.88em;cursor:pointer}',
+    '.gxsm.gxfs{font-weight:700;min-width:38px;padding:6px 10px;margin-left:auto}',
+    '.gxlen{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}',
+    '.gxlen button,.gxpill{border:1px solid var(--line,#D5D9E3);background:var(--surface,var(--card,#fff));color:var(--ink,#1A2233);border-radius:999px;padding:5px 11px;font:inherit;font-size:.85em;cursor:pointer}',
+    '.gxlen button.on,.gxpill.on{background:var(--accent,var(--acc,#2C5A9C));border-color:var(--accent,var(--acc,#2C5A9C));color:#fff}',
+    '.gxpills{display:flex;gap:6px;flex-wrap:wrap}',
+    '.gxlab{font-size:.8em;color:var(--muted,var(--sub,#586177));margin:0 2px 0 0;font-weight:600}',
+    '.gxaud{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}',
+    '.gxa{border:1px solid var(--line,#D5D9E3);background:var(--surface,var(--card,#fff));color:var(--ink,#1A2233);border-radius:999px;padding:6px 11px;font:inherit;font-size:.86em;cursor:pointer}',
+    '.gxa.on{background:var(--accent,var(--acc,#2C5A9C));border-color:var(--accent,var(--acc,#2C5A9C));color:#fff}',
+    '.gxhint{font-size:.8em;color:var(--muted,var(--sub,#586177));margin:4px 2px 0}',
+    '.gxr-fu{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;padding-top:8px;border-top:1px dashed var(--line,#D5D9E3)}',
+    '.gxq{border:1px solid var(--line,#D5D9E3);background:var(--surface,var(--card,#fff));color:var(--ink,#1A2233);border-radius:999px;padding:5px 11px;font:inherit;font-size:.84em;cursor:pointer}',
+    '#gxrBar{position:fixed;left:50%;transform:translateX(-50%) translateY(20px);bottom:76px;display:none;align-items:center;gap:8px;background:rgba(20,24,32,.94);color:#fff;border-radius:999px;padding:7px 8px 7px 16px;z-index:60;box-shadow:0 6px 18px rgba(0,0,0,.28);max-width:92vw;font-size:14px}',
+    '#gxrBar.on{display:flex;transform:translateX(-50%)}',
+    '#gxrBar .gxbt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+    '#gxrBar button{border:0;background:rgba(255,255,255,.16);color:#fff;width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer}',
+    '.msg.ai .gxr-fu .gxq{max-width:100%}',
+    '.chatwrap .msg.ai{max-width:100%;box-sizing:border-box}',
+    '.chatwrap .msg.user{max-width:92%}',
+    '#gxrTop{padding:4px 9px;font-size:15px;line-height:1.2;white-space:nowrap}',
+    '@media (max-width:359px){#gxrTop{display:none!important}}',
+    '.gxr-pb{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin-left:8px;border-radius:50%;border:1px solid var(--line,#D5D9E3);background:var(--surface,var(--card,#fff));color:var(--muted,var(--sub,#586177));font-size:13px;line-height:1;padding:0;vertical-align:middle;cursor:pointer}'
+  ].join('\n');
+  document.head.appendChild(css);
+
+  window.GXR = { sysExtra: sysExtra, pre: pre, pron: pron, ttsState: ttsState, hl: HLX, setAud: setAud, setLen: setLen, state: function () { return { aud: aud(), len: alen() }; }, scan: scan, reask: reask };
+  scan();
+})();
+
+</script>
 <script id="k321meet">window.K321MEET_CFG={hook:{sel:"#main",before:"p.foot",need:function(h){return !!h.querySelector("section.hero");}}};
 /* 國度321空中團契 · 首頁「下一堂聚會／一鍵加入聚會／聚會時間與奉獻支持」 k321meet v1 */
 (function () {
@@ -4661,6 +5180,6 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 })();
 </script>
 <script>window.CR321_CFG={pfx:'cr321-',names:{zh:'321萬象見神',zs:'321万象见神',en:'321 Creation Speaks'},nav:function(){return window.CR321_HOOK?CR321_HOOK.nav():null},go:function(o){if(window.CR321_HOOK)CR321_HOOK.go(o)},root:function(){return document.getElementById('main')}};</script>
-<script src="coread.js?v=202610200230-vp1023-co1"></script>
+<script src="coread.js?v=202611031200-vp1023-gx1103-co1"></script>
 </body>
 </html>
