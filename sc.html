@@ -294,7 +294,7 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 <button data-go="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6"/></svg>我的</button>
 </div></nav>
 <script>
-var VER = '202610200230-vp1023';
+var VER = '202610200230-vp1023-co1';
 var DATA = 'sc-';
 var SPEECH = 'zh-CN';
 var REFS = {};
@@ -787,6 +787,11 @@ var QUESTIONS = [{"q": "宇宙是从哪里来的？", "h": "cosmos", "u": 0}, {"
 
   /* ---------- events ---------- */
   function go(v) { S.view = v; if (v === 'unit' && cur() && S.step > cur().steps.length) { S.step = 0; } render(); window.scrollTo(0, 0); }
+  /* 一起共讀（coread.js）轉接：只交出「在哪個畫面」，個人頁（小智、收藏、畫線、我的）不同步 */
+  window.CR321_HOOK = {
+    nav: function () { var v = S.view; if (v === 'home' || v === 'today') { return { v: v }; } if (v === 'hall') { return { v: v, hall: S.hall }; } if (v === 'unit') { return { v: v, hall: S.hall, u: S.u, step: S.step, depth: S.depth }; } return null; },
+    go: function (o) { stopSpeak(); if (o.hall) { S.hall = o.hall; } if (o.v === 'unit') { S.u = +o.u || 0; S.step = +o.step || 0; if (o.depth != null) { S.depth = o.depth; } } go(o.v); }
+  };
 
   function finish() {
     var U = cur();
@@ -4655,5 +4660,7 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
   window.VPICK321 = { pick: pick, card: card, lang: lang, detect: detect, refs: function (t) { return toc().then(function () { return refs(t); }); } };
 })();
 </script>
+<script>window.CR321_CFG={pfx:'cr321-',names:{zh:'321萬象見神',zs:'321万象见神',en:'321 Creation Speaks'},nav:function(){return window.CR321_HOOK?CR321_HOOK.nav():null},go:function(o){if(window.CR321_HOOK)CR321_HOOK.go(o)},root:function(){return document.getElementById('main')}};</script>
+<script src="coread.js?v=202610200230-vp1023-co1"></script>
 </body>
 </html>
