@@ -294,7 +294,7 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 <button data-go="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6"/></svg>我的</button>
 </div></nav>
 <script>
-var VER = '202611031200-vp1023-gx1103-co1-xz1103-au1103';
+var VER = '202611031200-vp1023-gx1103-co1-xz1103-au1103-xzm1103';
 var DATA = 'sc-';
 var SPEECH = 'zh-CN';
 var REFS = {};
@@ -1963,6 +1963,19 @@ AUPD.init();
     stop: function () { ttsStop(); },
     from: function (k) { ttsFromKey(k); },
     readPage: function () { var b = $('readBtn'); if (b) { b.click(); return true; } return false; }
+  };
+
+  /* XZM 掛鉤（小智回答跟讀外掛 preset.sage 用）：本檔的朗讀／畫線函式都在這個 IIFE 裡，外面拿不到；這裡只提供存取，不改任何行為 */
+  window.XZM_HOST = {
+    fn: { wrapSents: wrapSents, groups: groups, gText: gText, rootOf: rootOf, ttsPrep: ttsPrep, ttsStop: ttsStop, ttsSayStop: ttsSayStop, ttsUnlock: ttsUnlock, ttsBtn: ttsBtn, ttsPlayFrom: ttsPlayFrom, raSeg: raSeg, saveHl: saveHl, paintHl: paintHl, msgAction: msgAction },
+    spk: function (v) { if (v) { spk = v; } return spk; },
+    reset: function () { raManualAt = 0; },
+    manual: function () { raManualAt = Date.now(); },
+    cool: function (ms) { if (RA_COOLDOWN < ms) { RA_COOLDOWN = ms; } },
+    busy: function () { return chatBusy; },
+    audio: function () { return ttsEl; },
+    list: function (w) { return w === 'fav' ? FAV : CHAT; },
+    hls: function () { return HLS; }
   };
 
   load();
@@ -5320,6 +5333,8 @@ window.GXR_SCM={"m":["丟並乾亂亙亞佈佔併來係俱倉個們倖倫偉側�
 })();
 </script>
 <script>window.CR321_CFG={pfx:'cr321-',names:{zh:'321萬象見神',zs:'321万象见神',en:'321 Creation Speaks'},nav:function(){return window.CR321_HOOK?CR321_HOOK.nav():null},go:function(o){if(window.CR321_HOOK)CR321_HOOK.go(o)},root:function(){return document.getElementById('main')}};</script>
-<script src="coread.js?v=202611031200-vp1023-gx1103-co1-xz1103-au1103"></script>
+<script src="coread.js?v=202611031200-vp1023-gx1103-co1-xz1103-au1103-xzm1103"></script>
+<script src="xzm.js?v=xzm1103"></script>
+<script>try{XZM.install(XZM.preset.sage());}catch(e){}</script>
 </body>
 </html>
