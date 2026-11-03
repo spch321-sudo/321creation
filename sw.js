@@ -1,5 +1,11 @@
-var CACHE = 'wanxiang-202611031200-vp1023-gxu1020-gx1103-co1';
-self.addEventListener('install', function (e) { self.skipWaiting(); });
+var CACHE = 'wanxiang-202611031200-vp1023-gxu1020-gx1103-co1-xz1103';
+/* 預先快取小智套件 xz2.js（離線也能用回答對象／長度／讀者資料） */
+self.addEventListener('install', function (e) {
+  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE).then(function (c) {
+    return Promise.all(['./xz2.js'].map(function (u) { return fetch(new Request(u, { cache: 'reload' })).then(function (r) { if (r && r.ok) { return c.put(u, r); } })['catch'](function () {}); }));
+  }));
+});
 self.addEventListener('activate', function (e) {
   e.waitUntil(caches.keys().then(function (ks) { return Promise.all(ks.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); })); }).then(function () { return self.clients.claim(); }));
 });
