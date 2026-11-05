@@ -3,9 +3,10 @@
    ‧ install：skipWaiting；預載用 cache:'reload' 繞過 HTTP 快取（GitHub Pages 會快取 10 分鐘）
    ‧ activate：只清自己前綴（PFX）的舊快取——同一個 github.io 網域的各 App 共用 Cache Storage，不能刪別人的；
      clients.claim 後通知所有頁面（頁面自己判斷空閒才重整）
-   ‧ fetch：HTML／JS／JSON／CSS 網路優先（no-cache），離線才用快取；圖片等快取優先；影音與 Range 請求不攔截 */
+   ‧ fetch：HTML／JS／JSON／CSS 網路優先（no-cache）＋1 秒競速（網路超過 1 秒沒回就先用快取，網路那份繼續下載並更新快取）；圖片等快取優先；影音與 Range 請求不攔截
+   ‧ 閒置預存（-rf1105）：頁面送 {t:'prefetch', pre:'tc-'|'sc-'|'en-'}，SW 依序把該語言十二展館的單元與講章 JSON 存進快取（上限 PREFETCH_BUDGET，已存的跳過），離線也能讀；tts-audio 是朗讀音檔快取，不以 PFX 開頭，不會被清 */
 var PFX = 'wanxiang-';
-var VER = '202611031200-vp1023-gx1103-co1-xz1103-au1103-xzm1103-h12';
+var VER = '202611031200-vp1023-gx1103-co1-xz1103-au1103-xzm1103-h12-rf1105';
 var V = PFX + VER;
 var SHELL = ["./", "./index.html", "./sc.html", "./en.html", "./manifest-tc.json", "./manifest-sc.json", "./manifest-en.json", "./icon-192.png", "./icon-512.png", "./coread.js", "./xz2.js", "./xzm.js"];
 self.addEventListener('install', function (e) {
@@ -38,17 +39,60 @@ self.addEventListener('fetch', function (e) {
   var nav = r.mode === 'navigate' || /\.html$/.test(p) || /\/$/.test(p);
   var key = u.origin + p + (/\/$/.test(p) ? 'index.html' : '');
   if (nav || /\.(json|js|css)$/.test(p)) {
-    e.respondWith(fetch(r.url, { cache: 'no-cache', credentials: 'same-origin' }).then(function (resp) {
-      if (resp && resp.ok) { var cp = resp.clone(); caches.open(V).then(function (c) { c.put(key, cp); }); }
-      return resp;
-    })['catch'](function () {
-      return caches.match(key).then(function (h) {
-        return h || caches.match(r, { ignoreSearch: true }).then(function (h2) { return h2 || (nav ? caches.match(u.origin + p.replace(/[^\/]*$/, '') + 'index.html') : undefined); });
-      });
-    }));
+    e.respondWith(shellFetch(r, u, p, key, nav));
     return;
   }
   e.respondWith(caches.match(r, { ignoreSearch: true }).then(function (h) {
     return h || fetch(r).then(function (resp) { if (resp && resp.ok) { var cp = resp.clone(); caches.open(V).then(function (c) { c.put(r, cp); }); } return resp; });
   }));
+});
+
+/* 網路優先，但最多等 SHELL_WAIT 毫秒：超過就先用「完全相同」的快取（沒有快取就繼續等網路）；網路那份回來後更新快取。
+   只有導覽請求才可以退回 index.html（程式檔退回 HTML 會被當 JS 執行而出錯）。 */
+var SHELL_WAIT = 1000;
+function cacheLookup(r, u, p, key, nav) {
+  return caches.match(key).then(function (h) {
+    return h || caches.match(r, { ignoreSearch: true }).then(function (h2) {
+      return h2 || (nav ? caches.match(u.origin + p.replace(/[^\/]*$/, '') + 'index.html') : undefined);
+    });
+  });
+}
+function shellFetch(r, u, p, key, nav) {
+  var net = fetch(r.url, { cache: 'no-cache', credentials: 'same-origin' }).then(function (resp) {
+    if (resp && resp.ok) { var cp = resp.clone(); caches.open(V).then(function (c) { c.put(key, cp); }); }
+    return resp;
+  });
+  var netSafe = net['catch'](function () { return cacheLookup(r, u, p, key, nav).then(function (h) { if (h) return h; return net; }); });
+  var timer = new Promise(function (res) {
+    setTimeout(function () { cacheLookup(r, u, p, key, nav).then(function (h) { if (h) res(h); }); }, SHELL_WAIT);
+  });
+  return Promise.race([netSafe, timer]);
+}
+
+/* ── 閒置預存各展館內容 ── */
+var HALLS = ['cosmos', 'earth', 'life', 'math', 'mind', 'history', 'beauty', 'body', 'bible', 'civ', 'human', 'jesus'];
+var PREFETCH_BUDGET = 9 * 1024 * 1024;
+function prefetchData(pre) {
+  if (!/^(tc-|sc-|en-)$/.test(pre)) return Promise.resolve();
+  var files = [], used = 0;
+  HALLS.forEach(function (h) { files.push('./' + pre + h + '.json'); files.push('./' + pre + h + '-sermon.json'); });
+  return caches.open(V).then(function (c) {
+    return files.reduce(function (chain, f) {
+      return chain.then(function () {
+        if (used > PREFETCH_BUDGET) return;
+        return c.match(f, { ignoreSearch: true }).then(function (hit) {
+          if (hit) return;
+          return fetch(new Request(f, { cache: 'no-cache' })).then(function (resp) {
+            if (!resp || !resp.ok) return;
+            var len = +resp.headers.get('content-length') || 0;
+            return resp.clone().arrayBuffer().then(function (buf) { used += buf.byteLength || len; return c.put(f, resp); });
+          });
+        })['catch'](function () { });
+      });
+    }, Promise.resolve());
+  });
+}
+self.addEventListener('message', function (e) {
+  var d = e.data || {};
+  if (d.t === 'prefetch' && d.pre) e.waitUntil(prefetchData(String(d.pre)));
 });
