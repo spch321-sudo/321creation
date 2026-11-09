@@ -295,7 +295,7 @@ details.refs ol{margin:6px 0 0;padding-left:1.4em;line-height:1.6}
 <button data-go="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6"/></svg>Me</button>
 </div></nav>
 <script>
-var VER = '202611031200-vp1023-gx1103-co1-xz1103-au1103-xzm1103-h12-rf1105';
+var VER = '202611091200-vp1023-gx1103-co1-xz1103-au1103-xzm1103-h12-rf1105-cs1109';
 var DATA = 'en-';
 var SPEECH = 'en-US';
 var REFS = {};
@@ -392,6 +392,7 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
     document.documentElement.style.setProperty('--fs', S.fs + 'px');
     after();
     save();
+    if (window.CPAR321 && window.CPAR321.after) { try { window.CPAR321.after(); } catch (e) {} }
   }
 
   function homeView() {
@@ -790,6 +791,11 @@ var QUESTIONS = [{"q": "Where did the universe come from?", "h": "cosmos", "u": 
   /* ---------- events ---------- */
   function go(v) { S.view = v; if (v === 'unit' && cur() && S.step > cur().steps.length) { S.step = 0; } render(); window.scrollTo(0, 0); }
   /* 一起共讀（coread.js）轉接：只交出「在哪個畫面」，個人頁（小智、收藏、畫線、我的）不同步 */
+  /* 中英並讀（cpar.js）轉接：目前位置，以及用另一語言的展館資料重畫一次單元（只回傳 HTML，不動畫面） */
+  window.CR321_PAR = {
+    st: function () { var U = cur(); return { view: S.view, hall: S.hall, u: S.u, step: S.step, depth: S.depth, id: U ? U.id : null }; },
+    alt: function (hd, sd) { var k = S.hall, h0 = HD[k], s0 = SD[k]; HD[k] = hd; if (sd) { SD[k] = sd; } try { return unitView(); } finally { HD[k] = h0; SD[k] = s0; } }
+  };
   window.CR321_HOOK = {
     nav: function () { var v = S.view; if (v === 'home' || v === 'today') { return { v: v }; } if (v === 'hall') { return { v: v, hall: S.hall }; } if (v === 'unit') { return { v: v, hall: S.hall, u: S.u, step: S.step, depth: S.depth }; } return null; },
     go: function (o) { stopSpeak(); if (o.hall) { S.hall = o.hall; } if (o.v === 'unit') { S.u = +o.u || 0; S.step = +o.step || 0; if (o.depth != null) { S.depth = o.depth; } } go(o.v); }
@@ -5541,7 +5547,7 @@ window.GXR_DATA={"keys":["adult","teen","kid","seeker","elder","single_parent","
 })();
 </script>
 <script>window.CR321_CFG={pfx:'cr321-',names:{zh:'321萬象見神',zs:'321万象见神',en:'321 Creation Speaks'},nav:function(){return window.CR321_HOOK?CR321_HOOK.nav():null},go:function(o){if(window.CR321_HOOK)CR321_HOOK.go(o)},root:function(){return document.getElementById('main')}};</script>
-<script src="coread.js?v=202611031200-vp1023-gx1103-co1-xz1103-au1103-xzm1103-h12-rf1105"></script>
+<script src="coread.js?v=202611091200-vp1023-gx1103-co1-xz1103-au1103-xzm1103-h12-rf1105-cs1109"></script>
 <script src="xzm.js?v=xzm1103"></script>
 <script id="RFPRE">/* 閒置預存（-rf1105）：載入完成、網路允許時，請 Service Worker 把本語言的展館內容存進快取 */
 (function(){try{
@@ -5554,5 +5560,6 @@ window.GXR_DATA={"keys":["adult","teen","kid","seeker","elder","single_parent","
 }catch(e){}})();
 </script>
 <script>try{XZM.install(XZM.preset.sage());}catch(e){}</script>
+<script src="cpar.js?v=202611091200-vp1023-gx1103-co1-xz1103-au1103-xzm1103-h12-rf1105-cs1109"></script>
 </body>
 </html>

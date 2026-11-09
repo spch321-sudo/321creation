@@ -6,9 +6,9 @@
    ‧ fetch：HTML／JS／JSON／CSS 網路優先（no-cache）＋1 秒競速（網路超過 1 秒沒回就先用快取，網路那份繼續下載並更新快取）；圖片等快取優先；影音與 Range 請求不攔截
    ‧ 閒置預存（-rf1105）：頁面送 {t:'prefetch', pre:'tc-'|'sc-'|'en-'}，SW 依序把該語言十二展館的單元與講章 JSON 存進快取（上限 PREFETCH_BUDGET，已存的跳過），離線也能讀；tts-audio 是朗讀音檔快取，不以 PFX 開頭，不會被清 */
 var PFX = 'wanxiang-';
-var VER = '202611031200-vp1023-gx1103-co1-xz1103-au1103-xzm1103-h12-rf1105';
+var VER = '202611091200-vp1023-gx1103-co1-xz1103-au1103-xzm1103-h12-rf1105-cs1109';
 var V = PFX + VER;
-var SHELL = ["./", "./index.html", "./sc.html", "./en.html", "./manifest-tc.json", "./manifest-sc.json", "./manifest-en.json", "./icon-192.png", "./icon-512.png", "./coread.js", "./xz2.js", "./xzm.js"];
+var SHELL = ["./", "./index.html", "./sc.html", "./en.html", "./manifest-tc.json", "./manifest-sc.json", "./manifest-en.json", "./icon-192.png", "./icon-512.png", "./coread.js", "./cpar.js", "./xz2.js", "./xzm.js"];
 self.addEventListener('install', function (e) {
   self.skipWaiting();
   e.waitUntil(caches.open(V).then(function (c) {
